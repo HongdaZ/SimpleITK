@@ -53,7 +53,7 @@ mark_as_advanced(ITK_GIT_REPOSITORY)
 sitk_legacy_naming(ITK_GIT_REPOSITORY ITK_REPOSITORY)
 
 set(ITK_GIT_TAG "v4.13.1" CACHE
-  STRING "Tag in ITK git repo") # release-4.13
+  STRING "Tag in ITK git repo") # release-4.13.1
 mark_as_advanced(ITK_GIT_TAG)
 set(ITK_TAG_COMMAND GIT_TAG "${ITK_GIT_TAG}")
 
