@@ -52,6 +52,10 @@ set(ITK_GIT_REPOSITORY "${git_protocol}://github.com/HongdaZ/ITK.git" CACHE STRI
 mark_as_advanced(ITK_GIT_REPOSITORY)
 sitk_legacy_naming(ITK_GIT_REPOSITORY ITK_REPOSITORY)
 
+set(ITK_GIT_TAG "4.13.1" CACHE
+  STRING "Tag in ITK git repo") # release-4.13.1
+mark_as_advanced(ITK_GIT_TAG)
+set(ITK_TAG_COMMAND GIT_TAG "${ITK_GIT_TAG}")
 
 set(ITK_USE_GIT_PROTOCOL 0)
 if("${git_protocol}" STREQUAL "git")
@@ -73,6 +77,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${proj}-build/CMakeCacheInit.txt" "${ep_
 
 ExternalProject_Add(${proj}
   GIT_REPOSITORY ${ITK_GIT_REPOSITORY}
+  ${ITK_TAG_COMMAND}
   UPDATE_COMMAND ""
   SOURCE_DIR ${proj}
   BINARY_DIR ${proj}-build
