@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ class EventObject;
 
 namespace simple
 {
+  class BSplineTransform;
 
   /** \brief An interface method to the modular ITKv4 registration framework.
    *
@@ -90,14 +91,14 @@ namespace simple
   {
   public:
 
-    typedef ImageRegistrationMethod Self;
-    typedef ProcessObject Superclass;
+    using Self = ImageRegistrationMethod;
+    using Superclass = ProcessObject;
 
-    virtual ~ImageRegistrationMethod();
+    ~ImageRegistrationMethod() override;
 
     ImageRegistrationMethod();
 
-    std::string GetName() const { return std::string("ImageRegistrationMethod"); }
+    std::string GetName() const override { return std::string("ImageRegistrationMethod"); }
 
     /** \brief Print the information about the object to a string.
      *
@@ -105,7 +106,7 @@ namespace simple
      * callback ), the ITK Optimizer and Transform objects will
      * be printed.
      */
-    std::string ToString() const;
+    std::string ToString() const override;
 
     /** \brief Set and get the interpolator to use.
      *
@@ -143,6 +144,25 @@ namespace simple
     bool GetInitialTransformInPlace() const
     { return this->m_InitialTransformInPlace;}
     /** @} */
+
+    /** \brief Set an initial BSpline transform to optimize.
+      *
+      * A specialization of SetInitialTransform for
+      * BSplineTransforms which can take an additional scaleFactors
+      * parameter. The scaleFactors specifies the a isotropic scaling
+      * factor per level for the BSpline transform mesh size with
+      * respect to the initial transform. For example to double the
+      * BSpline mesh resolution at each of 3 levels the vector
+      * [1,2,4] should be provided.
+      *
+      * If a per level scale factor is 0 or omitted than no transform
+      * adapter will be created for that level.
+      *
+      * \sa itk::BSplineTransformParametersAdaptor
+      **/
+    void SetInitialTransformAsBSpline( BSplineTransform &transform,
+                                       bool inPlace=true,
+                                       const std::vector<unsigned int> &scaleFactors=std::vector<unsigned int>() );
 
     /** \brief Set a fixed transform component towards moving domain.
      *
@@ -506,7 +526,8 @@ namespace simple
      *
      * By default the image gradient is computed by
      * itk::GradientRecursiveGaussianImageFiter. If disabled then a
-     * central difference function with be computed as needed.
+     * central difference function will be computed for each sample as
+     * needed.
      *
      * \sa itk::ImageToImageMetricv4::SetUseMovingImageGradientFilter
      * @{
@@ -517,10 +538,10 @@ namespace simple
     /** @} */
 
 
-    /** \brief Set the shrink factors for each level where each level
-     * has the same shrink factor for each dimension.
+    /** \brief Set the isotropic shrink factors for each level.
      *
-     * This virtual domain is the image domain with is shrink.
+     * The virtual domain image is shrunk by this factor relative to
+     * the full size of the original virtual domain.
      *
      * \sa  itk::ImageRegistrationMethodv4::SetShrinkFactorsPerLevel
      */
@@ -529,7 +550,8 @@ namespace simple
     /** \brief Set the sigmas of Gaussian used for smoothing.
      *
      * The smoothing is applied to both the fixed and the moving
-     * images at each level.
+     * images at each level. The number of smoothing sigmas must match
+     * the number of shrink factors.
      *
      * \sa  itk::ImageRegistrationMethodv4::SetSmoothingSigmasPerLevel
      */
@@ -640,34 +662,34 @@ namespace simple
       CreateTransformParametersAdaptor(
         TRegistrationMethod* method);
 
-    virtual void PreUpdate( itk::ProcessObject *p );
-    virtual void OnActiveProcessDelete( ) SITK_NOEXCEPT;
-    virtual unsigned long AddITKObserver(const itk::EventObject &, itk::Command *);
-    virtual void RemoveITKObserver( EventCommand &e );
+    void PreUpdate( itk::ProcessObject *p ) override;
+    void OnActiveProcessDelete( ) noexcept override;
+    unsigned long AddITKObserver(const itk::EventObject &, itk::Command *) override;
+    void RemoveITKObserver( EventCommand &e ) override;
 
   private:
 
-    nsstd::function<unsigned int()> m_pfGetOptimizerIteration;
-    nsstd::function<std::vector<double>()> m_pfGetOptimizerPosition;
-    nsstd::function<double()> m_pfGetOptimizerLearningRate;
-    nsstd::function<double()> m_pfGetOptimizerConvergenceValue;
-    nsstd::function<double()> m_pfGetMetricValue;
-    nsstd::function<uint64_t()> m_pfGetMetricNumberOfValidPoints;
-    nsstd::function<std::vector<double>()> m_pfGetOptimizerScales;
-    nsstd::function<std::string()> m_pfGetOptimizerStopConditionDescription;
+    std::function<unsigned int()> m_pfGetOptimizerIteration;
+    std::function<std::vector<double>()> m_pfGetOptimizerPosition;
+    std::function<double()> m_pfGetOptimizerLearningRate;
+    std::function<double()> m_pfGetOptimizerConvergenceValue;
+    std::function<double()> m_pfGetMetricValue;
+    std::function<uint64_t()> m_pfGetMetricNumberOfValidPoints;
+    std::function<std::vector<double>()> m_pfGetOptimizerScales;
+    std::function<std::string()> m_pfGetOptimizerStopConditionDescription;
 
 
-    nsstd::function<unsigned int()> m_pfGetCurrentLevel;
+    std::function<unsigned int()> m_pfGetCurrentLevel;
 
-    nsstd::function<void (itk::TransformBase *outTransform)> m_pfUpdateWithBestValue;
+    std::function<void (itk::TransformBase *outTransform)> m_pfUpdateWithBestValue;
 
     template < class TMemberFunctionPointer >
       struct EvaluateMemberFunctionAddressor
     {
-      typedef typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType ObjectType;
+      using ObjectType = typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType;
 
       template< typename TImageType >
-      TMemberFunctionPointer operator() ( void ) const
+      TMemberFunctionPointer operator() ( ) const
         {
           return &ObjectType::template EvaluateInternal< TImageType >;
         }
@@ -676,8 +698,8 @@ namespace simple
     typedef Transform (ImageRegistrationMethod::*MemberFunctionType)( const Image &fixed, const Image &moving );
     typedef double (ImageRegistrationMethod::*EvaluateMemberFunctionType)( const Image &fixed, const Image &moving );
     friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
-    nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
-    nsstd::auto_ptr<detail::MemberFunctionFactory<EvaluateMemberFunctionType> > m_EvaluateMemberFactory;
+    std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+    std::unique_ptr<detail::MemberFunctionFactory<EvaluateMemberFunctionType> > m_EvaluateMemberFactory;
 
     InterpolatorEnum  m_Interpolator;
     Transform  m_InitialTransform;
@@ -747,6 +769,7 @@ namespace simple
     double m_OptimizerLineSearchAccuracy;
 
 
+    std::vector<unsigned int> m_TransformBSplineScaleFactors;
 
     std::vector<double> m_OptimizerWeights;
 

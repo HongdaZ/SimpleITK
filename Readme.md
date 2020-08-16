@@ -1,11 +1,10 @@
 SimpleITK
 =========
 
-|  | CircleCI | ReadTheDocs |
-|:-------:|:---------:|:-------------:|
-| release | [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/release.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/release) | [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=release)](http://simpleitk.readthedocs.io/en/release/) |
-| master | [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/master.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/master) | [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=master)](http://simpleitk.readthedocs.io/en/master/) |
-| next | [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/next.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/next) | [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=next)](http://simpleitk.readthedocs.io/en/next/)  |
+|  | CircleCI | ReadTheDocs | AzurePipelines |
+|:-------:|:---------:|:-------------:|:-------------:|
+| release | [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/release.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/release) | [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=release)](http://simpleitk.readthedocs.io/en/release/) | [![Build Status](https://dev.azure.com/SimpleITK-DevOps/SimpleITK/_apis/build/status/SimpleITK.SimpleITK?branchName=release)](https://dev.azure.com/SimpleITK-DevOps/SimpleITK/_build/latest?definitionId=2&branchName=release) |
+| master | [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/master.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/master) | [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=master)](http://simpleitk.readthedocs.io/en/master/) | [![Build Status](https://dev.azure.com/SimpleITK-DevOps/SimpleITK/_apis/build/status/SimpleITK.SimpleITK?branchName=master)](https://dev.azure.com/SimpleITK-DevOps/SimpleITK/_build/latest?definitionId=2&branchName=master) |
 
 
 SimpleITK is an image analysis toolkit with a large number of components supporting general filtering operations, image segmentation and registration. It is built on top of the Insight Segmentation and Registration Toolkit [ITK](https://www.itk.org) with the intent of providing a simplified interface to ITK. SimpleITK itself is written in C++ but is available for a large number of programming languages. Currently these include:
@@ -21,9 +20,26 @@ SimpleITK is an image analysis toolkit with a large number of components support
 
 Wrapping of the C++ code is accomplished through [SWIG](http://www.swig.org), in principle, any language wrapped by SWIG should be applicable to SimpleITK.
 
-Unlike ITK's support of n-dimensional spatio-temporal images, SimpleITK supports 2D, 3D and optionally 3D+time. The dimensionality refers to spatio-temporal dimensions, the voxels can be n-dimensional vectors.
+Unlike ITK's support of n-dimensional spatio-temporal images, SimpleITK supports 2D, 3D and 4D images. The dimensionality refers to spatio-temporal dimensions, the voxels can be n-dimensional vectors.
 
-SimpleITK is licensed under the [Apache License](http://www.opensource.org/licenses/apache2.0.php) in the [same way as ITK](https://www.itk.org/Wiki/ITK_Release_4/Licensing).
+SimpleITK is licensed under the [Apache License](http://www.opensource.org/licenses/apache2.0.php).
+
+Acknowledgments
+--------------
+SimpleITK development has been supported by:
+
+* The Intramural Research Program of the National Institutes of Health, National Institute of Allergy and Infectious Diseases.
+
+* The US National Library of Medicine under the American Recovery and Reinvestment Act (ARRA) and under the Intramural Research Program of the U.S. National Institutes of Health.
+
+* The Insight Software Consortium and the ITK user and developer communities.
+
+
+License and Copyright
+---------------------
+
+The SimpleITK project  is part of the [Insight Software Consortium](https://www.insightsoftwareconsortium.org/)(ISC) a non-profit educational consortium dedicated to promoting and maintaining open-source, freely available software for bio-medical image analysis. The copyright is held by [NumFOCUS](https://numfocus.org/). The SimpleITK software is distributed under the [Apache License 2.0](https://github.com/SimpleITK/SimpleITK/blob/master/LICENSE).
+
 
 How to Cite
 --------
@@ -32,7 +48,7 @@ If you found SimpleITK useful in your research, support our efforts by citing
 the relevant publication(s):
 
 R. Beare, B. C. Lowekamp, Z. Yaniv, "Image Segmentation, Registration and
-Characterization in R with SimpleITK", *    J Stat Softw*, 86(8), https://doi.org/10.18637/jss.v086.i08, 2018.
+Characterization in R with SimpleITK", *J Stat Softw*, 86(8), https://doi.org/10.18637/jss.v086.i08, 2018.
 
 Z. Yaniv, B. C. Lowekamp, H. J. Johnson, R. Beare, "SimpleITK Image-Analysis Notebooks: a Collaborative Environment for Education and Reproducible Research", *J Digit Imaging.*, 31(3): 290-303, https://doi.org/10.1007/s10278-017-0037-8, 2018.
 
@@ -41,11 +57,11 @@ B. C. Lowekamp, D. T. Chen, L. Ibáñez, D. Blezek, "The Design of SimpleITK", *
 Documentation
 -------------
 With massive libraries like SimpleITK, good documentation is a must. The documentation for SimpleITK is split up into multiple levels:
-1. [API Documentation](https://itk.org/SimpleITKDoxygen/html/) - This contains class and function documentation. The descriptions for functions and classes are primarily borrowed from the original ITK classes.
-2. [SimpleITK Documentation](http://simpleitk.readthedocs.io/en/next/) - This contains higher-level guides, installing toolkit's binary distributions, building the toolkit as well as examples specific to SimpleITK. This documentation will be valid for each language that SimpleITK supports. The examples will also include code in each language.
-    * [SimpleITK Wiki](https://itk.org/Wiki/SimpleITK) - This is the old SimpleITK documentation page which was replaced by ReadTheDocs. The information may be outdated.
-3. Notebooks Repositories - This documentation is similar to the SimpleITK documentation except it contains examples on how to utilize **multiple** classes in SimpleITK to facilitate solving a broader image processing problem.
-    * [Python/Jupyter Notebook](http://insightsoftwareconsortium.github.io/SimpleITK-Notebooks/)
+1. [API Documentation](https://simpleitk.org/doxygen/latest/html/) - This contains class and function documentation. The descriptions for functions and classes are primarily borrowed from the original ITK C++ classes.
+2. [SimpleITK Documentation](http://simpleitk.readthedocs.io/en/master/) - This site contains high-level guides (fundamental SimpleITK concepts, common conventions, etc.), details with respect to the toolkit's binary distributions, instructions for building the toolkit, as well as SimpleITK examples in all supported programming languages. [This site replaced the
+[SimpleITK Wiki](https://itk.org/Wiki/SimpleITK)  which is mostly of interest for historical reasons.]
+3. [Juypyter Notebook Repository](http://insightsoftwareconsortium.github.io/SimpleITK-Notebooks/) - This repository contains a collection of Jupyter Notebooks illustrating the use of SimpleITK for educational and research activities. The notebooks demonstrate the use of SimpleITK for interactive image analysis using the Python and R programming languages. Recommended reading, if you are starting with SimpleITK.
+
 
 Support
 -------

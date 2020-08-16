@@ -23,6 +23,7 @@ if(NOT DEFINED Module_SimpleITKFilters)
   set(Module_SimpleITKFilters ON)
 endif()
 
+set(Module_SimpleITKFilters_GIT_TAG ce51d77771a54e7e0791fadb15e50dc38cbd8358 )
 
 get_cmake_property( _varNames VARIABLES )
 
@@ -31,7 +32,9 @@ foreach (_varName ${_varNames})
       OR _varName MATCHES "^ITKV3"
       OR _varName MATCHES "^ITKV4"
       OR _varName MATCHES "FFTW"
-      OR _varName MATCHES "^Module_")
+      OR _varName MATCHES "^GDCM_"
+      OR _varName MATCHES "^Module_"
+      OR _varName STREQUAL "TBB_DIR")
     message( STATUS "Passing variable \"${_varName}=${${_varName}}\" to ITK external project.")
     list(APPEND ITK_VARS ${_varName})
   endif()
@@ -48,12 +51,12 @@ VariableListToArgs( ITK_VARS  ep_itk_args )
 set(proj ITK)  ## Use ITK convention of calling it ITK
 
 
-set(ITK_GIT_REPOSITORY "${git_protocol}://itk.org/ITK.git" CACHE STRING "URL of ITK Git repository")
+set(ITK_GIT_REPOSITORY "${git_protocol}://github.com/InsightSoftwareConsortium/ITK.git" CACHE STRING "URL of ITK Git repository")
 mark_as_advanced(ITK_GIT_REPOSITORY)
 sitk_legacy_naming(ITK_GIT_REPOSITORY ITK_REPOSITORY)
 
-set(ITK_GIT_TAG "v4.13.1" CACHE
-  STRING "Tag in ITK git repo") # release-4.13.1
+set(_DEFAULT_ITK_GIT_TAG "6eb2bb0005da1d32065dd91b44b3796d44a84f0f")
+set(ITK_GIT_TAG "${_DEFAULT_ITK_GIT_TAG}" CACHE STRING "Tag in ITK git repo")
 mark_as_advanced(ITK_GIT_TAG)
 set(ITK_TAG_COMMAND GIT_TAG "${ITK_GIT_TAG}")
 
@@ -73,6 +76,12 @@ else()
     "-DITK_TEMPLATE_VISIBILITY_DEFAULT:BOOL=OFF" )
 endif()
 
+
+if( ITK_GIT_TAG STREQUAL _DEFAULT_ITK_GIT_TAG )
+  # Unable to use ITK_LEGACY_REMOVE due to change in the enum types.
+  # list( APPEND ep_itk_args "-DITK_LEGACY_REMOVE:BOOL=ON" )
+endif()
+
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${proj}-build/CMakeCacheInit.txt" "${ep_itk_cache}\n${ep_common_cache}" )
 
 ExternalProject_Add(${proj}
@@ -85,7 +94,6 @@ ExternalProject_Add(${proj}
   CMAKE_ARGS
   --no-warn-unused-cli
   -C "${CMAKE_CURRENT_BINARY_DIR}/${proj}-build/CMakeCacheInit.txt"
-  -DITK_LEGACY_REMOVE:BOOL=ON
   ${ep_itk_args}
   ${ep_common_args}
   -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON

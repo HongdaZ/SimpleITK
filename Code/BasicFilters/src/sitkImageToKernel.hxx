@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -34,20 +34,20 @@ namespace simple {
  *
  */
 template<typename TImageType>
-nsstd::auto_ptr< ImageKernelOperator< typename TImageType::PixelType, TImageType::ImageDimension > >
+std::unique_ptr< ImageKernelOperator< typename TImageType::PixelType, TImageType::ImageDimension > >
 CreateOperatorFromImage( const TImageType * image )
 {
-typedef typename TImageType::PixelType KernelImagePixelType;
-typedef ImageKernelOperator< KernelImagePixelType, TImageType::ImageDimension > KernelType;
-typedef nsstd::auto_ptr<KernelType> KernelPointerType;
+using KernelImagePixelType = typename TImageType::PixelType;
+using KernelType = ImageKernelOperator< KernelImagePixelType, TImageType::ImageDimension >;
+using KernelPointerType = std::unique_ptr<KernelType>;
 
-typedef typename KernelType::SizeType KernelSizeType;
+using KernelSizeType = typename KernelType::SizeType;
 
 KernelPointerType kernelOperator( new KernelType() );
 
 bool kernelNeedsPadding = false;
 
-typedef itk::ConstantPadImageFilter<TImageType,TImageType> PadImageFilter;
+using PadImageFilter = itk::ConstantPadImageFilter<TImageType,TImageType>;
 typename PadImageFilter::Pointer padFilter = PadImageFilter::New();
 padFilter->SetConstant( NumericTraits< KernelImagePixelType >::ZeroValue() );
 typename TImageType::SizeType padSize = image->GetLargestPossibleRegion().GetSize();

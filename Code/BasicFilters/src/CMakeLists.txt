@@ -44,6 +44,7 @@ function(add_filter_library library_name src_list_var itk_module_list_var)
       ${SimpleITK_PUBLIC_COMPILE_OPTIONS}
     PRIVATE
       ${SimpleITK_PRIVATE_COMPILE_OPTIONS} )
+  target_compile_features( ${library_name} PUBLIC cxx_std_11 )
 
   add_dependencies ( ${library_name} BasicFiltersSourceCode )
 
@@ -84,6 +85,7 @@ target_compile_options( SimpleITKBasicFilters0
     ${SimpleITK_PUBLIC_COMPILE_OPTIONS}
   PRIVATE
     ${SimpleITK_PRIVATE_COMPILE_OPTIONS} )
+target_compile_features( SimpleITKBasicFilters0 PUBLIC cxx_std_11 )
 sitk_install_exported_target( SimpleITKBasicFilters0 )
 
 # append this new library to the globally cached list
@@ -99,12 +101,18 @@ list(APPEND SimpleITKBasicFiltersGeneratedSource_ITKCommon
   sitkCastImageFilter-3l.cxx
   sitkCastImageFilter-3v.cxx
   sitkCastImageFilter.cxx
+  sitkExtractImageFilter.cxx
   sitkHashImageFilter.cxx )
 set(SimpleITKBasicFiltersGeneratedSource_ITKCommon ${SimpleITKBasicFiltersGeneratedSource_ITKCommon} CACHE INTERNAL "")
 
 list(APPEND SimpleITKBasicFiltersGeneratedSource_ITKTransform
   sitkBSplineTransformInitializerFilter.cxx )
 set(SimpleITKBasicFiltersGeneratedSource_ITKTransform ${SimpleITKBasicFiltersGeneratedSource_ITKTransform} CACHE INTERNAL "")
+
+list(APPEND SimpleITKBasicFiltersGeneratedSource_SimpleITKFilters
+  sitkDICOMOrientImageFilter_Support.cxx
+  sitkPasteImageFilter.cxx)
+set(SimpleITKBasicFiltersGeneratedSource_SimpleITKFilters ${SimpleITKBasicFiltersGeneratedSource_SimpleITKFilters} CACHE INTERNAL "")
 
 list(APPEND SimpleITKBasicFiltersGeneratedSource_ITKRegistrationCommon
   sitkCenteredTransformInitializerFilter.cxx

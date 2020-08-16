@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ class SITKCommon_EXPORT Euler2DTransform
   : public Transform
 {
 public:
-  typedef Euler2DTransform Self;
-  typedef Transform        Superclass;
+  using Self = Euler2DTransform;
+  using Superclass = Transform;
 
-  virtual ~Euler2DTransform();
+  ~Euler2DTransform() override;
 
   // construct identity
   Euler2DTransform();
@@ -55,7 +55,7 @@ public:
   Euler2DTransform &operator=( const Euler2DTransform & );
 
   /** Name of this class */
-  std::string GetName() const { return std::string ("Euler2DTransform"); }
+  std::string GetName() const override { return std::string ("Euler2DTransform"); }
 
 /** fixed parameter */
   SITK_RETURN_SELF_TYPE_HEADER SetCenter(const std::vector<double> &params);
@@ -74,25 +74,23 @@ public:
 
 protected:
 
-  virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
+  void SetPimpleTransform( PimpleTransformBase *pimpleTransform ) override;
 
 private:
-
-  using Superclass::AddTransform;
 
   void InternalInitialization(itk::TransformBase *transform);
 
   template <typename TransformType>
     void InternalInitialization(TransformType *transform);
 
-  nsstd::function<void(const std::vector<double>&)> m_pfSetCenter;
-  nsstd::function<std::vector<double>()> m_pfGetCenter;
-  nsstd::function<void(double)> m_pfSetAngle;
-  nsstd::function<double()> m_pfGetAngle;
-  nsstd::function<void(const std::vector<double>&)> m_pfSetTranslation;
-  nsstd::function<std::vector<double>()> m_pfGetTranslation;
-  nsstd::function<std::vector<double>()> m_pfGetMatrix;
-  nsstd::function<void(const std::vector<double>&, double)> m_pfSetMatrix;
+  std::function<void(const std::vector<double>&)> m_pfSetCenter;
+  std::function<std::vector<double>()> m_pfGetCenter;
+  std::function<void(double)> m_pfSetAngle;
+  std::function<double()> m_pfGetAngle;
+  std::function<void(const std::vector<double>&)> m_pfSetTranslation;
+  std::function<std::vector<double>()> m_pfGetTranslation;
+  std::function<std::vector<double>()> m_pfGetMatrix;
+  std::function<void(const std::vector<double>&, double)> m_pfSetMatrix;
 
 };
 

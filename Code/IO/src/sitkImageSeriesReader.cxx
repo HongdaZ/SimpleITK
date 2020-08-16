@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 *  limitations under the License.
 *
 *=========================================================================*/
-#ifdef _MFC_VER
+#ifdef _MSC_VER
 #pragma warning(disable:4996)
 #endif
 
@@ -30,10 +30,15 @@
 namespace itk {
   namespace simple {
 
-  Image ReadImage ( const std::vector<std::string> &filenames, PixelIDValueEnum outputPixelType )
+  Image ReadImage ( const std::vector<std::string> &filenames,
+                    PixelIDValueEnum outputPixelType,
+                    const std::string &imageIO )
     {
     ImageSeriesReader reader;
-    return reader.SetFileNames ( filenames ).SetOutputPixelType(outputPixelType).Execute();
+    reader.SetFileNames(filenames);
+    reader.SetOutputPixelType(outputPixelType);
+    reader.SetImageIO(imageIO);
+    return reader.Execute();
     }
 
 
@@ -68,22 +73,21 @@ namespace itk {
 
   ImageSeriesReader::ImageSeriesReader()
     :
-    m_Filter(SITK_NULLPTR),
+    m_Filter(nullptr),
     m_MetaDataDictionaryArrayUpdate(false)
     {
 
     // list of pixel types supported
-    typedef NonLabelPixelIDTypeList PixelIDTypeList;
+    using PixelIDTypeList = NonLabelPixelIDTypeList;
 
     this->m_MemberFactory.reset( new detail::MemberFunctionFactory<MemberFunctionType>( this ) );
 
-    this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 3 > ();
-    this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2 > ();
+    this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2, SITK_MAX_DIMENSION > ();
     }
 
   ImageSeriesReader::~ImageSeriesReader()
   {
-  if (this->m_Filter != SITK_NULLPTR)
+  if (this->m_Filter != nullptr)
     {
       m_Filter->UnRegister();
     }
@@ -153,7 +157,7 @@ namespace itk {
         }
       }
 
-    if ( dimension != 2 && dimension != 3 )
+    if ( dimension < 2 || dimension > SITK_MAX_DIMENSION )
       {
       sitkExceptionMacro( "The file in the series have unsupported " << dimension - 1 << " dimensions." );
       }
@@ -174,13 +178,13 @@ namespace itk {
   ImageSeriesReader::ExecuteInternal( itk::ImageIOBase* imageio )
     {
 
-    typedef TImageType                        ImageType;
-    typedef itk::ImageSeriesReader<ImageType> Reader;
+    using ImageType = TImageType;
+    using Reader = itk::ImageSeriesReader<ImageType>;
 
     // if the IsInstantiated is correctly implemented this should
     // not occur
     assert( ImageTypeToPixelIDValue<ImageType>::Result != (int)sitkUnknown );
-    assert( imageio != SITK_NULLPTR );
+    assert( imageio != nullptr );
     typename Reader::Pointer reader = Reader::New();
     reader->SetImageIO( imageio );
     reader->SetFileNames( this->m_FileNames );
@@ -188,13 +192,13 @@ namespace itk {
     reader->SetMetaDataDictionaryArrayUpdate(m_MetaDataDictionaryArrayUpdate);
 
     // release the old filter ( and output data )
-    if ( this->m_Filter != SITK_NULLPTR)
+    if ( this->m_Filter != nullptr)
       {
-      this->m_pfGetMetaDataKeys = SITK_NULLPTR;
-      this->m_pfHasMetaDataKey = SITK_NULLPTR;
-      this->m_pfGetMetaData =  SITK_NULLPTR;
+      this->m_pfGetMetaDataKeys = nullptr;
+      this->m_pfHasMetaDataKey = nullptr;
+      this->m_pfGetMetaData =  nullptr;
       this->m_Filter->UnRegister();
-      this->m_Filter = SITK_NULLPTR;
+      this->m_Filter = nullptr;
       }
 
 
@@ -204,9 +208,9 @@ namespace itk {
       {
       this->m_Filter = reader;
       this->m_Filter->Register();
-      this->m_pfGetMetaDataKeys = nsstd::bind(&GetMetaDataKeysCustomCast<Reader>::CustomCast, reader.GetPointer(), nsstd::placeholders::_1 );
-      this->m_pfHasMetaDataKey = nsstd::bind(&HasMetaDataKeyCustomCast<Reader>::CustomCast, reader.GetPointer(), nsstd::placeholders::_1, nsstd::placeholders::_2 );
-      this->m_pfGetMetaData = nsstd::bind(&GetMetaDataCustomCast<Reader>::CustomCast, reader.GetPointer(), nsstd::placeholders::_1, nsstd::placeholders::_2 );
+      this->m_pfGetMetaDataKeys = std::bind(&GetMetaDataKeysCustomCast<Reader>::CustomCast, reader.GetPointer(), std::placeholders::_1 );
+      this->m_pfHasMetaDataKey = std::bind(&HasMetaDataKeyCustomCast<Reader>::CustomCast, reader.GetPointer(), std::placeholders::_1, std::placeholders::_2 );
+      this->m_pfGetMetaData = std::bind(&GetMetaDataCustomCast<Reader>::CustomCast, reader.GetPointer(), std::placeholders::_1, std::placeholders::_2 );
       }
 
     reader->Update();

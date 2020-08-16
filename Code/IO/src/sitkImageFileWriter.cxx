@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -27,27 +27,24 @@
 namespace itk {
 namespace simple {
 
-void WriteImage ( const Image& image, const std::string &inFileName, bool useCompression )
+void WriteImage ( const Image& image, const std::string &inFileName, bool useCompression, int compressionLevel )
 {
   ImageFileWriter writer;
-  writer.Execute ( image, inFileName, useCompression );
+  writer.Execute ( image, inFileName, useCompression, compressionLevel );
 }
 
 
-ImageFileWriter::~ImageFileWriter()
-{
-}
+ImageFileWriter::~ImageFileWriter() = default;
 
 ImageFileWriter::ImageFileWriter()
 {
   this->m_UseCompression = false;
   this->m_KeepOriginalImageUID = false;
+  this->m_CompressionLevel = -1;
 
   this->m_MemberFactory.reset( new detail::MemberFunctionFactory<MemberFunctionType>( this ) );
 
-  this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 4 > ();
-  this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 3 > ();
-  this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2 > ();
+  this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 1, SITK_MAX_DIMENSION > ();
 
 }
 
@@ -60,6 +57,14 @@ std::string ImageFileWriter::ToString() const
 
   out << "  UseCompression: ";
   this->ToStringHelper(out, this->m_UseCompression);
+  out << std::endl;
+
+  out << "  CompressionLevel: ";
+  this->ToStringHelper( out, this->m_CompressionLevel);
+  out << std::endl;
+
+  out << "  Compressor: ";
+  this->ToStringHelper( out, this->m_Compressor);
   out << std::endl;
 
   out << "  KeepOriginalImageUID: ";
@@ -93,10 +98,37 @@ ImageFileWriter::SetUseCompression( bool UseCompression )
   return *this;
 }
 
-bool ImageFileWriter::GetUseCompression( void ) const
+bool ImageFileWriter::GetUseCompression( ) const
 {
   return this->m_UseCompression;
 }
+
+ImageFileWriter::Self &
+ImageFileWriter::SetCompressionLevel(int CompressionLevel)
+{
+  this->m_CompressionLevel = CompressionLevel;
+  return *this;
+}
+
+int
+ImageFileWriter::GetCompressionLevel() const
+{
+  return m_CompressionLevel;
+}
+
+ImageFileWriter::Self &
+ImageFileWriter::SetCompressor(const std::string &Compressor)
+{
+  this->m_Compressor = Compressor;
+  return *this;
+}
+
+std::string
+ImageFileWriter::GetCompressor()
+{
+  return m_Compressor;
+}
+
 
 ImageFileWriter::Self&
 ImageFileWriter::SetKeepOriginalImageUID( bool KeepOriginalImageUID )
@@ -105,7 +137,7 @@ ImageFileWriter::SetKeepOriginalImageUID( bool KeepOriginalImageUID )
   return *this;
 }
 
-bool ImageFileWriter::GetKeepOriginalImageUID( void ) const
+bool ImageFileWriter::GetKeepOriginalImageUID( ) const
 {
   return this->m_KeepOriginalImageUID;
 }
@@ -121,10 +153,11 @@ std::string ImageFileWriter::GetFileName() const
   return this->m_FileName;
 }
 
-ImageFileWriter& ImageFileWriter::Execute ( const Image& image, const std::string &inFileName, bool useCompression )
+ImageFileWriter& ImageFileWriter::Execute ( const Image& image, const std::string &inFileName, bool useCompression, int compressionLevel )
 {
   this->SetFileName( inFileName );
   this->SetUseCompression( useCompression );
+  this->SetCompressionLevel( compressionLevel );
   return this->Execute( image );
 }
 
@@ -148,7 +181,7 @@ ImageFileWriter
 
 std::string
 ImageFileWriter
-::GetImageIO(void) const
+::GetImageIO() const
 {
   return this->m_ImageIOName;
 }
@@ -159,9 +192,9 @@ ImageFileWriter
 ::GetImageIOBase(const std::string &fileName)
 {
   itk::ImageIOBase::Pointer iobase;
-  if (this->m_ImageIOName == "")
+  if (this->m_ImageIOName.empty())
     {
-    iobase = itk::ImageIOFactory::CreateImageIO( fileName.c_str(), itk::ImageIOFactory::WriteMode);
+    iobase = itk::ImageIOFactory::CreateImageIO( fileName.c_str(), itk::ImageIOFactory::FileModeEnum::WriteMode);
     }
   else
     {
@@ -189,13 +222,19 @@ ImageFileWriter& ImageFileWriter::ExecuteInternal( const Image& inImage )
   typename InputImageType::ConstPointer image =
     dynamic_cast <const InputImageType*> ( inImage.GetITKBase() );
 
-  typedef itk::ImageFileWriter<InputImageType> Writer;
+  using Writer = itk::ImageFileWriter<InputImageType>;
   typename Writer::Pointer writer = Writer::New();
   writer->SetUseCompression( this->m_UseCompression );
+  writer->SetCompressionLevel( this->m_CompressionLevel );
   writer->SetFileName ( this->m_FileName.c_str() );
   writer->SetInput ( image );
 
   itk::ImageIOBase::Pointer imageio = this->GetImageIOBase( this->m_FileName );
+
+  if (!this->m_Compressor.empty())
+  {
+  imageio->SetCompressor(this->m_Compressor);
+  }
 
   sitkDebugMacro( "ImageIO: " << imageio->GetNameOfClass() );
 
