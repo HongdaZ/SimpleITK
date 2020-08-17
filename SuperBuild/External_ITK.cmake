@@ -48,11 +48,11 @@ VariableListToArgs( ITK_VARS  ep_itk_args )
 set(proj ITK)  ## Use ITK convention of calling it ITK
 
 
-set(ITK_GIT_REPOSITORY "${git_protocol}://github.com/InsightSoftwareConsortium/ITK.git" CACHE STRING "URL of ITK Git repository")
+set(ITK_GIT_REPOSITORY "${git_protocol}://github.com/HongdaZ/ITK.git" CACHE STRING "URL of ITK Git repository")
 mark_as_advanced(ITK_GIT_REPOSITORY)
 sitk_legacy_naming(ITK_GIT_REPOSITORY ITK_REPOSITORY)
 
-set(_DEFAULT_ITK_GIT_TAG "f7ac08b4c96cb0cc5ecc6c2d5ef9fcbd17f613f8") # after 4.13.2 along release-4.13
+set(_DEFAULT_ITK_GIT_TAG "350304487ef86e22defde269a7ed35a95ec039fb") # after 4.13.2 along release-4.13
 set(ITK_GIT_TAG "${_DEFAULT_ITK_GIT_TAG}" CACHE STRING "Tag in ITK git repo")
 mark_as_advanced(ITK_GIT_TAG)
 set(ITK_TAG_COMMAND GIT_TAG "${ITK_GIT_TAG}")
