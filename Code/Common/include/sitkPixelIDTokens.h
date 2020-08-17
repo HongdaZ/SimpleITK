@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -20,30 +20,30 @@
 
 #include "sitkConfigure.h"
 #include "sitkPixelIDValues.h"
-#include "nsstd/type_traits.h"
 
+#include <type_traits>
 
 namespace itk
 {
 namespace simple
 {
 
-typedef nsstd::true_type  TrueType;
-typedef nsstd::false_type FalseType;
+using TrueType = std::true_type;
+using FalseType = std::false_type;
 
 template <typename TPixelIDType>
 struct IsBasic
 {
   static const bool                      Value = FalseType::value;
-  typedef typename FalseType::value_type ValueType;
-  typedef typename FalseType::type       Type;
+  using ValueType = typename FalseType::value_type;
+  using Type = typename FalseType::type;
 };
 template <typename TPixelType>
 struct IsBasic< BasicPixelID<TPixelType> >
 {
   static const bool                     Value = TrueType::value;
-  typedef typename TrueType::value_type ValueType;
-  typedef typename TrueType::type       Type;
+  using ValueType = typename TrueType::value_type;
+  using Type = typename TrueType::type;
 };
 template <typename TPixelType, unsigned int VImageDimension>
 struct IsBasic< itk::Image< TPixelType, VImageDimension> >
@@ -55,15 +55,15 @@ template <typename TPixelIDType>
 struct IsVector
 {
   static const bool                      Value = FalseType::value;
-  typedef typename FalseType::value_type ValueType;
-  typedef typename FalseType::type       Type;
+  using ValueType = typename FalseType::value_type;
+  using Type = typename FalseType::type;
 };
 template <typename TPixelType>
 struct IsVector< VectorPixelID<TPixelType> >
 {
   static const bool                     Value = TrueType::value;
-  typedef typename TrueType::value_type ValueType;
-  typedef typename TrueType::type       Type;
+  using ValueType = typename TrueType::value_type;
+  using Type = typename TrueType::type;
 };
 template <typename TPixelType, unsigned int VImageDimension>
 struct IsVector< itk::VectorImage< TPixelType, VImageDimension> >
@@ -75,15 +75,15 @@ template <typename TPixelIDType>
 struct IsLabel
 {
   static const bool                      Value = FalseType::value;
-  typedef typename FalseType::value_type ValueType;
-  typedef typename FalseType::type       Type;
+  using ValueType = typename FalseType::value_type;
+  using Type = typename FalseType::type;
 };
 template <typename TPixelType>
 struct IsLabel< LabelPixelID<TPixelType> >
 {
   static const bool                     Value = TrueType::value;
-  typedef typename TrueType::value_type ValueType;
-  typedef typename TrueType::type       Type;
+  using ValueType = typename TrueType::value_type;
+  using Type = typename TrueType::type;
 };
 template <typename TLabelType, unsigned int VImageDimension>
 struct IsLabel< itk::LabelMap<  itk::LabelObject< TLabelType, VImageDimension > > >
@@ -95,13 +95,10 @@ template <typename TPixelIDType, unsigned int VImageDimension =0>
 struct IsInstantiated
 {
   static const bool Value = ((int)PixelIDToPixelIDValue<TPixelIDType>::Result != (int)sitkUnknown)
-    &&  ( (VImageDimension == 0)||(VImageDimension == 2) || (VImageDimension == 3)
-#ifdef SITK_4D_IMAGES
-          || (VImageDimension == 4)
-#endif
-      );
-  typedef typename nsstd::integral_constant<bool, Value>::value_type ValueType;
-  typedef typename nsstd::integral_constant<bool, Value>::type       Type;
+    &&  ( (VImageDimension == 0) ||
+          (VImageDimension >= 2 && VImageDimension <= SITK_MAX_DIMENSION));
+  using ValueType = typename std::integral_constant<bool, Value>::value_type;
+  using Type = typename std::integral_constant<bool, Value>::type;
 };
           template <typename TPixelType, unsigned int VImageDimension >
 struct IsInstantiated< itk::Image< TPixelType, VImageDimension>, 0 >

@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -35,13 +35,13 @@ public:
   std::vector<double> scales;
   std::string toString;
 
-  virtual void Execute( )
+  void Execute( ) override
     {
       // use sitk's output operator for std::vector etc..
       using itk::simple::operator<<;
 
       // stash the stream state
-      std::ios  state(NULL);
+      std::ios  state(nullptr);
       state.copyfmt(std::cout);
 
       if ( m_Method.GetOptimizerIteration() == 0 )
@@ -85,7 +85,7 @@ public:
     :m_tx(tx), m_Method(m)
     {}
 
-  virtual void Execute( )
+  void Execute( ) override
     {
       // use sitk's output operator for std::vector etc..
       using itk::simple::operator<<;
@@ -183,7 +183,7 @@ public:
     }
 
 protected:
-  virtual void SetUp()
+  void SetUp() override
   {
     fixedBlobs = MakeDualGaussianBlobs(v2(64,64), v2(192,192), std::vector<unsigned int>(2,256));
     movingBlobs = MakeDualGaussianBlobs(v2(54,74), v2(192,192), std::vector<unsigned int>(2,256));

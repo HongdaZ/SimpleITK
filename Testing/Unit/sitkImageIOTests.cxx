@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ TEST(IO,ImageFileReader) {
   reader.SetLoadPrivateTags(false);
   EXPECT_EQ( reader.GetLoadPrivateTags(), false );
 
-  typedef std::map<std::string,std::string> MapType;
+  using MapType = std::map<std::string,std::string>;
   MapType mapping;
 
   // Configure the mapping between filename and MD5 hash
@@ -68,7 +68,7 @@ TEST(IO,ImageFileReader) {
     reader.SetFileName ( dataFinder.GetFile ( it->first ) );
     EXPECT_EQ ( reader.GetFileName(), dataFinder.GetFile ( it->first ) );
     sitk::Image image = reader.Execute();
-    ASSERT_TRUE ( image.GetITKBase() != NULL );
+    ASSERT_NE ( image.GetITKBase(), nullptr );
     hasher.SetHashFunction ( sitk::HashImageFilter::MD5 );
     EXPECT_EQ ( it->second, hasher.Execute ( image ) ) << " reading " << it->first;
     // Try the functional interface
@@ -126,7 +126,7 @@ TEST(IO, ReadWriteInt64){
   const char *extension_list[] = {"mha",
                                   "nii",
                                   "nrrd",
-                                  SITK_NULLPTR};
+                                  nullptr};
 
   for (unsigned int i = 0; extension_list[i]; ++i)
     {
@@ -199,6 +199,58 @@ TEST(IO,ImageFileWriter) {
 
 }
 
+TEST(IO,ImageFileWriter_Compression)
+{
+  namespace sitk = itk::simple;
+
+  sitk::Image generatedImage = sitk::Image(10, 10, sitk::sitkUInt8);
+
+  generatedImage = sitk::AdditiveGaussianNoise(generatedImage, 32.0, 0.0, 99u);
+  const std::string expectedHash = sitk::Hash(generatedImage);
+
+  std::string filename = dataFinder.GetOutputFile("IO.ImageFileWriter_Compression.nrrd");
+
+  sitk::ImageFileWriter writer;
+
+  EXPECT_EQ(writer.GetCompressor(), "");
+  EXPECT_EQ(writer.GetCompressionLevel(), -1);
+
+  writer.UseCompressionOn();
+
+  writer.SetFileName(filename);
+  writer.SetCompressor("does_not_exist");
+  writer.SetCompressionLevel(10);
+  EXPECT_NO_THROW(writer.Execute(generatedImage));
+  EXPECT_EQ(expectedHash, sitk::Hash(sitk::ReadImage(filename)));
+  EXPECT_EQ("does_not_exist", writer.GetCompressor());
+  EXPECT_EQ(10, writer.GetCompressionLevel());
+
+  writer.SetCompressor("gzip");
+  writer.SetCompressionLevel(9);
+  EXPECT_NO_THROW(writer.Execute(generatedImage));
+  EXPECT_EQ(expectedHash, sitk::Hash(sitk::ReadImage(filename)));
+
+  writer.SetCompressor("gzip");
+  writer.SetCompressionLevel(1);
+  EXPECT_NO_THROW(writer.Execute(generatedImage));
+  EXPECT_EQ(expectedHash, sitk::Hash(sitk::ReadImage(filename)));
+
+  filename = dataFinder.GetOutputFile("IO.ImageFileWriter_Compression.tiff");
+
+  writer.SetFileName(filename);
+
+  writer.SetCompressor("JPEG");
+  writer.SetCompressionLevel(50);
+  EXPECT_NO_THROW(writer.Execute(generatedImage));
+  // No hash comparison due to lossy compression
+  // EXPECT_EQ(expectedHash, sitk::Hash(sitk::ReadImage(filename)));
+
+  writer.SetCompressor("packbits");
+  writer.SetCompressionLevel(1);
+  EXPECT_NO_THROW(writer.Execute(generatedImage));
+  EXPECT_EQ(expectedHash, sitk::Hash(sitk::ReadImage(filename)));
+}
+
 TEST(IO,ReadWrite) {
   namespace sitk = itk::simple;
   sitk::HashImageFilter hasher;
@@ -233,7 +285,7 @@ TEST(IO,ReadWrite) {
 
 
   sitk::Image image = reader.SetFileName ( dataFinder.GetFile ( "Input/RA-Short.nrrd" ) ).Execute();
-  ASSERT_TRUE ( image.GetITKBase() != NULL );
+  ASSERT_NE ( image.GetITKBase(), nullptr );
   hasher.SetHashFunction ( sitk::HashImageFilter::MD5 );
   EXPECT_EQ ( md5, hasher.Execute ( image ) );
   hasher.SetHashFunction ( sitk::HashImageFilter::SHA1 );
@@ -254,7 +306,7 @@ TEST(IO,ReadWrite) {
   ASSERT_TRUE ( dataFinder.FileExists ( filename ) );
 
   image = reader.SetFileName ( filename ).Execute();
-  ASSERT_TRUE ( image.GetITKBase() != NULL );
+  ASSERT_NE ( image.GetITKBase(), nullptr );
 
   // Make sure we wrote and read the file correctly
   hasher.SetHashFunction ( sitk::HashImageFilter::MD5 );
@@ -268,7 +320,7 @@ TEST(IO,ReadWrite) {
   ASSERT_TRUE ( dataFinder.FileExists ( filename ) );
 
   image = reader.SetFileName ( filename ).Execute();
-  ASSERT_TRUE ( image.GetITKBase() != NULL );
+  ASSERT_NE ( image.GetITKBase(), nullptr );
 
   // Make sure we wrote and read the file correctly
   hasher.SetHashFunction ( sitk::HashImageFilter::MD5 );
@@ -284,7 +336,7 @@ TEST(IO,2DFormats) {
   itk::simple::ImageFileReader reader;
 
   itk::simple::Image image = reader.SetFileName ( dataFinder.GetFile ( "Input/RA-Slice-Short.png" ) ).Execute();
-  ASSERT_TRUE ( image.GetITKBase() != NULL );
+  ASSERT_NE ( image.GetITKBase(), nullptr );
   hasher.SetHashFunction ( itk::simple::HashImageFilter::SHA1 );
   EXPECT_EQ ( "bf0f7bae60b0322222e224941c31f37a981901aa", hasher.Execute ( image ) );
   ASSERT_EQ ( 2u, image.GetDimension() );
@@ -429,7 +481,7 @@ TEST(IO, DicomSeriesReader) {
   for (unsigned int i = 0; i <  image.GetSize()[2]; ++i)
     {
       std::vector<std::string> keys = reader.GetMetaDataKeys(0);
-      EXPECT_EQ( 93u, keys.size() );
+      EXPECT_EQ( 95u, keys.size() );
 
       for(unsigned int j = 0; j < keys.size(); ++j )
         {
@@ -454,6 +506,9 @@ TEST(IO, ImageSeriesWriter )
   EXPECT_TRUE(writer.GetUseCompression());
   writer.UseCompressionOff();
   EXPECT_FALSE(writer.GetUseCompression());
+
+  EXPECT_EQ(writer.GetCompressor(), "");
+  EXPECT_EQ(writer.GetCompressionLevel(), -1);
 
   EXPECT_NO_THROW ( writer.ToString() );
 
@@ -645,7 +700,7 @@ TEST(IO, ImageFileReader_SetImageIO )
   EXPECT_EQ ( "bf0f7bae60b0322222e224941c31f37a981901aa", hasher.Execute ( image ) );
 
 
-  ASSERT_TRUE ( image.GetITKBase() != NULL );
+  ASSERT_NE ( image.GetITKBase(), nullptr );
   EXPECT_EQ ( 2u, image.GetDimension() );
   EXPECT_EQ ( 64u, image.GetWidth() );
   EXPECT_EQ ( 64u, image.GetHeight() );
@@ -895,8 +950,18 @@ TEST(IO, ImageFileReader_5DExtract )
   EXPECT_VECTOR_DOUBLE_NEAR(reader.GetDirection(), direction_i5, 1e-8);
   EXPECT_VECTOR_NEAR(reader.GetSize(), v5(5.0, 5.0, 5.0, 5.0, 5.0), 1e-10);
 
-
-  EXPECT_ANY_THROW(reader.Execute());
+  if ( SITK_MAX_DIMENSION < 5 )
+    {
+    EXPECT_ANY_THROW(reader.Execute());
+    }
+  else
+    {
+    sitk::Image output;
+    EXPECT_NO_THROW(output = reader.Execute());
+    EXPECT_VECTOR_DOUBLE_NEAR(output.GetOrigin(), reader.GetOrigin(), 1e-10);
+    EXPECT_VECTOR_DOUBLE_NEAR(output.GetSpacing(), reader.GetSpacing(), 1e-10);
+    EXPECT_VECTOR_DOUBLE_NEAR(output.GetDirection(), reader.GetDirection(), 1e-8);
+    }
 
   std::vector<unsigned int> extractSize(5);
   std::vector<int> extractIndex(5, 0);

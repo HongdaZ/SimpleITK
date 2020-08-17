@@ -70,6 +70,15 @@
         {
           "name" : "OriginalNumberOfObjects",
           "value" : "2u"
+        },
+        {
+          "name" : "SizeOfObjectsInPhysicalUnits",
+          "dim_vec" : 1,
+          "value" : [
+            23061,
+            9085
+          ],
+          "tolerance" : 1e-23
         }
       ],
       "md5hash" : "58af064e929f08f9d5bacc8be44ed92e",
@@ -91,21 +100,72 @@
       "measurements_results" : [
         {
           "name" : "NumberOfObjects",
+          "value" : "3u"
+        },
+        {
+          "name" : "OriginalNumberOfObjects",
+          "value" : "3u"
+        },
+        {
+          "name" : "SizeOfObjectsInPhysicalUnits",
+          "dim_vec" : 1,
+          "value" : [
+            146,
+            126,
+            200
+          ],
+          "tolerance" : 1e-23
+        }
+      ],
+      "md5hash" : "0231da8387aa665ddff9c2645e71f213",
+      "inputs" : [
+        "Input/simple-label-d.png"
+      ]
+    },
+    {
+      "tag" : "no_sorting2",
+      "description" : "2D without size sorting",
+      "settings" : [
+        {
+          "parameter" : "SortByObjectSize",
+          "value" : "false",
+          "python_value" : "False",
+          "R_value" : "FALSE"
+        },
+        {
+          "parameter" : "MinimumObjectSize",
+          "type" : "uint64_t",
+          "value" : "140"
+        }
+      ],
+      "measurements_results" : [
+        {
+          "name" : "NumberOfObjects",
           "value" : "2u"
         },
         {
           "name" : "OriginalNumberOfObjects",
-          "value" : "2u"
+          "value" : "3u"
+        },
+        {
+          "name" : "SizeOfObjectsInPhysicalUnits",
+          "dim_vec" : 1,
+          "value" : [
+            146,
+            200
+          ],
+          "tolerance" : 1e-23
         }
       ],
-      "md5hash" : "c8485314800c21580cc125fb240ada6d",
+      "md5hash" : "4c81464832a0270041334abd744b94b0",
       "inputs" : [
-        "Input/2th_cthead1.png"
+        "Input/simple-label-d.png"
       ]
     }
   ],
   "briefdescription" : "Relabel the components in an image such that consecutive labels are used.",
   "detaileddescription" : "RelabelComponentImageFilter remaps the labels associated with the objects in an image (as from the output of ConnectedComponentImageFilter ) such that the label numbers are consecutive with no gaps between the label numbers used. By default, the relabeling will also sort the labels based on the size of the object: the largest object will have label #1, the second largest will have label #2, etc. If two labels have the same size their initial order is kept. The sorting by size can be disabled using SetSortByObjectSize.\n\nLabel #0 is assumed to be the background and is left unaltered by the relabeling.\n\nRelabelComponentImageFilter is typically used on the output of the ConnectedComponentImageFilter for those applications that want to extract the largest object or the \"k\" largest objects. Any particular object can be extracted from the relabeled output using a BinaryThresholdImageFilter . A group of objects can be extracted from the relabled output using a ThresholdImageFilter .\n\nOnce all the objects are relabeled, the application can query the number of objects and the size of each object. Object sizes are returned in a vector. The size of the background is not calculated. So the size of object #1 is GetSizeOfObjectsInPixels() [0], the size of object #2 is GetSizeOfObjectsInPixels() [1], etc.\n\nIf user sets a minimum object size, all objects with fewer pixels than the minimum will be discarded, so that the number of objects reported will be only those remaining. The GetOriginalNumberOfObjects method can be called to find out how many objects were present before the small ones were discarded.\n\nRelabelComponentImageFilter can be run as an \"in place\" filter, where it will overwrite its output. The default is run out of place (or generate a separate output). \"In place\" operation can be controlled via methods in the superclass, InPlaceImageFilter::InPlaceOn() and InPlaceImageFilter::InPlaceOff() .\n\n\\see ConnectedComponentImageFilter , BinaryThresholdImageFilter , ThresholdImageFilter",
   "itk_module" : "ITKConnectedComponents",
-  "itk_group" : "ConnectedComponents"
+  "itk_group" : "ConnectedComponents",
+  "in_place" : true
 }

@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -192,7 +192,7 @@ namespace itk
   static std::vector<std::string> ConvertCommand(std::string command, std::string app, std::string filename, std::string title="")
     {
 
-    if (title == "")
+    if (title.empty())
       {
       title = filename;
       }
@@ -213,7 +213,7 @@ namespace itk
         case '\'':
         case '\"':
           word.push_back(new_command[i]);
-          if (quoteStack.size())
+          if (!quoteStack.empty())
             {
             if (new_command[i] == quoteStack[quoteStack.size()-1])
               {
@@ -234,7 +234,7 @@ namespace itk
           break;
 
         case ' ':
-          if (quoteStack.size())
+          if (!quoteStack.empty())
             {
             // the space occurs inside a quote, so tack it onto the current word.
             word.push_back(new_command[i]);
@@ -297,7 +297,7 @@ namespace itk
 
   std::ostringstream tmp;
 
-  if ( name != "" )
+  if ( !name.empty() )
     {
     // remove whitespace
     name.erase(std::remove_if(name.begin(), name.end(), &::isspace), name.end());
@@ -379,25 +379,20 @@ namespace itk
 #ifdef _WIN32
 
   std::string ProgramFiles;
-  if ( itksys::SystemTools::GetEnv ( "PROGRAMFILES", ProgramFiles ) )
-    {
-    paths.push_back ( ProgramFiles + "\\" + directory + "\\");
-    }
+  std::vector<std::string> windirs = { "PROGRAMFILES", "PROGRAMFILES(x86)", "PROGRAMW6432",
+                                       "USERPROFILE" };
+  std::vector<std::string>::iterator it;
 
-  if ( itksys::SystemTools::GetEnv ( "PROGRAMFILES(x86)", ProgramFiles ) )
+  for (it=windirs.begin(); it!=windirs.end(); it++)
     {
-    paths.push_back ( ProgramFiles + "\\" + directory + "\\");
+      if ( itksys::SystemTools::GetEnv ( (*it), ProgramFiles ) )
+        {
+        paths.push_back ( ProgramFiles + "\\" + directory + "\\");
+        }
     }
-
-  if ( itksys::SystemTools::GetEnv ( "PROGRAMW6432", ProgramFiles ) )
-    {
-    paths.push_back ( ProgramFiles + "\\" + directory + "\\");
-    }
-
   if ( itksys::SystemTools::GetEnv ( "USERPROFILE", ProgramFiles ) )
     {
-    paths.push_back ( ProgramFiles + "\\" + directory + "\\");
-    paths.push_back ( ProgramFiles + "\\Desktop\\" + directory + "\\");
+    paths.push_back ( ProgramFiles + "\\DESKTOP\\" + directory + "\\");
     }
 
   // Find the executable
@@ -406,18 +401,21 @@ namespace itk
 #elif defined(__APPLE__)
 
   // Common places on the Mac to look
-  paths.push_back( "/Applications" );
-  paths.push_back( "/Applications/" + directory );
-  paths.push_back( "/Developer" );
-  paths.push_back( "/opt/" + directory );
-  paths.push_back( "/usr/local/" + directory );
+  paths = { "/Applications", "/Applications/" + directory,
+            "/Developer", "/opt/" + directory, "/usr/local/" + directory };
+  std::string homedir;
+  if ( itksys::SystemTools::GetEnv ( "HOME", homedir ) )
+    {
+    paths.push_back( homedir + "/Applications/" + directory );
+    }
+
 
   ExecutableName = itksys::SystemTools::FindDirectory( name.c_str(), paths );
 
 #else
 
   // linux and other systems
-  paths.push_back( "./" + directory );
+  paths = { "./" + directory };
   std::string homedir;
   if ( itksys::SystemTools::GetEnv ( "HOME", homedir ) )
     {

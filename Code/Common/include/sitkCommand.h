@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -50,14 +50,14 @@ public:
   Command();
 
   /** Destructor. */
-  virtual ~Command(void);
+  virtual ~Command();
 
   /** Set/Get Command Name */
   virtual std::string GetName() const { return this->m_Name; }
   virtual void SetName(const std::string &name) { this->m_Name = name; }
 
   /** The method that defines action to be taken by the command */
-  virtual void Execute(void);
+  virtual void Execute();
 
 protected:
 

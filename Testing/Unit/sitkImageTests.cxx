@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -37,21 +37,21 @@
 #include "itkImage.h"
 #include "itkVectorImage.h"
 #include "itkMetaDataObject.h"
+#include <type_traits>
 
 const double adir[] = {0.0, 0.0, 1.0,
                        -1.0, 0.0, 0.0,
                        0.0, -1.0, 0.0};
 
 using  itk::simple::InstantiatedPixelIDTypeList;
-namespace nsstd = itk::simple::nsstd;
 
 
 
 class Image : public ::testing::Test {
 public:
-  typedef nsstd::auto_ptr<itk::simple::Image> sitkAutoImagePointer;
+  using sitkAutoImagePointer = std::unique_ptr<itk::simple::Image>;
 
-  virtual void SetUp() {
+  void SetUp() override {
     itk::ImageBase<3>::IndexType index;
     itk::ImageBase<3>::SizeType size;
     itk::ImageBase<3>::RegionType region;
@@ -105,18 +105,18 @@ public:
 
   itk::ImageBase<3>::Pointer itkShortImage;
 
-  typedef itk::Image<short,3> ShortImageType;
+  using ShortImageType = itk::Image<short,3>;
   sitkAutoImagePointer shortImage;
 
-  typedef itk::Image<float,3> FloatImageType;
+  using FloatImageType = itk::Image<float,3>;
   sitkAutoImagePointer floatImage;
   FloatImageType::Pointer itkFloatImage;
 
-  typedef itk::VectorImage<float,3> FloatVectorImageType;
+  using FloatVectorImageType = itk::VectorImage<float,3>;
   sitkAutoImagePointer floatVectorImage;
   FloatVectorImageType::Pointer itkFloatVectorImage;
 
-  typedef itk::VectorImage<float,2> FloatVector2DImageType;
+  using FloatVector2DImageType = itk::VectorImage<float,2>;
   sitkAutoImagePointer floatVector2DImage;
   FloatVector2DImageType::Pointer itkFloatVector2DImage;
 
@@ -131,7 +131,7 @@ public:
 
 
 TEST_F(Image,Create) {
-  ASSERT_TRUE ( shortImage->GetITKBase() != NULL );
+  ASSERT_TRUE ( shortImage->GetITKBase() != nullptr );
   EXPECT_EQ ( shortImage->GetWidth(), itkShortImage->GetLargestPossibleRegion().GetSize()[0] ) << " Checking image width";
   EXPECT_EQ ( shortImage->GetHeight(), itkShortImage->GetLargestPossibleRegion().GetSize()[1] ) << " Checking image height";
   EXPECT_EQ ( shortImage->GetDepth(), itkShortImage->GetLargestPossibleRegion().GetSize()[2] ) << " Checking image depth";
@@ -282,7 +282,7 @@ TEST_F(Image,Constructors) {
 
   // check for error when incorrect number of dimensions are requested
   std::vector<unsigned int> s1d(1, 100);
-  std::vector<unsigned int> s5d(5, 100);
+  std::vector<unsigned int> s5d(SITK_MAX_DIMENSION+1, 100);
   ASSERT_ANY_THROW( itk::simple::Image( s1d, itk::simple::sitkVectorFloat64 ) );
   ASSERT_ANY_THROW( itk::simple::Image( s5d, itk::simple::sitkVectorFloat64 ) );
 
@@ -420,7 +420,7 @@ TEST_F(Image,Properties) {
   // SetDirection
   std::vector<double> vdir( adir, adir+9);
   shortImage->SetDirection( vdir );
-  for( unsigned int i = 0 ; i < 9; ++i )
+  for( unsigned int i = 0; i < 9; ++i )
     {
     EXPECT_EQ ( shortImage->GetDirection()[i], vdir[i] ) << " Checking Direction matrix at index " << i;
     }
@@ -461,44 +461,67 @@ TEST_F(Image, CopyInformation)
   EXPECT_EQ( img1.GetNumberOfPixels(), img2.GetNumberOfPixels() );
 }
 
+sitkClangDiagnosticPush();
+sitkClangWarningIgnore("-Wself-assign-overloaded");
 TEST_F(Image, CopyOnWrite)
 {
-  // test that a just constructed image only have 1 referecne
+  // test that a just constructed image only have 1 reference
   sitk::Image img( 10, 10, sitk::sitkInt16 );
   EXPECT_EQ(static_cast<const sitk::Image *>(&img)->GetITKBase()->GetReferenceCount(), 1 )
     << " Reference Count for just constructed Image";
+  EXPECT_TRUE(img.IsUnique());
 
   // use the image from the fixture to test some copy constructor
   EXPECT_EQ(static_cast<const sitk::Image *>(shortImage.get())->GetITKBase()->GetReferenceCount(), 2 )
     << " Reference Count for shared shortImage initial";
+  EXPECT_FALSE(shortImage->IsUnique());
   sitk::Image img0 = *shortImage;
   EXPECT_EQ(static_cast<const sitk::Image *>(shortImage.get())->GetITKBase()->GetReferenceCount(), 3 )
     << " Reference Count for shared shortImage copy";
+  EXPECT_FALSE(shortImage->IsUnique());
   sitk::Image imgCopy = img0;
   EXPECT_EQ(static_cast<const sitk::Image *>(shortImage.get())->GetITKBase()->GetReferenceCount(), 4 )
     << " Reference Count for shared shortImage second copy";
+  EXPECT_FALSE(shortImage->IsUnique());
 
   // check set origin for copy on write
   imgCopy.SetOrigin( std::vector<double>( 3, 2.123 ) );
   EXPECT_EQ(static_cast<const sitk::Image *>(&imgCopy)->GetITKBase()->GetReferenceCount(), 1 )
     << " Reference Count for copy after set origin";
+  EXPECT_TRUE(imgCopy.IsUnique());
   EXPECT_EQ(static_cast<const sitk::Image *>(&img0)->GetITKBase()->GetReferenceCount(), 3 )
     << " Reference Count for shared after set origin";
+  EXPECT_FALSE(img0.IsUnique());
 
   // check shallow copy on assignment
   imgCopy = img0;
   EXPECT_EQ(static_cast<const sitk::Image *>(&imgCopy)->GetITKBase()->GetReferenceCount(), 4 )
     << " Reference Count for copy after assigment";
+  EXPECT_FALSE(imgCopy.IsUnique());
   EXPECT_EQ(static_cast<const sitk::Image *>(&img0)->GetITKBase()->GetReferenceCount(), 4 )
     << " Reference Count for shared after assignment";
+  EXPECT_FALSE(img0.IsUnique());
 
   // check copy on write with set spacing
   imgCopy.SetSpacing( std::vector<double>( 3, 3.45 ) );
   EXPECT_EQ(static_cast<const sitk::Image *>(&imgCopy)->GetITKBase()->GetReferenceCount(), 1 )
     << " Reference Count for copy after set spacing";
+  EXPECT_TRUE(imgCopy.IsUnique());
   EXPECT_EQ(static_cast<const sitk::Image *>(&img0)->GetITKBase()->GetReferenceCount(), 3 )
     << " Reference Count for shared after set spacing";
+  EXPECT_FALSE(img0.IsUnique());
   EXPECT_EQ( sitk::Hash( imgCopy ), sitk::Hash( img0 ) ) << "Hash for shared and copy after set spacing";
+
+  sitk::Image labelImage1(10, 10, sitk::sitkLabelUInt8);
+  EXPECT_TRUE(labelImage1.IsUnique());
+  sitk::Image labelImage2(labelImage1);
+  EXPECT_FALSE(labelImage1.IsUnique());
+  EXPECT_FALSE(labelImage2.IsUnique());
+
+  // copy on write
+  labelImage2.SetSpacing( std::vector<double>( {1.2, 3.4} ));
+  EXPECT_TRUE(labelImage1.IsUnique());
+  EXPECT_TRUE(labelImage2.IsUnique());
 }
 
 TEST_F(Image,Operators)
@@ -634,6 +657,7 @@ TEST_F(Image,Operators)
   v =  dynamic_cast<itk::Image<short,3>*>( imgA.GetITKBase() )->GetPixel( idx);
   EXPECT_EQ( 0, v ) << "value check 8";
 }
+sitkClangDiagnosticPop();
 
 TEST_F(Image,SetPixel)
 {
@@ -755,6 +779,39 @@ TEST_F(Image,SetPixel)
   ASSERT_NO_THROW( img.SetPixelAsDouble(  std::vector<uint32_t>( zOOB, zOOB+3 ), 0.0 ) ) << "z out of bounds, expect truncation of z-dim";
 
 }
+
+
+sitkClangDiagnosticPush();
+sitkClangWarningIgnore("-Wself-assign-overloaded");
+TEST_F(Image,Operators_InPlace)
+{
+  sitk::Image img(10, 10, sitk::sitkUInt16);
+
+  img += img;
+  img -= img;
+  img *= img;
+
+  img += 1;
+  img /= img;
+  img %= img;
+  img &= img;
+  img |= img;
+  img ^= img;
+
+  img += 2.0;
+  img -= 2.0;
+  img *= 1.0;
+
+  img /= 1.0;
+  img %= 2;
+  img &= 1;
+  img |= 1;
+  img ^= 0;
+
+  img = ( img *= 0 ) + 5;
+  EXPECT_EQ( img.GetPixelAsUInt16({1,1}), 5);
+}
+sitkClangDiagnosticPop();
 
 
 TEST_F(Image,GetPixel)
@@ -1432,21 +1489,17 @@ TEST_F(Image, GetBuffer)
   ASSERT_ANY_THROW( img.GetBufferAsDouble() ) << " Get with wrong type";
 
 
-  // currently Int64 pixel types are instantiated yet,
-  // so an exception will be thrown.
-  try
+  // Int64 pixel types might not be instantiated
+  if ( sitk::sitkUInt64 != sitk::sitkUnknown )
     {
     img = sitk::Image( 10, 10, sitk::sitkUInt64 );
     EXPECT_EQ( img.GetBufferAsUInt64()[99], 0u ) << " Get last element in buffer ";
-
+    }
+  if ( sitk::sitkInt64 != sitk::sitkUnknown )
+    {
     img = sitk::Image( 10, 10, sitk::sitkInt64 );
     EXPECT_EQ( img.GetBufferAsInt64()[99], 0u ) << " Get last element in buffer ";
     }
-  catch ( std::exception &e)
-    {
-    std::cout << "Exception: " << e.what() << std::endl;
-    }
-
   img = sitk::Image( 10, 10, sitk::sitkFloat32 );
   EXPECT_EQ( img.GetBufferAsFloat()[99], 0u ) << " Get last element in buffer ";
   ASSERT_ANY_THROW( img.GetBufferAsInt16() ) << " Get with wrong type";
@@ -1456,6 +1509,22 @@ TEST_F(Image, GetBuffer)
 
   img = sitk::Image( 10, 10, sitk::sitkFloat64 );
   EXPECT_EQ( img.GetBufferAsDouble()[99], 0 ) << " Get last element in buffer ";
+  ASSERT_ANY_THROW( img.GetBufferAsUInt8() ) << " Get with wrong type";
+  ASSERT_ANY_THROW( img.GetBufferAsInt16() ) << " Get with wrong type";
+  ASSERT_ANY_THROW( img.GetBufferAsUInt16() ) << " Get with wrong type";
+  ASSERT_ANY_THROW( img.GetBufferAsInt32() ) << " Get with wrong type";
+  ASSERT_ANY_THROW( img.GetBufferAsUInt32() ) << " Get with wrong type";
+  ASSERT_ANY_THROW( img.GetBufferAsFloat() ) << " Get with wrong type";
+
+  img = sitk::Image( 10, 10, sitk::sitkComplexFloat32 );
+  EXPECT_EQ( img.GetBufferAsFloat()[199], 0.0f ) << " Get last element in buffer ";
+  ASSERT_ANY_THROW( img.GetBufferAsInt16() ) << " Get with wrong type";
+  ASSERT_ANY_THROW( img.GetBufferAsUInt16() ) << " Get with wrong type";
+  ASSERT_ANY_THROW( img.GetBufferAsInt32() ) << " Get with wrong type";
+  ASSERT_ANY_THROW( img.GetBufferAsDouble() ) << " Get with wrong type";
+
+  img = sitk::Image( 10, 10, sitk::sitkComplexFloat64 );
+  EXPECT_EQ( img.GetBufferAsDouble()[199], 0.0 ) << " Get last element in buffer ";
   ASSERT_ANY_THROW( img.GetBufferAsUInt8() ) << " Get with wrong type";
   ASSERT_ANY_THROW( img.GetBufferAsInt16() ) << " Get with wrong type";
   ASSERT_ANY_THROW( img.GetBufferAsUInt16() ) << " Get with wrong type";
@@ -1540,20 +1609,16 @@ TEST_F(Image, GetBufferVector)
   ASSERT_ANY_THROW( img.GetBufferAsFloat() ) << " Get with wrong type";
   ASSERT_ANY_THROW( img.GetBufferAsDouble() ) << " Get with wrong type";
 
-
-  // currently Int64 pixel types are instantiated yet,
-  // so an exception will be thrown.
-  try
+  // Int64 pixel types might not be instantiated
+  if ( sitk::sitkVectorUInt64 != sitk::sitkUnknown )
     {
     img = sitk::Image( 10, 10, sitk::sitkVectorUInt64 );
     EXPECT_EQ( img.GetBufferAsUInt64()[99], 0u ) << " Get last element in buffer ";
-
+    }
+  if ( sitk::sitkVectorInt64 != sitk::sitkUnknown )
+    {
     img = sitk::Image( 10, 10, sitk::sitkVectorInt64 );
     EXPECT_EQ( img.GetBufferAsInt64()[99], 0u ) << " Get last element in buffer ";
-    }
-  catch ( std::exception &e)
-    {
-    std::cout << "Exception: " << e.what() << std::endl;
     }
 
   img = sitk::Image( 10, 10, sitk::sitkVectorFloat32 );
@@ -1624,6 +1689,57 @@ TEST_F(Image,MetaDataDictionary)
   EXPECT_EQ( 0u, img.GetMetaDataKeys().size() );
 
   EXPECT_FALSE( img.EraseMetaData("k1") );
+
+}
+
+TEST_F(Image, MoveOperations)
+{
+  sitk::Image img;
+
+  static_assert(std::is_move_constructible<sitk::Image>::value, "Verify method availability");
+  static_assert(std::is_move_assignable<sitk::Image>::value, "Verify method availability");
+
+  img = sitk::Image(10,10,  sitk::sitkUInt8);
+
+  EXPECT_EQ(img.GetSize()[0], 10);
+
+  sitk::Image img2(5, 6, sitk::sitkUInt8);
+
+  // The details of when an image has a nullptr for the ITKBase are
+  // not specified, so that part of the tests are to verify the
+  // internal implementation details
+  auto itkBasePtr = img2.GetITKBase();
+
+  img = std::move(img2);
+
+  EXPECT_EQ(img.GetSize()[1], 6);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img).GetITKBase(), itkBasePtr);
+
+  sitk::Image img3(std::move(img));
+
+  EXPECT_EQ(img3.GetSize()[0], 5);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img3).GetITKBase(), itkBasePtr);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img).GetITKBase(), nullptr);
+
+  img = std::move(img3);
+
+  EXPECT_EQ(img.GetSize()[0], 5);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img).GetITKBase(), itkBasePtr);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img3).GetITKBase(), nullptr);
+
+  img2 = img;
+
+
+  EXPECT_EQ(img2.GetSize()[0], 5);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img2).GetITKBase(), itkBasePtr);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img).GetITKBase(), itkBasePtr);
+
+  const sitk::Image img4(std::move(img2));
+
+  EXPECT_EQ(img4.GetSize()[0], 5);
+  EXPECT_EQ(img4.GetITKBase(), itkBasePtr);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img).GetITKBase(), itkBasePtr);
+  EXPECT_EQ(static_cast<const sitk::Image&>(img2).GetITKBase(), nullptr);
 
 }
 

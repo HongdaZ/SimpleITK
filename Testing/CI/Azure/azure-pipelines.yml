@@ -1,50 +1,31 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# These pipelines are executed on every PR, and merge. They should provide quick
+# coverage for the common wrapped language and the SimpleITK core and examples.
 
 trigger:
   - master
   - next
   - release
-variables:
-  ExternalDataVersion: 1.2.0
 jobs:
   - job: Linux
     timeoutInMinutes: 0
-    cancelTimeoutInMinutes: 300
     pool:
-      vmImage: 'Ubuntu-16.04'
-
+      name: 'Default'
+      demands:
+      - Agent.OS -equals Linux
+    variables:
+      PYTHONUSERBASE: $(Agent.BuildDirectory)/.pypkgs
+    workspace:
+      clean: all
     steps:
-      - checkout: self
-        clean: true
-        fetchDepth: 5
-      - bash: |
-          set -x
-          if [ -n "$(System.PullRequest.SourceCommitId)" ]; then
-            git checkout $(System.PullRequest.SourceCommitId)
-          fi
-      - bash: |
-          set -x
-          git clone -b dashboard --single-branch ${BUILD_REPOSITORY_URI} SimpleITK-dashboard
-
-          curl -L -O https://github.com/SimpleITK/SimpleITK/releases/download/v$(ExternalDataVersion)/SimpleITKData-$(ExternalDataVersion).tar.gz
-          cmake -E tar xfz SimpleITKData-$(ExternalDataVersion).tar.gz
-          cmake -E rename SimpleITK-$(ExternalDataVersion)/.ExternalData/MD5 $(Build.SourcesDirectory)/.ExternalData/MD5
-        displayName: Download dashboard scripts and testing data
-        workingDirectory: $(Agent.BuildDirectory)
-      - task: UsePythonVersion@0
-        displayName: Enable Python
-        inputs:
-          versionSpec: '3.6'
-          architecture: 'x64'
-          addToPath: true
+      - template: templates/git-download-steps.yml
       - script: |
+          mkdir -p ${PYTHONUSERBASE}
           python --version
-          sudo python -m pip install setuptools
-          sudo python -m pip install ninja scikit-ci-addons
-        displayName: 'Install ninja dependency'
+          python -m site --user-site
+          python -m pip install --upgrade --user pip
+          python -m pip install --user setuptools
+          python -m pip install --user numpy scikit-ci-addons
+        displayName: 'Install python tools and dependency'
       - bash: |
           set -x
           c++ --version
@@ -53,13 +34,21 @@ jobs:
           ctest -S ${BUILD_SOURCESDIRECTORY}/Testing/CI/Azure/azure.cmake -V -j 4
         displayName: Build and test
         env:
-          CTEST_BUILD_CONFIGURATION: MinSizeRel
-          CTEST_OUTPUT_ON_FALURE: 1
+          CTEST_CONFIGURATION_TYPE: MinSizeRel
+          CTEST_OUTPUT_ON_FAILURE: 1
           DASHBOARD_BRANCH_DIRECTORY: $(Agent.BuildDirectory)/SimpleITK-dashboard
           ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS: 2
+          CTEST_CACHE: |
+            BUILD_DOCUMENTS:BOOL=OFF
+            BUILD_EXAMPLES:BOOL=ON
+            BUILD_SHARED_LIBS:BOOL=OFF
+            BUILD_TESTING:BOOL=ON
+            WRAP_DEFAULT:BOOL=OFF
+            WRAP_R:BOOL=OFF
+            WRAP_PYTHON:BOOL=ON
         workingDirectory: $(Agent.BuildDirectory)
       - script: |
-          ci_addons ctest_junit_formatter $(Build.SourcesDirectory)-build > $(Agent.BuildDirectory)/JUnitTestResults.xml
+          python -m ci_addons ctest_junit_formatter $(Build.SourcesDirectory)-build > $(Agent.BuildDirectory)/JUnitTestResults.xml
         condition: succeededOrFailed()
         displayName: 'Format CTest output in JUnit format'
       - task: PublishTestResults@2
@@ -71,28 +60,14 @@ jobs:
 
   - job: macOS
     timeoutInMinutes: 0
-    cancelTimeoutInMinutes: 300
+    variables:
+      imageName: 'macos-10.14'
+      xcodeVersion: 10.2
     pool:
-      vmImage: 'macOS-10.13'
+      vmImage: $(imageName)
 
     steps:
-      - checkout: self
-        clean: true
-        fetchDepth: 5
-      - bash: |
-          set -x
-          if [ -n "$(System.PullRequest.SourceCommitId)" ]; then
-            git checkout $(System.PullRequest.SourceCommitId)
-          fi
-      - bash: |
-          set -x
-          git clone -b dashboard --single-branch ${BUILD_REPOSITORY_URI} SimpleITK-dashboard
-
-          curl -L -O https://github.com/SimpleITK/SimpleITK/releases/download/v$(ExternalDataVersion)/SimpleITKData-$(ExternalDataVersion).tar.gz
-          cmake -E tar xfz SimpleITKData-$(ExternalDataVersion).tar.gz
-          cmake -E rename SimpleITK-$(ExternalDataVersion)/.ExternalData/MD5 $(Build.SourcesDirectory)/.ExternalData/MD5
-        displayName: Download dashboard scripts  and testing data
-        workingDirectory: $(Agent.BuildDirectory)
+      - template: templates/git-download-steps.yml
       - task: UsePythonVersion@0
         displayName: Enable Python
         inputs:
@@ -101,24 +76,35 @@ jobs:
           addToPath: true
       - script: |
           python --version
-          sudo python -m pip install setuptools
+          sudo python -m pip install setuptools numpy
           sudo python -m pip install ninja scikit-ci-addons
         displayName: 'Install ninja dependency'
       - bash: |
           set -x
+          xcode-select -p
+          sudo xcode-select -s /Applications/Xcode_$(xcodeVersion).app/Contents/Developer/
+          xcode-select -p
           c++ --version
           cmake --version
           ninja --version
-          ctest -S ${BUILD_SOURCESDIRECTORY}/Testing/CI/Azure/azure.cmake -V -j 4
+          ctest -S ${BUILD_SOURCESDIRECTORY}/Testing/CI/Azure/azure.cmake -V -j 2
         displayName: Build and test
         env:
-          CTEST_BUILD_CONFIGURATION: MinSizeRel
-          CTEST_OUTPUT_ON_FALURE: 1
+          CTEST_CONFIGURATION_TYPE: MinSizeRel
+          CTEST_OUTPUT_ON_FAILURE: 1
           DASHBOARD_BRANCH_DIRECTORY: $(Agent.BuildDirectory)/SimpleITK-dashboard
           ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS: 2
+          CTEST_CACHE: |
+            BUILD_DOCUMENTS:BOOL=OFF
+            BUILD_EXAMPLES:BOOL=ON
+            BUILD_SHARED_LIBS:BOOL=OFF
+            BUILD_TESTING:BOOL=ON
+            WRAP_DEFAULT:BOOL=OFF
+            WRAP_PYTHON:BOOL=ON
+            WRAP_JAVA:BOOL=ON
         workingDirectory: $(Agent.BuildDirectory)
       - script: |
-          ci_addons ctest_junit_formatter $(Build.SourcesDirectory)-build > $(Agent.BuildDirectory)/JUnitTestResults.xml
+          python -m ci_addons ctest_junit_formatter $(Build.SourcesDirectory)-build > $(Agent.BuildDirectory)/JUnitTestResults.xml
         condition: succeededOrFailed()
         displayName: 'Format CTest output in JUnit format'
       - task: PublishTestResults@2
@@ -130,26 +116,10 @@ jobs:
 
   - job: Windows
     timeoutInMinutes: 0
-    cancelTimeoutInMinutes: 300
     pool:
       vmImage: 'vs2017-win2016'
-
     steps:
-      - checkout: self
-        clean: true
-        fetchDepth: 5
-      - script: |
-          if DEFINED SYSTEM_PULLREQUEST_SOURCECOMMITID git checkout $(System.PullRequest.SourceCommitId)
-        displayName: Checkout pull request HEAD
-      - bash: |
-          set -x
-          git clone -b dashboard --single-branch ${BUILD_REPOSITORY_URI} SimpleITK-dashboard
-
-          curl -L -O https://github.com/SimpleITK/SimpleITK/releases/download/v$(ExternalDataVersion)/SimpleITKData-$(ExternalDataVersion).tar.gz
-          cmake -E tar xfz SimpleITKData-$(ExternalDataVersion).tar.gz
-          cmake -E rename "SimpleITK-$(ExternalDataVersion)/.ExternalData/MD5" "$(Build.SourcesDirectory)/.ExternalData/MD5"
-        displayName: Download dashboard scripts and testing data
-        workingDirectory: $(Agent.BuildDirectory)
+      - template: templates/git-download-steps.yml
       - task: UsePythonVersion@0
         displayName: Enable Python
         inputs:
@@ -158,7 +128,7 @@ jobs:
           addToPath: true
       - script: |
           python --version
-          python -m pip install setuptools
+          python -m pip install setuptools numpy
           python -m pip install ninja scikit-ci-addons
         displayName: 'Install ninja dependency'
       - script: |
@@ -166,16 +136,25 @@ jobs:
           ctest -S "$(Build.SourcesDirectory)/Testing/CI/Azure/azure.cmake" -V -j 4
         displayName: Build and test
         env:
-          CTEST_BUILD_CONFIGURATION: MinSizeRel
-          CTEST_OUTPUT_ON_FALURE: 1
+          CTEST_CONFIGURATION_TYPE: MinSizeRel
+          CTEST_OUTPUT_ON_FAILURE: 1
           CTEST_CMAKE_GENERATOR: "Visual Studio 15 2017 Win64"
+          CTEST_CMAKE_GENERATOR_TOOLSET: v141,host=x64
           DASHBOARD_BRANCH_DIRECTORY: $(Agent.BuildDirectory)/SimpleITK-dashboard
           ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS: 2
           CXXFLAGS: /MP
           CFLAGS: /MP
+          CTEST_CACHE: |
+            BUILD_DOCUMENTS:BOOL=OFF
+            BUILD_EXAMPLES:BOOL=ON
+            BUILD_SHARED_LIBS:BOOL=OFF
+            BUILD_TESTING:BOOL=ON
+            WRAP_DEFAULT:BOOL=OFF
+            WRAP_CSHARP:BOOL=OFF
+            WRAP_PYTHON:BOOL=ON
         workingDirectory: $(Agent.BuildDirectory)
       - script: |
-          ci_addons ctest_junit_formatter $(Build.SourcesDirectory)-build > $(Agent.BuildDirectory)/JUnitTestResults.xml
+          python -m ci_addons ctest_junit_formatter $(Build.SourcesDirectory)-build > $(Agent.BuildDirectory)/JUnitTestResults.xml
         condition: succeededOrFailed()
         displayName: 'Format CTest output in JUnit format'
       - task: PublishTestResults@2
@@ -184,50 +163,3 @@ jobs:
           testRunTitle: 'CTest $(Agent.OS)'
         condition: succeededOrFailed()
         displayName: 'Publish test results'
-  - job:  WindowsVS2008
-    timeoutInMinutes: 240
-    strategy:
-      matrix:
-        x86:
-          CTEST_CMAKE_GENERATOR: "Visual Studio 9 2008"
-        x64:
-          CTEST_CMAKE_GENERATOR: "Visual Studio 9 2008 Win64"
-    pool:
-      name: 'Default'
-      demands:
-        - VS90COMNTOOLS
-    workspace:
-      clean: all
-    variables:
-      coreBinaryDirectory:  '$(Agent.BuildDirectory)/sitk-build'
-      CTEST_CONFIGURATION_TYPE: MinSizeRel
-      DASHBOARD_BRANCH_DIRECTORY: $(Agent.BuildDirectory)/SimpleITK-dashboard
-      DASHBOARD_GIT_BRANCH: $[ dependencies.Configure.outputs['configure.BuildHash'] ]
-    steps:
-      - checkout: self
-        clean: true
-        fetchDepth: 5
-      - script: |
-           if DEFINED SYSTEM_PULLREQUEST_SOURCECOMMITID git checkout $(System.PullRequest.SourceCommitId)
-        displayName: Checkout pull request HEAD
-      - script: |
-          git clone -b dashboard --single-branch %BUILD_REPOSITORY_URI% SimpleITK-dashboard
-        displayName: Download dashboard scripts
-        workingDirectory: $(Agent.BuildDirectory)
-      - script: |
-          cmake --version
-          ctest -S "$(Build.SourcesDirectory)/Testing/CI/Azure/azure.cmake" -V
-        displayName: Build and test
-        workingDirectory: $(Agent.BuildDirectory)
-        env:
-          CTEST_BINARY_DIRECTORY: $(coreBinaryDirectory)
-          ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS: 2
-          CXXFLAGS: /MP
-          CFLAGS: /MP
-          CTEST_CACHE: |
-            BUILD_DOCUMENTS:BOOL=OFF
-            BUILD_EXAMPLES:BOOL=N
-            BUILD_SHARED_LIBS:BOOL=OFF
-            BUILD_TESTING:BOOL=ON
-            WRAP_DEFAULT:BOOL=OFF
-            SimpleITK_BUILD_DISTRIBUTE:BOOL=ON

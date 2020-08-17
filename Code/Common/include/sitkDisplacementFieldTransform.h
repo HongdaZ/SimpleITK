@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -37,10 +37,10 @@ class SITKCommon_EXPORT DisplacementFieldTransform
   : public Transform
 {
 public:
-  typedef DisplacementFieldTransform Self;
-  typedef Transform                  Superclass;
+  using Self = DisplacementFieldTransform;
+  using Superclass = Transform;
 
-  virtual ~DisplacementFieldTransform();
+  ~DisplacementFieldTransform() override;
 
   explicit DisplacementFieldTransform( unsigned int dimensions );
 
@@ -63,7 +63,7 @@ public:
   DisplacementFieldTransform &operator=( const DisplacementFieldTransform & );
 
   /** Name of this class */
-  std::string GetName() const { return std::string ("DisplacementFieldTransform"); }
+  std::string GetName() const override { return std::string ("DisplacementFieldTransform"); }
 
   /** parameters */
 
@@ -108,18 +108,16 @@ public:
 
 protected:
 
-  virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
+  void SetPimpleTransform( PimpleTransformBase *pimpleTransform ) override;
 
 private:
-
-  using Superclass::AddTransform;
 
   struct MyVisitor
   {
     itk::TransformBase *transform;
     DisplacementFieldTransform *that;
     template< typename TransformType >
-    void operator() ( void ) const
+    void operator() ( ) const
       {
         TransformType *t = dynamic_cast<TransformType*>(transform);
         if (t && (typeid(*t) == typeid(TransformType)))
@@ -155,18 +153,18 @@ private:
 
   static PimpleTransformBase *CreateDisplacementFieldPimpleTransform(unsigned int dimension);
 
-  nsstd::function<void (Image &)> m_pfSetDisplacementField;
-  nsstd::function<Image ()> m_pfGetDisplacementField;
+  std::function<void (Image &)> m_pfSetDisplacementField;
+  std::function<Image ()> m_pfGetDisplacementField;
 
-  nsstd::function<void (Image &)> m_pfSetInverseDisplacementField;
-  nsstd::function<Image ()> m_pfGetInverseDisplacementField;
+  std::function<void (Image &)> m_pfSetInverseDisplacementField;
+  std::function<Image ()> m_pfGetInverseDisplacementField;
 
-  nsstd::function<void (InterpolatorEnum &)> m_pfSetInterpolator;
-  nsstd::function<InterpolatorEnum ()> m_pfGetInterpolator;
+  std::function<void (InterpolatorEnum &)> m_pfSetInterpolator;
+  std::function<InterpolatorEnum ()> m_pfGetInterpolator;
 
-  nsstd::function<void ()> m_pfSetSmoothingOff;
-  nsstd::function<void (double, double)> m_pfSetSmoothingGaussianOnUpdate;
-  nsstd::function<void (const std::vector<unsigned int> &,const std::vector<unsigned int>&, bool, unsigned int)> m_pfSetSmoothingBSplineOnUpdate;
+  std::function<void ()> m_pfSetSmoothingOff;
+  std::function<void (double, double)> m_pfSetSmoothingGaussianOnUpdate;
+  std::function<void (const std::vector<unsigned int> &,const std::vector<unsigned int>&, bool, unsigned int)> m_pfSetSmoothingBSplineOnUpdate;
 
 };
 

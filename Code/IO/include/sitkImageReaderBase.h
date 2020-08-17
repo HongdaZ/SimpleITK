@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 namespace itk {
 
-// Forward decalaration for pointer
+// Forward declaration for pointer
 class ImageIOBase;
 
 template<class T>
@@ -40,9 +40,9 @@ class SmartPointer;
       public ProcessObject
     {
     public:
-      typedef ImageReaderBase Self;
+      using Self = ImageReaderBase;
 
-      virtual ~ImageReaderBase();
+      ~ImageReaderBase() override;
 
       ImageReaderBase();
 
@@ -56,12 +56,12 @@ class SmartPointer;
        * @{
        */
       SITK_RETURN_SELF_TYPE_HEADER SetOutputPixelType( PixelIDValueEnum pixelID );
-      PixelIDValueEnum GetOutputPixelType( void ) const;
+      PixelIDValueEnum GetOutputPixelType( ) const;
       /* @} */
 
       virtual Image Execute() = 0;
 
-      virtual std::string ToString() const;
+      std::string ToString() const override;
 
       /** \brief Get a vector of the names of registered itk ImageIOs
        */
@@ -93,7 +93,7 @@ class SmartPointer;
        * @{
        */
       virtual SITK_RETURN_SELF_TYPE_HEADER SetImageIO(const std::string &imageio);
-      virtual std::string GetImageIO( void ) const;
+      virtual std::string GetImageIO( ) const;
       /* @} */
 
 

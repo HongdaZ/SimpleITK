@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ class SITKCommon_EXPORT BSplineTransform
   : public Transform
 {
 public:
-  typedef BSplineTransform Self;
-  typedef Transform        Superclass;
+  using Self = BSplineTransform;
+  using Superclass = Transform;
 
-  virtual ~BSplineTransform();
+  ~BSplineTransform() override;
 
   explicit BSplineTransform(unsigned int dimensions, unsigned int order=3);
 
@@ -52,7 +52,7 @@ public:
    * transform domain. The transform domain is reduced by the spline
    * order.
    */
-  explicit BSplineTransform( std::vector<Image> &coefficientImages, unsigned int order=3 );
+  explicit BSplineTransform( const std::vector<Image> &coefficientImages, unsigned int order=3 );
 
   BSplineTransform( const BSplineTransform & );
 
@@ -61,7 +61,7 @@ public:
   BSplineTransform &operator=( const BSplineTransform & );
 
   /** Name of this class */
-  std::string GetName() const { return std::string ("BSplineTransform"); }
+  std::string GetName() const override { return std::string ("BSplineTransform"); }
 
   /** parameters */
 
@@ -90,18 +90,16 @@ public:
 
 protected:
 
-  virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
+  void SetPimpleTransform( PimpleTransformBase *pimpleTransform ) override;
 
 private:
-
-  using Superclass::AddTransform;
 
   struct MyVisitor
   {
     itk::TransformBase *transform;
     BSplineTransform *that;
     template< typename TransformType >
-    void operator() ( void ) const
+    void operator() ( ) const
       {
         TransformType *t = dynamic_cast<TransformType*>(transform);
         if (t && (typeid(*t) == typeid(TransformType)))
@@ -121,19 +119,19 @@ private:
   template <unsigned int ND>
     static PimpleTransformBase *CreateBSplinePimpleTransform(unsigned int order);
 
-  nsstd::function<std::vector<double> ()> m_pfGetTransformDomainDirection;
-  nsstd::function<void (const std::vector<double> &)> m_pfSetTransformDomainDirection;
-  nsstd::function<std::vector<unsigned int> ()> m_pfGetTransformDomainMeshSize;
-  nsstd::function<void (const std::vector<unsigned int>&)> m_pfSetTransformDomainMeshSize;
-  nsstd::function<std::vector<double> ()> m_pfGetTransformDomainOrigin;
-  nsstd::function<void (const std::vector<double>&)> m_pfSetTransformDomainOrigin;
-  nsstd::function<std::vector<double> ()> m_pfGetTransformDomainPhysicalDimensions;
-  nsstd::function<void (const std::vector<double> &)> m_pfSetTransformDomainPhysicalDimensions;
+  std::function<std::vector<double> ()> m_pfGetTransformDomainDirection;
+  std::function<void (const std::vector<double> &)> m_pfSetTransformDomainDirection;
+  std::function<std::vector<unsigned int> ()> m_pfGetTransformDomainMeshSize;
+  std::function<void (const std::vector<unsigned int>&)> m_pfSetTransformDomainMeshSize;
+  std::function<std::vector<double> ()> m_pfGetTransformDomainOrigin;
+  std::function<void (const std::vector<double>&)> m_pfSetTransformDomainOrigin;
+  std::function<std::vector<double> ()> m_pfGetTransformDomainPhysicalDimensions;
+  std::function<void (const std::vector<double> &)> m_pfSetTransformDomainPhysicalDimensions;
 
-  nsstd::function<std::vector<Image> ()> m_pfGetCoefficientImages;
-  nsstd::function< unsigned int()> m_pfGetOrder;
+  std::function<std::vector<Image> ()> m_pfGetCoefficientImages;
+  std::function< unsigned int()> m_pfGetOrder;
 
-  nsstd::function<void (std::vector<Image> &)> m_pfSetCoefficientImages;
+  std::function<void (const std::vector<Image> &)> m_pfSetCoefficientImages;
 
 };
 

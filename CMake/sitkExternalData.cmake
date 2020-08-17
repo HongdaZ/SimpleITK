@@ -19,7 +19,7 @@ if(NOT ExternalData_OBJECT_STORES)
 endif()
 list(APPEND ExternalData_OBJECT_STORES
   # Local data store populated by the ITK pre-commit hook
-  "${SimpleITK_SOURCE_DIR}/../.ExternalData"
+  "${SimpleITK_SOURCE_DIR}/.ExternalData"
   )
 
 set(ExternalData_BINARY_ROOT ${CMAKE_BINARY_DIR}/ExternalData)
@@ -34,10 +34,10 @@ if(NOT SimpleITK_FORBID_DOWNLOADS)
   list(APPEND ExternalData_URL_TEMPLATES
 
     # Data mirrored from SimpleITKExternalData repository
-    "https://s3.amazonaws.com/simpleitk/public/%(algo)/%(hash)"
+    "https://simpleitk.s3.amazonaws.com/public/%(algo)/%(hash)"
 
     # Data published on GitHub Pages
-    "https://simpleitk.github.io/SimpleITKExternalData/%(algo)/%(hash)"
+    "https://simpleitk.org/SimpleITKExternalData/%(algo)/%(hash)"
 
     # Data published on Girder
     "https://data.kitware.com:443/api/v1/file/hashsum/%(algo)/%(hash)/download"

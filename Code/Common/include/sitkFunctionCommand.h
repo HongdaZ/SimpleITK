@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 #include "sitkCommand.h"
 
-#include "nsstd/functional.h"
+#include <functional>
 
 namespace itk {
 namespace simple {
@@ -35,14 +35,14 @@ class SITKCommon_EXPORT FunctionCommand:
 {
 public:
 
-  typedef FunctionCommand Self;
+  using Self = FunctionCommand;
 
 
-  virtual ~FunctionCommand();
+  ~FunctionCommand() override;
 
   FunctionCommand();
 
-  virtual void Execute(void);
+  void Execute() override;
 
   /** Generic method to set a class's member function to be called in
    *  the Execute method.
@@ -50,7 +50,7 @@ public:
   template <class T>
     void SetCallbackFunction ( T *object, void(T::* pMemberFunction )() )
   {
-    m_Function = nsstd::bind(pMemberFunction, object);
+    m_Function = std::bind(pMemberFunction, object);
   }
 
   /** Set a C-Style function to be called in the Execute method */
@@ -63,9 +63,12 @@ public:
     */
   void SetCallbackFunction( void(* pFunction )(void *), void *clientData );
 
+  /** Set as a C++ function, which is compatible with lambdas. */
+  void SetCallbackFunction( const std::function<void()> &);
+
 private:
 
-  typedef nsstd::function<void()> FunctionObjectType;
+  using FunctionObjectType = std::function<void()>;
   FunctionObjectType m_Function;
 
 };

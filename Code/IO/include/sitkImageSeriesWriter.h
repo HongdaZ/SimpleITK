@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 
 namespace itk {
 
-// Forward decalaration for pointer
+// Forward declaration for pointer
 class ImageIOBase;
 
   namespace simple {
@@ -50,14 +50,14 @@ class ImageIOBase;
       : public ProcessObject
     {
     public:
-      typedef ImageSeriesWriter Self;
+      using Self = ImageSeriesWriter;
 
-      virtual ~ImageSeriesWriter();
+      ~ImageSeriesWriter() override;
 
       ImageSeriesWriter();
 
       /** Print ourselves to string */
-      virtual std::string ToString() const;
+      std::string ToString() const override;
 
       /** \brief Get a vector of the names of registered itk ImageIOs
        */
@@ -76,11 +76,11 @@ class ImageIOBase;
        * @{
        */
       virtual SITK_RETURN_SELF_TYPE_HEADER SetImageIO(const std::string &imageio);
-      virtual std::string GetImageIO( void ) const;
+      virtual std::string GetImageIO( ) const;
       /* @} */
 
       /** return user readable name of the filter */
-      virtual std::string GetName() const { return std::string("ImageSeriesWriter"); }
+      std::string GetName() const override { return std::string("ImageSeriesWriter"); }
 
       /** \brief Enable compression if available for file type.
        *
@@ -89,10 +89,30 @@ class ImageIOBase;
        * only a request as not all file formatts support compression.
        * @{ */
       SITK_RETURN_SELF_TYPE_HEADER SetUseCompression( bool UseCompression );
-      bool GetUseCompression( void ) const;
+      bool GetUseCompression( ) const;
 
-      SITK_RETURN_SELF_TYPE_HEADER UseCompressionOn( void ) { return this->SetUseCompression(true); }
-      SITK_RETURN_SELF_TYPE_HEADER UseCompressionOff( void ) { return this->SetUseCompression(false); }
+      SITK_RETURN_SELF_TYPE_HEADER UseCompressionOn( ) { return this->SetUseCompression(true); }
+      SITK_RETURN_SELF_TYPE_HEADER UseCompressionOff( ) { return this->SetUseCompression(false); }
+      /** @} */
+
+      /** \brief A hint for the amount of compression to be applied during writing.
+       *
+       *  After compression is enabled and if the itk::ImageIO support this option, then this value may be used. The range is
+       *  dependent upon the compression algorithm used. It is generally 0-100 for JPEG like lossy compression and 0-9
+       *  for lossless zip or LZW like compression algorithms.  Please see the specific itk::ImageIO for details.
+       * @{ */
+      SITK_RETURN_SELF_TYPE_HEADER SetCompressionLevel(int);
+      int GetCompressionLevel() const;
+      /** @} */
+
+      /** \brief A compression algorithm hint
+       *
+       * The default is an empty string which enables the default compression of the ImageIO if compression is enabled.
+       * If the string identifier is not known a warning is produced and the default compressor is used. Please see the
+       * itk::ImageIO for details.
+       * @{ */
+      SITK_RETURN_SELF_TYPE_HEADER SetCompressor(const std::string &);
+      std::string GetCompressor();
       /** @} */
 
       /** The filenames to where the image slices are written.
@@ -106,7 +126,7 @@ class ImageIOBase;
 
 
       SITK_RETURN_SELF_TYPE_HEADER Execute( const Image& );
-      SITK_RETURN_SELF_TYPE_HEADER Execute( const Image &image, const std::vector<std::string> &inFileNames, bool useCompression );
+      SITK_RETURN_SELF_TYPE_HEADER Execute( const Image &image, const std::vector<std::string> &inFileNames, bool useCompression, int compressionLevel );
 
     protected:
 
@@ -121,16 +141,23 @@ class ImageIOBase;
 
       // friend to get access to executeInternal member
       friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
-      nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+      std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
 
-      bool                     m_UseCompression;
+      bool        m_UseCompression;
+      int         m_CompressionLevel;
+      std::string m_Compressor;
+
       std::vector<std::string> m_FileNames;
 
       std::string m_ImageIOName;
     };
 
-  SITKIO_EXPORT void WriteImage ( const Image & image, const std::vector<std::string> &fileNames, bool useCompression=false );
-  }
+    SITKIO_EXPORT void
+    WriteImage(const Image &                    image,
+               const std::vector<std::string> & fileNames,
+               bool                             useCompression = false,
+               int                              compressionLevel = -1);
+    }
 }
 
 #endif

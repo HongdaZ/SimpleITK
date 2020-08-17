@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ class SITKCommon_EXPORT AffineTransform
   : public Transform
 {
 public:
-  typedef AffineTransform Self;
-  typedef Transform       Superclass;
+  using Self = AffineTransform;
+  using Superclass = Transform;
 
-  virtual ~AffineTransform();
+  ~AffineTransform() override;
 
   explicit AffineTransform(unsigned int dimensions);
 
@@ -55,7 +55,7 @@ public:
   AffineTransform &operator=( const AffineTransform & );
 
   /** Name of this class */
-  std::string GetName() const { return std::string ("AffineTransform"); }
+  std::string GetName() const override { return std::string ("AffineTransform"); }
 
   /** parameters */
   std::vector<double> GetTranslation( ) const;
@@ -80,18 +80,16 @@ public:
 
 protected:
 
-  virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
+  void SetPimpleTransform( PimpleTransformBase *pimpleTransform ) override;
 
 private:
-
-  using Superclass::AddTransform;
 
   struct MyVisitor
   {
     itk::TransformBase *transform;
     AffineTransform *that;
     template< typename TransformType >
-    void operator() ( void ) const
+    void operator() ( ) const
       {
         TransformType *t = dynamic_cast<TransformType*>(transform);
         if (t && (typeid(*t) == typeid(TransformType)))
@@ -107,18 +105,18 @@ private:
     void InternalInitialization(TransformType *transform);
 
 
-  nsstd::function<void(const std::vector<double>&)> m_pfSetCenter;
-  nsstd::function<std::vector<double>()> m_pfGetCenter;
-  nsstd::function<void(const std::vector<double>&)> m_pfSetMatrix;
-  nsstd::function<std::vector<double>()> m_pfGetMatrix;
-  nsstd::function<void(const std::vector<double>&)> m_pfSetTranslation;
-  nsstd::function<std::vector<double>()> m_pfGetTranslation;
+  std::function<void(const std::vector<double>&)> m_pfSetCenter;
+  std::function<std::vector<double>()> m_pfGetCenter;
+  std::function<void(const std::vector<double>&)> m_pfSetMatrix;
+  std::function<std::vector<double>()> m_pfGetMatrix;
+  std::function<void(const std::vector<double>&)> m_pfSetTranslation;
+  std::function<std::vector<double>()> m_pfGetTranslation;
 
-  nsstd::function<void(const std::vector<double> &, bool)> m_pfScale1;
-  nsstd::function<void(double, bool)> m_pfScale2;
-  nsstd::function<void(int, int, double, bool)> m_pfShear;
-  nsstd::function<void(const std::vector<double> &, bool)> m_pfTranslate;
-  nsstd::function<void(int, int, double, bool)> m_pfRotate;
+  std::function<void(const std::vector<double> &, bool)> m_pfScale1;
+  std::function<void(double, bool)> m_pfScale2;
+  std::function<void(int, int, double, bool)> m_pfShear;
+  std::function<void(const std::vector<double> &, bool)> m_pfTranslate;
+  std::function<void(int, int, double, bool)> m_pfRotate;
 
 };
 

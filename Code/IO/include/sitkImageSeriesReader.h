@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -46,17 +46,17 @@ namespace itk {
       : public ImageReaderBase
     {
     public:
-      typedef ImageSeriesReader Self;
+      using Self = ImageSeriesReader;
 
-      virtual ~ImageSeriesReader();
+      ~ImageSeriesReader() override;
 
       ImageSeriesReader();
 
       /** Print ourselves to string */
-      virtual std::string ToString() const;
+      std::string ToString() const override;
 
       /** return user readable name of the filter */
-      virtual std::string GetName() const { return std::string("ImageSeriesReader"); }
+      std::string GetName() const override { return std::string("ImageSeriesReader"); }
 
 
       /**
@@ -113,7 +113,7 @@ namespace itk {
       SITK_RETURN_SELF_TYPE_HEADER SetFileNames ( const std::vector<std::string> &fileNames );
       const std::vector<std::string> &GetFileNames() const;
 
-      Image Execute();
+      Image Execute() override;
 
       /** \brief Get the meta-data dictionary keys for a slice
        *
@@ -157,12 +157,12 @@ namespace itk {
 
       // friend to get access to executeInternal member
       friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
-      nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+      std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
 
 
-      nsstd::function<std::vector<std::string>(int)> m_pfGetMetaDataKeys;
-      nsstd::function<bool(int, const std::string &)> m_pfHasMetaDataKey;
-      nsstd::function<std::string(int, const std::string &)> m_pfGetMetaData;
+      std::function<std::vector<std::string>(int)> m_pfGetMetaDataKeys;
+      std::function<bool(int, const std::string &)> m_pfHasMetaDataKey;
+      std::function<std::string(int, const std::string &)> m_pfGetMetaData;
 
       // Holder of process object for active measurements
       itk::ProcessObject *m_Filter;
