@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# =========================================================================
+#=========================================================================
 #
-#  Copyright NumFOCUS
+#  Copyright Insight Software Consortium
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-# =========================================================================
+#=========================================================================
 
 from __future__ import print_function
 
@@ -23,24 +23,25 @@ import SimpleITK as sitk
 import sys
 import os
 
-if len(sys.argv) != 4:
-    print("Usage: %s inputImage sliceNumber outputImage" % (sys.argv[0]))
-    sys.exit(1)
+if len ( sys.argv ) != 4:
+    print( "Usage: %s inputImage sliceNumber outputImage" % ( sys.argv[0] ) )
+    sys.exit ( 1 )
 
-zslice = int(sys.argv[2])
+zslice = int( sys.argv[2] )
 
-inputImage = sitk.ReadImage(str(sys.argv[1]))
+inputImage = sitk.ReadImage( str(sys.argv[1]) )
 
-size = list(inputImage.GetSize())
+size = list( inputImage.GetSize() )
 size[2] = 0
 
-index = [0, 0, zslice]
+index = [ 0, 0, zslice  ]
 
 Extractor = sitk.ExtractImageFilter()
-Extractor.SetSize(size)
-Extractor.SetIndex(index)
+Extractor.SetSize( size )
+Extractor.SetIndex( index )
 
-sitk.WriteImage(Extractor.Execute(inputImage), str(sys.argv[3]))
+sitk.WriteImage( Extractor.Execute( inputImage ), str(sys.argv[3]) )
 
-if ("SITK_NOSHOW" not in os.environ):
-    sitk.Show(Extractor.Execute(inputImage))
+
+if ( not "SITK_NOSHOW" in os.environ ):
+    sitk.Show( Extractor.Execute( inputImage ) )

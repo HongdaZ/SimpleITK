@@ -13,8 +13,4 @@ elseif enum then
 else
   OUT = '  filter->Set${name} ( this->m_${name} );'
 end)
-)$(if in_place then
-OUT = [[
-  filter->SetInPlace( m_InPlace );
-         ]]
-end)
+)

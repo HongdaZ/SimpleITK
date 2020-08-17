@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@ SITKBasicFilters_EXPORT Image Resample ( const Image& image1,
                                          Transform transform,
                                          InterpolatorEnum interpolator,
                                          double defaultPixelValue,
-                                         PixelIDValueEnum outputPixelType,
-                                         bool useNearestNeighborExtrapolator)
+                                         PixelIDValueEnum outputPixelType )
 {
   ResampleImageFilter filter;
   filter.SetReferenceImage( image1 );
@@ -43,7 +42,6 @@ SITKBasicFilters_EXPORT Image Resample ( const Image& image1,
   filter.SetInterpolator( interpolator );
   filter.SetDefaultPixelValue( defaultPixelValue );
   filter.SetOutputPixelType(outputPixelType);
-  filter.SetUseNearestNeighborExtrapolator(useNearestNeighborExtrapolator);
   return filter.Execute ( image1);
 }
 
@@ -52,8 +50,7 @@ Image Resample ( const Image& image1,
                  Transform transform,
                  InterpolatorEnum interpolator,
                  double defaultPixelValue,
-                 PixelIDValueEnum outputPixelType,
-                 bool useNearestNeighborExtrapolator)
+                 PixelIDValueEnum outputPixelType )
 {
   ResampleImageFilter filter;
   filter.SetReferenceImage( referenceImage );
@@ -61,33 +58,22 @@ Image Resample ( const Image& image1,
   filter.SetInterpolator( interpolator );
   filter.SetDefaultPixelValue( defaultPixelValue );
   filter.SetOutputPixelType(outputPixelType);
-  filter.SetUseNearestNeighborExtrapolator(useNearestNeighborExtrapolator);
   return filter.Execute ( image1);
 }
 
 
 SITKBasicFilters_EXPORT Image Resample ( const Image& image1,
-                                         const std::vector<uint32_t> &size,
+                                         std::vector<uint32_t> size,
                                          Transform transform,
                                          InterpolatorEnum interpolator,
-                                         const std::vector<double> &outputOrigin,
-                                         const std::vector<double> &outputSpacing,
-                                         const std::vector<double> &outputDirection,
+                                         std::vector<double> outputOrigin,
+                                         std::vector<double> outputSpacing,
+                                         std::vector<double> outputDirection,
                                          double defaultPixelValue,
-                                         PixelIDValueEnum outputPixelType,
-                                         bool useNearestNeighborExtrapolator)
+                                         PixelIDValueEnum outputPixelType )
 {
   ResampleImageFilter filter;
-  filter.SetSize(size);
-  filter.SetTransform(transform);
-  filter.SetInterpolator(interpolator);
-  filter.SetOutputOrigin(outputOrigin);
-  filter.SetOutputSpacing(outputSpacing);
-  filter.SetOutputDirection(outputDirection);
-  filter.SetDefaultPixelValue(defaultPixelValue);
-  filter.SetOutputPixelType(outputPixelType);
-  filter.SetUseNearestNeighborExtrapolator(useNearestNeighborExtrapolator);
-  return filter.Execute ( image1 );
+  return filter.Execute ( image1, size, transform, interpolator, outputOrigin, outputSpacing, outputDirection, defaultPixelValue, outputPixelType );
 }
 
 SITKBasicFilters_EXPORT Image PatchBasedDenoising (const Image& image1,

@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -38,15 +38,6 @@ class ExceptionObject;
 namespace simple
 {
 
-#ifdef _MSC_VER
-// Ignore the following warning:
-// sitkExceptionObject.h(46,1): warning C4275: non dll-interface class
-// 'std::exception' used as base for dll-interface class
-// 'itk::simple::GenericException'
-#pragma warning( push )
-#pragma warning(disable:4275)
-#endif
-
 /** \class GenericException
  * \brief The base SimpleITK exception class
  */
@@ -56,22 +47,22 @@ class SITKCommon_EXPORT GenericException :
 public:
   /** Default constructor.  Needed to ensure the exception object can be
    * copied. */
-  GenericException()  noexcept;
-  GenericException( const GenericException &e )  noexcept;
+  GenericException()  SITK_NOEXCEPT;
+  GenericException( const GenericException &e )  SITK_NOEXCEPT;
 
   /** Constructor. Needed to ensure the exception object can be copied. */
-  GenericException(const char *file, unsigned int lineNumber) noexcept;
+  GenericException(const char *file, unsigned int lineNumber) SITK_NOEXCEPT;
 
   /** Constructor. Needed to ensure the exception object can be copied. */
-  GenericException(const std::string & file, unsigned int lineNumber) noexcept;
+  GenericException(const std::string & file, unsigned int lineNumber) SITK_NOEXCEPT;
 
   /** Constructor. Needed to ensure the exception object can be copied. */
   GenericException(const std::string & file,
                    unsigned int lineNumber,
-                   const std::string & desc) noexcept;
+                   const std::string & desc) SITK_NOEXCEPT;
 
-  /** Virtual destructor needed for subclasses. Has to have empty noexcept. */
-  ~GenericException() noexcept override;
+  /** Virtual destructor needed for subclasses. Has to have empty SITK_NOEXCEPT. */
+  virtual ~GenericException() SITK_NOEXCEPT;
 
   /** Assignment operator. */
   GenericException & operator=(const GenericException & orig);
@@ -83,7 +74,7 @@ public:
   /** Return a description of the error */
   std::string ToString() const;
 
-  const char * what() const noexcept override;
+  const char * what() const SITK_NOEXCEPT;
 
   virtual const char * GetNameOfClass() const;
 
@@ -100,10 +91,6 @@ public:
 private:
   const ExceptionObject *m_PimpleException;
 };
-
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 }
 }

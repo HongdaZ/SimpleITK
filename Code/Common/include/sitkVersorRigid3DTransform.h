@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -37,10 +37,10 @@ class SITKCommon_EXPORT VersorRigid3DTransform
   : public Transform
 {
 public:
-  using Self = VersorRigid3DTransform;
-  using Superclass = Transform;
+  typedef VersorRigid3DTransform Self;
+  typedef Transform              Superclass;
 
-  ~VersorRigid3DTransform() override;
+  virtual ~VersorRigid3DTransform();
 
   // construct identity
   VersorRigid3DTransform();
@@ -58,9 +58,6 @@ public:
                           const std::vector< double> &fixedCenter=std::vector< double >(3, 0.0) );
 
   VersorRigid3DTransform &operator=( const VersorRigid3DTransform & );
-
-  /** Name of this class */
-  std::string GetName() const override { return std::string ("VersorRigid3DTransform"); }
 
 /** fixed parameter */
   SITK_RETURN_SELF_TYPE_HEADER SetCenter(const std::vector<double> &params);
@@ -82,9 +79,11 @@ public:
 
 protected:
 
-  void SetPimpleTransform( PimpleTransformBase *pimpleTransform ) override;
+  virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
 
 private:
+
+  using Superclass::AddTransform;
 
   void InternalInitialization(itk::TransformBase *transform);
 
@@ -92,16 +91,16 @@ private:
     void InternalInitialization(TransformType *transform);
 
 
-  std::function<void(const std::vector<double>&)> m_pfSetCenter;
-  std::function<std::vector<double>()> m_pfGetCenter;
-  std::function<void(const std::vector<double>&)> m_pfSetRotation1;
-  std::function<void(const std::vector<double>&,double)> m_pfSetRotation2;
-  std::function<std::vector<double>()> m_pfGetVersor;
-  std::function<void(const std::vector<double>&)> m_pfSetTranslation;
-  std::function<std::vector<double>()> m_pfGetTranslation;
-  std::function<void(const std::vector<double> &)> m_pfTranslate;
-  std::function<std::vector<double>()> m_pfGetMatrix;
-  std::function<void(const std::vector<double>&, double)> m_pfSetMatrix;
+  nsstd::function<void(const std::vector<double>&)> m_pfSetCenter;
+  nsstd::function<std::vector<double>()> m_pfGetCenter;
+  nsstd::function<void(const std::vector<double>&)> m_pfSetRotation1;
+  nsstd::function<void(const std::vector<double>&,double)> m_pfSetRotation2;
+  nsstd::function<std::vector<double>()> m_pfGetVersor;
+  nsstd::function<void(const std::vector<double>&)> m_pfSetTranslation;
+  nsstd::function<std::vector<double>()> m_pfGetTranslation;
+  nsstd::function<void(const std::vector<double> &)> m_pfTranslate;
+  nsstd::function<std::vector<double>()> m_pfGetMatrix;
+  nsstd::function<void(const std::vector<double>&, double)> m_pfSetMatrix;
 };
 
 }

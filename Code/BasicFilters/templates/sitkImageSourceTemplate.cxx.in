@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ namespace simple {
 //
 $(include ConstructorSignature.cxx.in)
 {
+$(include ConstructorInitializeMembers.cxx.in)
 $(include ConstructorMemberFunctionSetup.cxx.in)
 
 $(include ConstructorVectorPixels.cxx.in)
@@ -50,7 +51,9 @@ $(include CustomMethods.cxx.in)
 
 //
 // Execute
-//
+//$(include ExecuteWithParameters.cxx.in)
+
+
 Image ${name}::Execute ( $(include ImageParameters.in)$(include InputParameters.in) )
 {
 
@@ -106,17 +109,12 @@ sitkClangDiagnosticPop();
 //-----------------------------------------------------------------------------
 
 $(include ExecuteInternalVectorImages.cxx.in)
-
 //
 // Function to run the Execute method of this filter
 //
 Image ${name:gsub("ImageSource$", "Source"):gsub("Filter$", "")} ( $(include ImageParameters.in)$(include InputParameters.in)$(include MemberParameters.in) )
 {
   ${name} filter;
-$(for i = 1,#members do
-  OUT=OUT .. [[  filter.Set]] ..members[i].name..[[( ]] .. members[i].name:sub(1,1):lower() .. members[i].name:sub(2,-1) .. [[ );
-]]
-end)
   return filter.Execute ( $(for inum=1,number_of_inputs do
                               if inum>1 then
                                 OUT=OUT..', '
@@ -130,6 +128,16 @@ end)
                                 end
                                 OUT=OUT..inputs[inum].name:sub(1,1):lower() .. inputs[inum].name:sub(2,-1)
                               end
+                            end
+                            temp = number_of_inputs
+                            if inputs then
+                              temp = temp + #inputs
+                            end
+                            for i = 1,#members do
+                                        if (temp > 0 or i > 1) then
+                                OUT = OUT .. ", "
+                              end
+                            OUT= OUT .. members[i].name:sub(1,1):lower() .. members[i].name:sub(2,-1)
                             end) );
 }
 

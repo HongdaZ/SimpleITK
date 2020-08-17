@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -102,19 +102,19 @@ template <typename TPixelIDType, unsigned int VImageDimension> struct PixelIDToI
 template <typename TPixelType, unsigned int VImageDimension>
 struct PixelIDToImageType< BasicPixelID<TPixelType> , VImageDimension >
 {
-  using ImageType = itk::Image< TPixelType, VImageDimension >;
+  typedef itk::Image< TPixelType, VImageDimension > ImageType;
 };
 
 template <typename TVectorPixelType, unsigned int VImageDimension>
 struct PixelIDToImageType< VectorPixelID< TVectorPixelType >, VImageDimension >
 {
-  using ImageType = itk::VectorImage< TVectorPixelType, VImageDimension >;
+  typedef itk::VectorImage< TVectorPixelType, VImageDimension > ImageType;
 };
 
 template <typename TLabelType, unsigned int VImageDimension>
 struct PixelIDToImageType< LabelPixelID< TLabelType >, VImageDimension >
 {
-  using ImageType = itk::LabelMap< itk::LabelObject< TLabelType, VImageDimension > >;
+  typedef itk::LabelMap< itk::LabelObject< TLabelType, VImageDimension > > ImageType;
 };
 /** @} */
 
@@ -137,19 +137,19 @@ template <typename TImageType> struct ImageTypeToPixelID;
 template <typename TPixelType, unsigned int VImageDimension>
 struct ImageTypeToPixelID< itk::Image< TPixelType, VImageDimension> >
 {
-  using PixelIDType = BasicPixelID<TPixelType >;
+  typedef BasicPixelID<TPixelType > PixelIDType;
 };
 
 template <typename TPixelType, unsigned int VImageDimension>
 struct ImageTypeToPixelID< itk::VectorImage< TPixelType, VImageDimension> >
 {
-  using PixelIDType = VectorPixelID< TPixelType >;
+  typedef VectorPixelID< TPixelType > PixelIDType;
 };
 
 template <typename TLabelType, unsigned int VImageDimension>
 struct ImageTypeToPixelID< itk::LabelMap< itk::LabelObject< TLabelType, VImageDimension > > >
 {
-  using PixelIDType = LabelPixelID< TLabelType >;
+  typedef  LabelPixelID< TLabelType > PixelIDType;
 };
 /** @} */
 

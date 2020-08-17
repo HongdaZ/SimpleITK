@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -46,27 +46,26 @@ struct DualMemberFunctionInstantiater
     : m_Factory( factory )
     {}
   template <class TPixelIDType1, class TPixelIDType2>
-
-  typename std::enable_if< IsInstantiated<TPixelIDType1,VImageDimension>::Value &&
-                              IsInstantiated<TPixelIDType2,VImageDimension>::Value >::type
-  operator()( TPixelIDType1* t1=nullptr, TPixelIDType2*t2=nullptr ) const
+  typename EnableIf< IsInstantiated<TPixelIDType1,VImageDimension>::Value &&
+                     IsInstantiated<TPixelIDType2,VImageDimension>::Value >::Type
+  operator()( TPixelIDType1* t1=SITK_NULLPTR, TPixelIDType2*t2=SITK_NULLPTR ) const
     {
       (void)t1;
       (void)t2;
-      using ImageType1 = typename PixelIDToImageType<TPixelIDType1, VImageDimension>::ImageType;
-      using ImageType2 = typename PixelIDToImageType<TPixelIDType2, VImageDimension>::ImageType;
-      using AddressorType = TAddressor;
+      typedef typename PixelIDToImageType<TPixelIDType1, VImageDimension>::ImageType ImageType1;
+      typedef typename PixelIDToImageType<TPixelIDType2, VImageDimension>::ImageType ImageType2;
+      typedef TAddressor                                                             AddressorType;
 
       AddressorType addressor;
-      m_Factory.Register(addressor.CLANG_TEMPLATE operator()<ImageType1, ImageType2>(), (ImageType1*)(nullptr), (ImageType2*)(nullptr) );
+      m_Factory.Register(addressor.CLANG_TEMPLATE operator()<ImageType1, ImageType2>(), (ImageType1*)(SITK_NULLPTR), (ImageType2*)(SITK_NULLPTR) );
 
     }
 
   // this methods is conditionally enabled when the PixelID is not instantiated
   template <class TPixelIDType1, class TPixelIDType2>
-  typename std::enable_if< ! (IsInstantiated<TPixelIDType1,VImageDimension>::Value &&
-                              IsInstantiated<TPixelIDType2,VImageDimension>::Value) >::type
-  operator()( TPixelIDType1*t1=nullptr, TPixelIDType2*t2=nullptr ) const
+  typename DisableIf< IsInstantiated<TPixelIDType1,VImageDimension>::Value &&
+                     IsInstantiated<TPixelIDType2,VImageDimension>::Value >::Type
+  operator()( TPixelIDType1*t1=SITK_NULLPTR, TPixelIDType2*t2=SITK_NULLPTR ) const
     {
       (void)t1;
       (void)t2;
@@ -98,31 +97,41 @@ DualMemberFunctionFactory< TMemberFunctionPointer >
   assert( pixelID1 >= 0 && pixelID1 < typelist::Length< InstantiatedPixelIDTypeList >::Result );
   assert( pixelID2 >= 0 && pixelID2 < typelist::Length< InstantiatedPixelIDTypeList >::Result );
 
-  static_assert( TImageType1::ImageDimension >= 2 && TImageType1::ImageDimension <= SITK_MAX_DIMENSION,
-                    "Image1 Dimension out of range" );
-  static_assert( TImageType2::ImageDimension >= 2 && TImageType2::ImageDimension <= SITK_MAX_DIMENSION,
-                    "Image2 Dimension out of range" );
-  static_assert( int(TImageType1::ImageDimension) == int(TImageType2::ImageDimension),
+  sitkStaticAssert( TImageType1::ImageDimension == 2 || TImageType1::ImageDimension == 3,
+                    "Image Dimension out of range" );
+  sitkStaticAssert( int(TImageType1::ImageDimension) == int(TImageType2::ImageDimension),
                     "Image Dimensions do not match" );
-  static_assert( IsInstantiated<TImageType1>::Value,
+  sitkStaticAssert( IsInstantiated<TImageType1>::Value,
                     "invalid pixel type for argument one");
-  static_assert( IsInstantiated<TImageType2>::Value,
+  sitkStaticAssert( IsInstantiated<TImageType2>::Value,
                     "invalid pixel type for argument two");
 
-  typename Superclass::KeyType key(TImageType1::GetImageDimension(), pixelID1,
-                                   TImageType2::GetImageDimension(), pixelID2);
+  if ( pixelID1 >= 0 && pixelID1 < typelist::Length< InstantiatedPixelIDTypeList >::Result &&
+       pixelID2 >= 0 && pixelID2 < typelist::Length< InstantiatedPixelIDTypeList >::Result )
+    {
+    typename Superclass::KeyType key(pixelID1, pixelID2);
 
-  Superclass::m_PFunction[ key ] = Superclass::BindObject( pfunc, m_ObjectPointer );
-
+    switch( int(TImageType1::ImageDimension) )
+      {
+      case 3:
+        Superclass::m_PFunction3[ key ] = Superclass::BindObject( pfunc, m_ObjectPointer );
+        break;
+      case 2:
+        Superclass::m_PFunction2[ key ] = Superclass::BindObject( pfunc, m_ObjectPointer );
+        break;
+      default:
+        break;
+      }
+    }
 }
 
 template <typename TMemberFunctionPointer>
 template < typename TPixelIDTypeList1, typename TPixelIDTypeList2, unsigned int VImageDimension, typename TAddressor >
 void
 DualMemberFunctionFactory< TMemberFunctionPointer >
-::RegisterMemberFunctions( )
+::RegisterMemberFunctions( void )
 {
-  using InstantiaterType = DualMemberFunctionInstantiater< Self, VImageDimension, TAddressor >;
+  typedef DualMemberFunctionInstantiater< Self, VImageDimension, TAddressor > InstantiaterType;
 
   // initialize function array with pointer
   typelist::DualVisit<TPixelIDTypeList1, TPixelIDTypeList2> visitEachComboInLists;
@@ -133,19 +142,30 @@ DualMemberFunctionFactory< TMemberFunctionPointer >
 template <typename TMemberFunctionPointer>
 bool
 DualMemberFunctionFactory< TMemberFunctionPointer >
-::HasMemberFunction( PixelIDValueType pixelID1, PixelIDValueType pixelID2, unsigned int imageDimension  ) const noexcept
+::HasMemberFunction( PixelIDValueType pixelID1, PixelIDValueType pixelID2, unsigned int imageDimension  ) const SITK_NOEXCEPT
 {
-  typename Superclass::KeyType key(imageDimension, pixelID1, imageDimension, pixelID2);
   try
     {
-    // check if tr1::function has been set in map
-    return Superclass::m_PFunction.find( key ) != Superclass::m_PFunction.end();
+
+    typename Superclass::KeyType key(pixelID1, pixelID2);
+
+    switch ( imageDimension )
+      {
+      case 3:
+        // check if tr1::function has been set in map
+        return Superclass::m_PFunction3.find( key ) != Superclass::m_PFunction3.end();
+      case 2:
+        // check if tr1::function has been set in map
+        return Superclass::m_PFunction2.find( key ) != Superclass::m_PFunction2.end();
+      default:
+        return false;
+      }
     }
   // we do not throw exceptions
   catch(...)
     {
+    return false;
     }
-  return false;
 }
 
 template <typename TMemberFunctionPointer>
@@ -163,20 +183,40 @@ DualMemberFunctionFactory< TMemberFunctionPointer >
     sitkExceptionMacro ( << "unexpected error pixelID2 is out of range " << pixelID2 << " "  << typeid(ObjectType).name() );
     }
 
-  typename Superclass::KeyType key(imageDimension, pixelID1, imageDimension, pixelID2);
+  typename Superclass::KeyType key(pixelID1, pixelID2);
 
-  // check if tr1::function has been set
-  auto ret_pair = Superclass::m_PFunction.find( key ) ;
-  if ( ret_pair != Superclass::m_PFunction.end() )
+  switch ( imageDimension )
     {
-    return ret_pair->second;
-    }
-  // todo updated exceptions here
-  sitkExceptionMacro ( << "Pixel type: "
-                       << GetPixelIDValueAsString(pixelID1)
-                       << " is not supported in " << imageDimension << "D by"
-                       << typeid(ObjectType).name() );
+    case 3:
+      // check if tr1::function has been set
+      if ( Superclass::m_PFunction3.find( key ) != Superclass::m_PFunction3.end() )
+        {
+        return Superclass::m_PFunction3[ key ];
+        }
 
+      // todo updated exceptions here
+      sitkExceptionMacro ( << "Pixel type: "
+                           << GetPixelIDValueAsString(pixelID1)
+                           << " is not supported in 3D by"
+                           << typeid(ObjectType).name() );
+
+      break;
+    case 2:
+      // check if tr1::function has been set
+      if ( Superclass::m_PFunction2.find( key ) != Superclass::m_PFunction2.end() )
+        {
+        return Superclass::m_PFunction2[ key ];
+        }
+
+      sitkExceptionMacro ( << "Pixel type: "
+                           << GetPixelIDValueAsString(pixelID1)
+                           << " is not supported in 2D by"
+                           << typeid(ObjectType).name() );
+
+      break;
+    default:
+      sitkExceptionMacro ( << "Image dimension " << imageDimension << " is not supported" );
+    }
 }
 
 

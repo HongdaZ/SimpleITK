@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ namespace detail {
  *
  *  Example member function pointer:
  *  \code
- *  type alias Self& (Self::*MemberFunctionType)( Image* );
+ *  typedef Self& (Self::*MemberFunctionType)( Image* );
  *  \endcode
  *
  *  The RegisterMemberFunctions instantiate the templeted member
@@ -53,17 +53,17 @@ namespace detail {
  */
 template <typename TMemberFunctionPointer>
 class MemberFunctionFactory
-  : protected MemberFunctionFactoryBase<TMemberFunctionPointer, std::pair<unsigned int, int> >
+  : protected MemberFunctionFactoryBase<TMemberFunctionPointer, int>
 {
 
 public:
 
-  using Superclass = MemberFunctionFactoryBase<TMemberFunctionPointer, std::pair<unsigned int, int>>;
-  using Self = MemberFunctionFactory;
+  typedef MemberFunctionFactoryBase<TMemberFunctionPointer, int> Superclass;
+  typedef MemberFunctionFactory                                  Self;
 
-  using MemberFunctionType = TMemberFunctionPointer;
-  using ObjectType = typename ::detail::FunctionTraits<MemberFunctionType>::ClassType;
-  using FunctionObjectType = typename Superclass::FunctionObjectType;
+  typedef TMemberFunctionPointer                                           MemberFunctionType;
+  typedef typename ::detail::FunctionTraits<MemberFunctionType>::ClassType ObjectType;
+  typedef typename Superclass::FunctionObjectType                          FunctionObjectType;
 
   /** \brief Constructor which permanently binds the constructed
   * object to pObject */
@@ -90,7 +90,7 @@ public:
    * template < class TMemberFunctionPointer >
    * struct AllocateAddressor
    * {
-   *   using ObjectType = typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType;
+   *   typedef typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType ObjectType;
    *
    *   template< typename TImageType >
    *   TMemberFunctionPointer operator() ( void ) const
@@ -110,57 +110,24 @@ public:
    * this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 3 > ();
    * this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2 > ();
    * \endcode
-   *
-   * A range can also be used:
-   * \code
-   * this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2, 3 > ();
-   * \endcode
    * @{
    */
   template < typename TPixelIDTypeList,
              unsigned int VImageDimension,
              typename TAddressor >
-  void RegisterMemberFunctions( );
+  void RegisterMemberFunctions( void );
   template < typename TPixelIDTypeList, unsigned int VImageDimension >
-  void RegisterMemberFunctions( )
+  void RegisterMemberFunctions( void )
   {
-    using AddressorType = detail::MemberFunctionAddressor< TMemberFunctionPointer >;
+    typedef detail::MemberFunctionAddressor< TMemberFunctionPointer > AddressorType;
     this->RegisterMemberFunctions< TPixelIDTypeList, VImageDimension, AddressorType >();
-  }
-
-  template < typename TPixelIDTypeList, unsigned int VImageDimension, unsigned int VImageDimensionStop >
-  void
-   RegisterMemberFunctions( )
-  {
-    using AddressorType = detail::MemberFunctionAddressor< TMemberFunctionPointer >;
-    this->RegisterMemberFunctions< TPixelIDTypeList, VImageDimension, VImageDimensionStop, AddressorType >();
-  }
-  template < typename TPixelIDTypeList,
-             unsigned int VImageDimension,
-             unsigned int VImageDimensionStop,
-             typename TAddressor
-               >
-    typename std::enable_if<(VImageDimensionStop > VImageDimension)>::type
-   RegisterMemberFunctions( )
-  {
-    this->RegisterMemberFunctions< TPixelIDTypeList, VImageDimensionStop, TAddressor >();
-    this->RegisterMemberFunctions< TPixelIDTypeList, VImageDimension, VImageDimensionStop - 1, TAddressor >();
-  }
-  template < typename TPixelIDTypeList,
-             unsigned int VImageDimension,
-             unsigned int VImageDimensionStop,
-             typename TAddressor  >
-  typename std::enable_if<(VImageDimensionStop == VImageDimension)>::type
-   RegisterMemberFunctions( )
-  {
-    this->RegisterMemberFunctions< TPixelIDTypeList, VImageDimensionStop, TAddressor >();
   }
   /** @} */
 
   /** \brief Query to determine if an member function has been
     * registered for pixelID and imageDimension
     */
-  bool HasMemberFunction( PixelIDValueType pixelID, unsigned int imageDimension  ) const noexcept;
+  bool HasMemberFunction( PixelIDValueType pixelID, unsigned int imageDimension  ) const SITK_NOEXCEPT;
 
   /** \brief Returns a function object for the PixelIndex, and image
    *  dimension.

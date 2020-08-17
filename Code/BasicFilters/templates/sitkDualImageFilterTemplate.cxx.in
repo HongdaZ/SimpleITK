@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -30,8 +30,9 @@ namespace simple {
 //
 $(include ConstructorSignature.cxx.in)
 {
+$(include ConstructorInitializeMembers.cxx.in)
 
-  using PixelIDTypeList2 = ${pixel_types2};
+  typedef ${pixel_types2}  PixelIDTypeList2;
 
 
   this->m_DualMemberFactory.reset( new detail::DualMemberFunctionFactory<MemberFunctionType>( this ) );
@@ -40,17 +41,17 @@ $(include ConstructorSignature.cxx.in)
   this->m_DualMemberFactory->RegisterMemberFunctions< PixelIDTypeList, PixelIDTypeList2, 2 > ();
 
 $(if vector_pixel_types_by_component then
-  OUT=[[  using VectorByComponentsPixelIDTypeList = ${vector_pixel_types_by_component};
+  OUT=[[  typedef ${vector_pixel_types_by_component} VectorByComponentsPixelIDTypeList;
 ]]
   if vector_pixel_types_by_component2 then
-  OUT = OUT..[[  using VectorByComponentsPixelIDTypeList2 = ${vector_pixel_types_by_component2};
+  OUT = OUT..[[  typedef ${vector_pixel_types_by_component2} VectorByComponentsPixelIDTypeList2;
 ]]
   else
-  OUT = OUT..[[  using VectorByComponentsPixelIDTypeList2 = PixelIDTypeList2;
+  OUT = OUT..[[  typedef PixelIDTypeList2 VectorByComponentsPixelIDTypeList2;
 ]]
   end
   OUT = OUT..[[
-  using VectorAddressorType = detail::DualExecuteInternalVectorAddressor<MemberFunctionType>;
+  typedef detail::DualExecuteInternalVectorAddressor<MemberFunctionType> VectorAddressorType;
   this->m_DualMemberFactory->RegisterMemberFunctions< VectorByComponentsPixelIDTypeList, VectorByComponentsPixelIDTypeList2, 3, VectorAddressorType> ();
   this->m_DualMemberFactory->RegisterMemberFunctions< VectorByComponentsPixelIDTypeList, VectorByComponentsPixelIDTypeList2, 2, VectorAddressorType> ();]]
 end)
@@ -73,7 +74,7 @@ $(include CustomMethods.cxx.in)
 
 //
 // Execute
-//
+//$(include ExecuteWithParameters.cxx.in)
 $(if no_return_image then OUT=[[void]] else OUT=[[Image]] end) ${name}::Execute ( $(include ImageParameters.in)$(include InputParameters.in) )
 {
 $(if true then
@@ -82,28 +83,24 @@ if not (number_of_inputs >  0) and (#inputs > 0) then
   inputName1 = inputs[1].name:sub(1,1):lower() .. inputs[1].name:sub(2,-1)
 end
 OUT=[[
-  const PixelIDValueEnum type1 = ]]..inputName1..[[.GetPixelID();
-  const unsigned int dimension = ]]..inputName1..[[.GetDimension();
+  PixelIDValueEnum type1 = ]]..inputName1..[[.GetPixelID();
+  unsigned int dimension = ]]..inputName1..[[.GetDimension();
 ]]
 end
 local inputName2 = "image2"
-local input2_size_check = true
 if not (number_of_inputs >  1) and (inputs and (#inputs > 1)) then
   inputName2 = inputs[2].name:sub(1,1):lower() .. inputs[2].name:sub(2,-1)
-  input2_size_check = not inputs[2].no_size_check
 end
 if number_of_inputs >= 2 or (inputs and (#inputs >= 2)) then
   OUT=OUT..[[
-  const PixelIDValueType type2 = ]]..inputName2..[[.GetPixelIDValue();]]
-  OUT=OUT..[[
+  PixelIDValueType type2 = ]]..inputName2..[[.GetPixelIDValue();
 
-  CheckImageMatchingDimension( ]]..inputName1 .. [[, ]] .. inputName2 .. [[, "]] .. inputName2 .. [[" );
-]]
-  if input2_size_check then
-       OUT=OUT..[[
-  CheckImageMatchingSize( ]]..inputName1 .. [[, ]] .. inputName2 .. [[, "]] .. inputName2 .. [[" );
-]]
-  end
+  // todo need better error handling and potential type conversion
+  if ( ]]..inputName1..[[.GetDimension() != ]]..inputName2..[[.GetDimension() ||
+       ]]..inputName1..[[.GetSize() != ]]..inputName2..[[.GetSize() )
+    {
+      sitkExceptionMacro ( "Both images for ${name} don't match type or dimension!" );
+    }]]
 else
 OUT=OUT..[[
   ${custom_type2}]]
@@ -122,7 +119,7 @@ if inputs then
       OUT = OUT .. ", "
     end
     if  inputs[inum].optional and no_optional then
-      OUT=OUT.."nullptr"
+      OUT=OUT.."NULL"
     else
       OUT=OUT.."&"..inputs[inum].name:sub(1,1):lower() .. inputs[inum].name:sub(2,-1)
     end
@@ -130,9 +127,6 @@ if inputs then
 end) );
 }
 
-$(if in_place then
-  OUT=[[$(include ExecuteRValueReferenceNoParameters.cxx.in)]]
-end)
 
 //-----------------------------------------------------------------------------
 
@@ -163,17 +157,17 @@ if inputs then
 end ) )
 {
   // Define the input and output image types
-  using InputImageType = TImageType;
-  using InputImageType2 = TImageType2;
+  typedef TImageType     InputImageType;
+  typedef TImageType2    InputImageType2;
 
   $(if output_image_type then
   OUT=[[//Define output image type
-  using OutputImageType = ${output_image_type};]]
+  typedef ${output_image_type} OutputImageType;]]
   elseif output_pixel_type then
   OUT=[[// Define output image type
-  using OutputImageType =  itk::Image< ${output_pixel_type}, InputImageType::ImageDimension >;]]
+  typedef itk::Image< ${output_pixel_type}, InputImageType::ImageDimension > OutputImageType;]]
   else
-  OUT=[[using OutputImageType = InputImageType;]]
+  OUT=[[typedef InputImageType OutputImageType;]]
   end)
 
 $(include ExecuteInternalGetImagePointers.cxx.in)
@@ -205,34 +199,34 @@ if inputs then
   end
 end ) )
 {
-  using VectorInputImageType =  TImageType;
-  using ComponentType = typename VectorInputImageType::InternalPixelType;
-  using ComponentImageType = typename itk::Image<ComponentType, VectorInputImageType::ImageDimension>;
+  typedef TImageType                                                               VectorInputImageType;
+  typedef typename VectorInputImageType::InternalPixelType                         ComponentType;
+  typedef typename itk::Image<ComponentType, VectorInputImageType::ImageDimension> ComponentImageType;
   // we must define the input and output image types
   // they should be the same as the scalar execute internal method
-  using InputImageType = ComponentImageType;
+  typedef ComponentImageType   InputImageType;
 ]]
 if vector_pixel_types_by_component2 then OUT = OUT..[[
-  using VectorInputImageType2 = TImageType2;
-  using ComponentType2 = typename VectorInputImageType2::InternalPixelType;
-  using ComponentImageType2 = typename itk::Image<ComponentType2, VectorInputImageType2::ImageDimension>;
-  using InputImageType2 = ComponentImageType2;]]
+  typedef TImageType2                                                                VectorInputImageType2;
+  typedef typename VectorInputImageType2::InternalPixelType                          ComponentType2;
+  typedef typename itk::Image<ComponentType2, VectorInputImageType2::ImageDimension> ComponentImageType2;
+  typedef ComponentImageType2  InputImageType2;]]
 else
    OUT= OUT..[[
-  using InputImageType2 = TImageType2;]]
+  typedef TImageType2  InputImageType2;]]
 end
 if output_image_type then
 OUT=OUT..[[
   //Define output image type
-  using OutputImageType = ${output_image_type};]]
+  typedef ${output_image_type} OutputImageType;]]
 elseif output_pixel_type then
 OUT=OUT..[[
   // Define output image type
-  using OutputImageType = itk::Image< ${output_pixel_type}, InputImageType::ImageDimension >;]]
+  typedef itk::Image< ${output_pixel_type}, InputImageType::ImageDimension > OutputImageType;]]
 else
   OUT=OUT..[[
   // Define output image type
-  using OutputImageType = InputImageType;]]
+  typedef InputImageType OutputImageType;]]
 end
 
 OUT=OUT..[[
@@ -249,18 +243,18 @@ end
 
 OUT=OUT..[[ );
 
-  using ComponentExtractorType = itk::VectorIndexSelectionCastImageFilter< VectorInputImageType, ComponentImageType >;
-  typename ComponentExtractorType::Pointer extractor = ComponentExtractorType::New();
+  typedef itk::VectorIndexSelectionCastImageFilter< VectorInputImageType, ComponentImageType > ComponentExtratorType;
+  typename ComponentExtratorType::Pointer extractor = ComponentExtratorType::New();
   extractor->SetInput( image1 );
 
-  using ToVectorFilterType = itk::ComposeImageFilter<OutputImageType>;
+  typedef itk::ComposeImageFilter<OutputImageType> ToVectorFilterType;
   typename ToVectorFilterType::Pointer toVector = ToVectorFilterType::New();
 
   unsigned int numComps = image1->GetNumberOfComponentsPerPixel();
   for ( unsigned int i = 0; i < numComps; ++i )
     {
     extractor->SetIndex( i );
-    extractor->UpdateLargestPossibleRegion();
+    extractor->Update();
 ]]
 
 if number_of_inputs > 0 then
@@ -297,9 +291,7 @@ sitkClangDiagnosticPop();
 
 //-----------------------------------------------------------------------------
 
-$(if (not no_procedure) or (no_procedure == 1) then
-OUT=[[$(include ProceduralAPI.cxx.in)]]
-end)
+$(include FunctionalAPI.cxx.in)
 
 } // end namespace simple
 } // end namespace itk

@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -24,7 +24,9 @@ namespace itk
 namespace simple
 {
 
-ScaleTransform::~ScaleTransform() = default;
+ScaleTransform::~ScaleTransform()
+{
+}
 
 ScaleTransform::ScaleTransform(unsigned int dimensions,
                                            const std::vector<double> &scale)
@@ -106,15 +108,15 @@ void ScaleTransform::InternalInitialization(itk::TransformBase *transform)
 
   typelist::Visit<TransformTypeList> callInternalInitialization;
 
-  this->m_pfSetCenter = nullptr;
-  this->m_pfGetCenter = nullptr;
-  this->m_pfSetScale = nullptr;
-  this->m_pfGetScale = nullptr;
-  this->m_pfGetMatrix = nullptr;
+  this->m_pfSetCenter = SITK_NULLPTR;
+  this->m_pfGetCenter = SITK_NULLPTR;
+  this->m_pfSetScale = SITK_NULLPTR;
+  this->m_pfGetScale = SITK_NULLPTR;
+  this->m_pfGetMatrix = SITK_NULLPTR;
 
   callInternalInitialization(visitor);
 
-  if ( this->m_pfSetCenter == nullptr )
+  if ( this->m_pfSetCenter == SITK_NULLPTR )
     {
     sitkExceptionMacro("Transform is not of type " << this->GetName() << "!" );
     }

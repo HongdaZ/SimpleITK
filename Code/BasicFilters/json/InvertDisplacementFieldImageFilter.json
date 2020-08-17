@@ -8,7 +8,7 @@
   "custom_set_input" : "filter->SetDisplacementField( GetImageFromVectorImage(const_cast< InputImageType * >(image1.GetPointer())) );",
   "include_files" : [
     "itkVector.h",
-    "sitkImageConvert.hxx"
+    "sitkImageConvert.h"
   ],
   "members" : [
     {
@@ -77,8 +77,7 @@
     }
   ],
   "briefdescription" : "Iteratively estimate the inverse field of a displacement field.",
-  "detaileddescription" : "\\author Nick Tustison \n\n\n\\author Brian Avants",
+  "detaileddescription" : "\\author Nick Tustison \n\n\\author Brian Avants",
   "itk_module" : "ITKDisplacementField",
-  "itk_group" : "DisplacementField",
-  "in_place" : false
+  "itk_group" : "DisplacementField"
 }

@@ -1,11 +1,10 @@
   $(if filter_type then
-    OUT=[[using FilterType = ${filter_type};]]
+    OUT=[[typedef ${filter_type} FilterType;]]
   else
-    OUT=[[using FilterType = ]]
     if itk_name then
-      OUT=OUT..[[itk::${itk_name}<InputImageType,]]
+      OUT=[[typedef itk::${itk_name}<InputImageType,]]
     else
-      OUT=OUT..[[ itk::${name}<InputImageType,]]
+      OUT=[[typedef itk::${name}<InputImageType,]]
     end
         if number_of_inputs == 2 or (inputs and #inputs == 2 )then
            OUT=OUT .. ' InputImageType2,'
@@ -13,7 +12,7 @@
          if additional_template_types then
          OUT=OUT .. [[ $(foreach additional_template_types ${type},) ]]
          end
-     OUT=OUT .. [[  OutputImageType>;]]
+     OUT=OUT .. [[  OutputImageType> FilterType;]]
   end)
   // Set up the ITK filter
   typename FilterType::Pointer filter = FilterType::New();

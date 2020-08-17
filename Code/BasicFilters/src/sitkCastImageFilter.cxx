@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -27,7 +27,9 @@ namespace simple
 //----------------------------------------------------------------------------
 
 
-CastImageFilter::~CastImageFilter() = default;
+CastImageFilter::~CastImageFilter()
+{
+}
 
 //
 // Default constructor that initializes parameters
@@ -70,7 +72,7 @@ CastImageFilter::Self& CastImageFilter::SetOutputPixelType( PixelIDValueEnum pix
   return *this;
 }
 
-PixelIDValueEnum CastImageFilter::GetOutputPixelType( ) const
+PixelIDValueEnum CastImageFilter::GetOutputPixelType( void ) const
 {
   return this->m_OutputPixelType;
 }
@@ -102,8 +104,7 @@ Image CastImageFilter::Execute ( const Image& image )
 
 Image Cast ( const Image& image, PixelIDValueEnum pixelID ) {
   CastImageFilter filter;
-  filter.SetOutputPixelType( pixelID );
-  return filter.Execute ( image );
+  return filter.SetOutputPixelType ( pixelID ).Execute ( image );
 }
 
 

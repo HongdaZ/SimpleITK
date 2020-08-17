@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ ImageRegistrationMethod::ImageRegistrationMethod()
   m_MemberFactory->RegisterMemberFunctions< RealPixelIDTypeList, 3 > ();
   m_MemberFactory->RegisterMemberFunctions< RealPixelIDTypeList, 2 > ();
 
-  using EvaluateMemberFunctionAddressorType = EvaluateMemberFunctionAddressor<EvaluateMemberFunctionType>;
+  typedef EvaluateMemberFunctionAddressor<EvaluateMemberFunctionType> EvaluateMemberFunctionAddressorType;
   m_EvaluateMemberFactory->RegisterMemberFunctions< RealPixelIDTypeList, 3, EvaluateMemberFunctionAddressorType > ();
   m_EvaluateMemberFactory->RegisterMemberFunctions< RealPixelIDTypeList, 2, EvaluateMemberFunctionAddressorType > ();
 
@@ -96,7 +96,9 @@ ImageRegistrationMethod::ImageRegistrationMethod()
 }
 
 
-ImageRegistrationMethod::~ImageRegistrationMethod() = default;
+ImageRegistrationMethod::~ImageRegistrationMethod()
+{
+}
 
 std::string  ImageRegistrationMethod::ToString() const
 {
@@ -694,7 +696,7 @@ ImageRegistrationMethod::CreateScalesEstimator()
     {
     case Jacobian:
     {
-      using ScalesEstimatorType = RegistrationParameterScalesFromJacobian<TMetric>;
+      typedef RegistrationParameterScalesFromJacobian<TMetric> ScalesEstimatorType;
       typename ScalesEstimatorType::Pointer scalesEstimator = ScalesEstimatorType::New();
       scalesEstimator->SetCentralRegionRadius(this->m_OptimizerScalesCentralRegionRadius);
       scalesEstimator->Register();
@@ -702,7 +704,7 @@ ImageRegistrationMethod::CreateScalesEstimator()
     }
     case IndexShift:
     {
-      using ScalesEstimatorType = RegistrationParameterScalesFromIndexShift<TMetric>;
+      typedef RegistrationParameterScalesFromIndexShift<TMetric> ScalesEstimatorType;
       typename ScalesEstimatorType::Pointer scalesEstimator = ScalesEstimatorType::New();
       scalesEstimator->SetCentralRegionRadius(this->m_OptimizerScalesCentralRegionRadius);
       scalesEstimator->SetSmallParameterVariation(this->m_OptimizerScalesSmallParameterVariation);
@@ -711,7 +713,7 @@ ImageRegistrationMethod::CreateScalesEstimator()
     }
     case PhysicalShift:
     {
-      using ScalesEstimatorType = RegistrationParameterScalesFromPhysicalShift<TMetric>;
+      typedef RegistrationParameterScalesFromPhysicalShift<TMetric> ScalesEstimatorType;
       typename ScalesEstimatorType::Pointer scalesEstimator = ScalesEstimatorType::New();
       scalesEstimator->SetCentralRegionRadius(this->m_OptimizerScalesCentralRegionRadius);
       scalesEstimator->SetSmallParameterVariation(this->m_OptimizerScalesSmallParameterVariation);
@@ -746,10 +748,10 @@ ImageRegistrationMethod::CreateSpatialObjectMask(const Image &imageMask)
     }
 
   // ick assuming uint8 == uchar
-  using ITKImageType = itk::Image<unsigned char, VDimension>;
+  typedef itk::Image<unsigned char, VDimension> ITKImageType;
   typename ITKImageType::ConstPointer itkImage = this->CastImageToITK<ITKImageType>(mask);
 
-  using SpatialObjectMaskType = itk::ImageMaskSpatialObject<VDimension>;
+  typedef itk::ImageMaskSpatialObject<VDimension> SpatialObjectMaskType;
   typename SpatialObjectMaskType::Pointer spatialMask = SpatialObjectMaskType::New();
   spatialMask->SetImage(itkImage);
   spatialMask->Register();
@@ -764,7 +766,7 @@ Transform ImageRegistrationMethod::Execute ( const Image &fixed, const Image & m
   if ( fixed.GetPixelIDValue() != moving.GetPixelIDValue() )
     {
     sitkExceptionMacro ( << "Fixed and moving images must be the same datatype! Got "
-                         << fixed.GetPixelIDTypeAsString() << " and " << moving.GetPixelIDTypeAsString() );
+                         << fixed.GetPixelIDValue() << " and " << moving.GetPixelIDValue() );
     }
 
   if ( fixed.GetDimension() != moving.GetDimension() )
@@ -785,13 +787,13 @@ Transform ImageRegistrationMethod::Execute ( const Image &fixed, const Image & m
 template<class TImageType>
 Transform ImageRegistrationMethod::ExecuteInternal ( const Image &inFixed, const Image &inMoving )
 {
-  using FixedImageType = TImageType;
-  using MovingImageType = TImageType;
+  typedef TImageType     FixedImageType;
+  typedef TImageType     MovingImageType;
   const unsigned int ImageDimension = FixedImageType::ImageDimension;
-  //using SpatialObjectMaskType = itk::SpatialObject<ImageDimension>;
+  //typedef itk::SpatialObject<ImageDimension> SpatialObjectMaskType;
 
 
-  using RegistrationType = itk::ImageRegistrationMethodv4<FixedImageType, MovingImageType>;
+  typedef itk::ImageRegistrationMethodv4<FixedImageType, MovingImageType>  RegistrationType;
   typename RegistrationType::Pointer   registration  = RegistrationType::New();
 
   // this variable will hold the initial moving then fixed, then the
@@ -913,13 +915,15 @@ Transform ImageRegistrationMethod::ExecuteInternal ( const Image &inFixed, const
   //
   // Configure Optimizer
   //
-  if( this->GetNumberOfWorkUnits() > 0 )
-    {
-    optimizer->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
-    }
+  #if ITK_VERSION_MAJOR < 5
+  optimizer->SetNumberOfThreads(this->GetNumberOfThreads());
+  #else
+  optimizer->SetNumberOfWorkUnits(this->GetNumberOfThreads());
+  #endif
+
   registration->SetOptimizer( optimizer );
 
-  if ( !m_OptimizerWeights.empty() )
+  if ( m_OptimizerWeights.size( ) )
     {
     itk::ObjectToObjectOptimizerBaseTemplate<double>::ScalesType weights(m_OptimizerWeights.size());
     std::copy( m_OptimizerWeights.begin(), m_OptimizerWeights.end(), weights.begin() );
@@ -934,7 +938,7 @@ Transform ImageRegistrationMethod::ExecuteInternal ( const Image &inFixed, const
     scalesEstimator->SetTransformForward( true );
     optimizer->SetScalesEstimator( scalesEstimator );
     }
-  else if ( !m_OptimizerScales.empty() )
+  else if ( m_OptimizerScales.size() )
     {
     itk::ObjectToObjectOptimizerBaseTemplate<double>::ScalesType scales(m_OptimizerScales.size());
     std::copy( m_OptimizerScales.begin(), m_OptimizerScales.end(), scales.begin() );
@@ -945,9 +949,9 @@ Transform ImageRegistrationMethod::ExecuteInternal ( const Image &inFixed, const
                  << *registration->GetOptimizer()
                  << *registration->GetMetric());
 
-  m_pfGetOptimizerStopConditionDescription =  std::bind(&_OptimizerType::GetStopConditionDescription, optimizer.GetPointer());
+  m_pfGetOptimizerStopConditionDescription =  nsstd::bind(&_OptimizerType::GetStopConditionDescription, optimizer.GetPointer());
 
-  m_pfGetCurrentLevel = std::bind(&CurrentLevelCustomCast::CustomCast<RegistrationType>,registration.GetPointer());
+  m_pfGetCurrentLevel = nsstd::bind(&CurrentLevelCustomCast::CustomCast<RegistrationType>,registration.GetPointer());
 
 
   try
@@ -989,7 +993,7 @@ Transform ImageRegistrationMethod::ExecuteInternal ( const Image &inFixed, const
     // which accepts an arbitrary ITK transform.
     typename RegistrationType::OutputTransformType* itkOutTx = registration->GetModifiableTransform();
 
-    using CompositeTransformType = itk::CompositeTransform<double, ImageDimension>;
+    typedef itk::CompositeTransform<double, ImageDimension> CompositeTransformType;
 
     typename CompositeTransformType::Pointer comp = CompositeTransformType::New();
     comp->ClearTransformQueue();
@@ -1035,12 +1039,12 @@ double ImageRegistrationMethod::MetricEvaluate ( const Image &fixed, const Image
 template<class TImageType>
 double ImageRegistrationMethod::EvaluateInternal ( const Image &inFixed, const Image &inMoving )
 {
-  using FixedImageType = TImageType;
-  using MovingImageType = TImageType;
+  typedef TImageType     FixedImageType;
+  typedef TImageType     MovingImageType;
   const unsigned int ImageDimension = FixedImageType::ImageDimension;
-  //using SpatialObjectMaskType = itk::SpatialObject<ImageDimension>;
+  //typedef itk::SpatialObject<ImageDimension> SpatialObjectMaskType;
 
- using RegistrationType = itk::ImageRegistrationMethodv4<FixedImageType, MovingImageType>;
+ typedef itk::ImageRegistrationMethodv4<FixedImageType, MovingImageType>  RegistrationType;
 
   // this variable will hold the initial moving then fixed, then the
   // initial to optimize.
@@ -1059,7 +1063,7 @@ double ImageRegistrationMethod::EvaluateInternal ( const Image &inFixed, const I
   metric->SetFixedImage(fixed);
   metric->SetMovingImage(moving);
 
-  using CompositeTransformType = itk::CompositeTransform<double, ImageDimension>;
+  typedef itk::CompositeTransform<double, ImageDimension> CompositeTransformType;
   typename CompositeTransformType::Pointer movingInitialCompositeTransform = CompositeTransformType::New();
   // Set initial moving transform
   if ( strIdentityTransform != this->m_MovingInitialTransform.GetITKBase()->GetNameOfClass())
@@ -1108,20 +1112,22 @@ ImageRegistrationMethod::SetupMetric(
   >*metric, const TImageType *fixed, const TImageType *moving)
 {
 
-  using FixedImageType = TImageType;
-  using MovingImageType = TImageType;
+  typedef TImageType     FixedImageType;
+  typedef TImageType     MovingImageType;
   const unsigned int ImageDimension = FixedImageType::ImageDimension;
-  using SpatialObjectMaskType = itk::SpatialObject<ImageDimension>;
+  typedef itk::SpatialObject<ImageDimension> SpatialObjectMaskType;
 
-  if (this->GetNumberOfWorkUnits() > 0)
-    {
-    metric->SetMaximumNumberOfWorkUnits(this->GetNumberOfWorkUnits());
-    }
+  #if ITK_VERSION_MAJOR < 5
+  metric->SetMaximumNumberOfThreads(this->GetNumberOfThreads());
+  #else
+  metric->SetMaximumNumberOfWorkUnits(this->GetNumberOfThreads());
+  #endif
+
 
   metric->SetUseFixedImageGradientFilter( m_MetricUseFixedImageGradientFilter );
   metric->SetUseMovingImageGradientFilter( m_MetricUseMovingImageGradientFilter );
 
-  if ( !this->m_VirtualDomainSize.empty() )
+  if ( this->m_VirtualDomainSize.size() != 0 )
     {
     typename FixedImageType::SpacingType itkSpacing = sitkSTLVectorToITK<typename FixedImageType::SpacingType>(this->m_VirtualDomainSpacing);
     typename FixedImageType::PointType itkOrigin = sitkSTLVectorToITK<typename FixedImageType::PointType>(this->m_VirtualDomainOrigin);
@@ -1133,11 +1139,11 @@ ImageRegistrationMethod::SetupMetric(
     metric->SetVirtualDomain( itkSpacing, itkOrigin, itkDirection, itkRegion );
     }
 
-  using FixedInterpolatorType = itk::InterpolateImageFunction< FixedImageType, double >;
+  typedef itk::InterpolateImageFunction< FixedImageType, double > FixedInterpolatorType;
   typename FixedInterpolatorType::Pointer   fixedInterpolator  = CreateInterpolator(fixed, m_Interpolator);
   metric->SetFixedInterpolator( fixedInterpolator );
 
-  using MovingInterpolatorType = itk::InterpolateImageFunction< MovingImageType, double >;
+  typedef itk::InterpolateImageFunction< MovingImageType, double > MovingInterpolatorType;
   typename MovingInterpolatorType::Pointer   movingInterpolator  = CreateInterpolator(moving, m_Interpolator);
   metric->SetMovingInterpolator( movingInterpolator );
 
@@ -1196,25 +1202,25 @@ void ImageRegistrationMethod::RemoveITKObserver( EventCommand &e )
   return Superclass::RemoveITKObserver(e);
 }
 
-void ImageRegistrationMethod::OnActiveProcessDelete( ) noexcept
+void ImageRegistrationMethod::OnActiveProcessDelete( ) SITK_NOEXCEPT
 {
   Superclass::OnActiveProcessDelete( );
 
   // clean up all pointer functions here
-  this->m_pfGetOptimizerIteration = nullptr;
-  this->m_pfGetOptimizerPosition = nullptr;
-  this->m_pfGetOptimizerLearningRate = nullptr;
-  this->m_pfGetOptimizerConvergenceValue = nullptr;
-  this->m_pfGetMetricValue = nullptr;
-  this->m_pfGetMetricNumberOfValidPoints = nullptr;
-  this->m_pfGetOptimizerScales = nullptr;
-  this->m_pfGetOptimizerStopConditionDescription = nullptr;
+  this->m_pfGetOptimizerIteration = SITK_NULLPTR;
+  this->m_pfGetOptimizerPosition = SITK_NULLPTR;
+  this->m_pfGetOptimizerLearningRate = SITK_NULLPTR;
+  this->m_pfGetOptimizerConvergenceValue = SITK_NULLPTR;
+  this->m_pfGetMetricValue = SITK_NULLPTR;
+  this->m_pfGetMetricNumberOfValidPoints = SITK_NULLPTR;
+  this->m_pfGetOptimizerScales = SITK_NULLPTR;
+  this->m_pfGetOptimizerStopConditionDescription = SITK_NULLPTR;
 
-  this->m_pfUpdateWithBestValue = nullptr;
+  this->m_pfUpdateWithBestValue = SITK_NULLPTR;
 
-  this->m_pfGetCurrentLevel = nullptr;
+  this->m_pfGetCurrentLevel = SITK_NULLPTR;
 
-  this->m_ActiveOptimizer = nullptr;
+  this->m_ActiveOptimizer = SITK_NULLPTR;
 }
 
 

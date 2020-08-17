@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# =========================================================================
+#=========================================================================
 #
-#  Copyright NumFOCUS
+#  Copyright Insight Software Consortium
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -15,28 +15,29 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-# =========================================================================
+#=========================================================================
 
 from __future__ import print_function
 
+import SimpleITK as sitk
 import os
 
-import SimpleITK as sitk
+xImg = sitk.Image( 256, 256, sitk.sitkFloat32 )
+yImg = sitk.Image( 256, 256, sitk.sitkFloat32 )
 
-xImg = sitk.Image(256, 256, sitk.sitkFloat32)
-yImg = sitk.Image(256, 256, sitk.sitkFloat32)
-
-for y in range(0, xImg.GetSize()[1]):
-    for x in range(0, xImg.GetSize()[0]):
-        xImg.SetPixel(x, y, x)
+for y in range( 0, xImg.GetSize()[1] ):
+    for x in range( 0, xImg.GetSize()[0] ):
+        xImg.SetPixel( x, y, x )
         yImg[x, y] = y
+
 
 sigma = 50
 
-xImg = sitk.Subtract(xImg, xImg.GetSize()[0] / 2)
+xImg = sitk.Subtract( xImg,  xImg.GetSize()[0] / 2 )
 yImg = yImg - yImg.GetSize()[1] / 2
 
-gaussianImg = sitk.Exp(-1 * (xImg ** 2 + yImg ** 2) / (2.0 * sigma ** 2))
+gaussianImg = sitk.Exp( -1 * (xImg**2 + yImg**2) / (2.0 * sigma**2) )
 
-if ("SITK_NOSHOW" not in os.environ):
-    sitk.Show(gaussianImg, "Gaussian Blob")
+
+if ( not "SITK_NOSHOW" in os.environ ):
+    sitk.Show( gaussianImg, "Gaussian Blob" )

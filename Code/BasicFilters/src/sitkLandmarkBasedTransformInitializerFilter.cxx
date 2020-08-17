@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -59,7 +59,10 @@ LandmarkBasedTransformInitializerFilter::LandmarkBasedTransformInitializerFilter
 //
 // Destructor
 //
-LandmarkBasedTransformInitializerFilter::~LandmarkBasedTransformInitializerFilter () = default;
+LandmarkBasedTransformInitializerFilter::~LandmarkBasedTransformInitializerFilter ()
+{
+
+}
 
 
 //
@@ -92,6 +95,23 @@ std::string LandmarkBasedTransformInitializerFilter::ToString() const
 //
 // Execute
 //
+Transform LandmarkBasedTransformInitializerFilter::Execute ( const Transform & transform,
+                                                             const std::vector<double> & fixedLandmarks,
+                                                             const std::vector<double> & movingLandmarks,
+                                                             const std::vector<double> & landmarkWeight,
+                                                             const Image & referenceImage,
+                                                             unsigned int numberOfControlPoints )
+{
+  this->SetFixedLandmarks ( fixedLandmarks );
+  this->SetMovingLandmarks ( movingLandmarks );
+  this->SetLandmarkWeight ( landmarkWeight );
+  this->SetReferenceImage ( referenceImage );
+  this->SetBSplineNumberOfControlPoints ( numberOfControlPoints );
+
+  return this->Execute ( transform );
+}
+
+
 Transform LandmarkBasedTransformInitializerFilter::Execute ( const Transform & transform )
 {
   unsigned int dimension = transform.GetDimension();
@@ -127,11 +147,11 @@ Transform LandmarkBasedTransformInitializerFilter::ExecuteInternal ( const Trans
 {
 
   // Define the input and output image types
-  using InputImageType = itk::ImageBase<TImageType::ImageDimension>;
+  typedef itk::ImageBase<TImageType::ImageDimension>  InputImageType;
   const unsigned int Dimension = InputImageType::ImageDimension;
 
 
-  using FilterType = itk::LandmarkBasedTransformInitializer< itk::Transform< double, Dimension, Dimension >, InputImageType, InputImageType>;
+  typedef itk::LandmarkBasedTransformInitializer< itk::Transform< double, Dimension, Dimension >, InputImageType, InputImageType> FilterType;
   // Set up the ITK filter
   typename FilterType::Pointer filter = FilterType::New();
 
@@ -150,7 +170,7 @@ Transform LandmarkBasedTransformInitializerFilter::ExecuteInternal ( const Trans
   else { filter->SetTransform( const_cast<typename FilterType::TransformType*>(itkTx) ); }
 
 
-  using PointContainer = typename FilterType::LandmarkPointContainer;
+  typedef typename FilterType::LandmarkPointContainer PointContainer;
   PointContainer fixedITKPoints;
   fixedITKPoints = sitkSTLVectorToITKPointVector<PointContainer,double>(m_FixedLandmarks);
   filter->SetFixedLandmarks(fixedITKPoints);
@@ -161,9 +181,8 @@ Transform LandmarkBasedTransformInitializerFilter::ExecuteInternal ( const Trans
 
   filter->SetLandmarkWeight ( this->m_LandmarkWeight );
 
-  using TransformCategoryEnum = typename FilterType::TransformType::TransformCategoryEnum;
   // BSpline specific setup
-  if( itkTx->GetTransformCategory() == TransformCategoryEnum::BSpline )
+  if( itkTx->GetTransformCategory() == itkTx->BSpline )
     {
     if ( this->m_ReferenceImage.GetSize() == std::vector<unsigned int>(this->m_ReferenceImage.GetDimension(), 0u) )
       {
@@ -206,12 +225,7 @@ Transform LandmarkBasedTransformInitializer ( const Transform & transform,
                                               unsigned int numberOfControlPoints )
 {
   LandmarkBasedTransformInitializerFilter filter;
-  filter.SetFixedLandmarks(fixedLandmarks);
-  filter.SetMovingLandmarks(movingLandmarks);
-  filter.SetLandmarkWeight(landmarkWeight);
-  filter.SetReferenceImage(referenceImage);
-  filter.SetBSplineNumberOfControlPoints(numberOfControlPoints);
-  return filter.Execute ( transform );
+  return filter.Execute ( transform, fixedLandmarks, movingLandmarks, landmarkWeight, referenceImage, numberOfControlPoints );
 }
 
 

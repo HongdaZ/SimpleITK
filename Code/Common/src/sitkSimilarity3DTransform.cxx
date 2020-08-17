@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -25,7 +25,9 @@ namespace itk
 namespace simple
 {
 
-Similarity3DTransform::~Similarity3DTransform() = default;
+Similarity3DTransform::~Similarity3DTransform()
+{
+}
 
 // construct identity
 Similarity3DTransform::Similarity3DTransform()
@@ -166,22 +168,22 @@ void Similarity3DTransform::SetPimpleTransform( PimpleTransformBase *pimpleTrans
 void Similarity3DTransform::InternalInitialization(itk::TransformBase *transform)
 {
 
-  using TransformType = itk::Similarity3DTransform<double>;
+  typedef itk::Similarity3DTransform<double> TransformType;
   TransformType *t = dynamic_cast<TransformType*>(transform);
 
   // explicitly remove all function pointer with reference to prior transform
-  this->m_pfSetCenter = nullptr;
-  this->m_pfGetCenter = nullptr;
-  this->m_pfSetTranslation = nullptr;
-  this->m_pfGetTranslation = nullptr;
-  this->m_pfSetRotation1 = nullptr;
-  this->m_pfSetRotation2 = nullptr;
-  this->m_pfGetVersor = nullptr;
-  this->m_pfSetScale = nullptr;
-  this->m_pfGetScale = nullptr;
-  this->m_pfTranslate = nullptr;
-  this->m_pfGetMatrix = nullptr;
-  this->m_pfSetMatrix = nullptr;
+  this->m_pfSetCenter = SITK_NULLPTR;
+  this->m_pfGetCenter = SITK_NULLPTR;
+  this->m_pfSetTranslation = SITK_NULLPTR;
+  this->m_pfGetTranslation = SITK_NULLPTR;
+  this->m_pfSetRotation1 = SITK_NULLPTR;
+  this->m_pfSetRotation2 = SITK_NULLPTR;
+  this->m_pfGetVersor = SITK_NULLPTR;
+  this->m_pfSetScale = SITK_NULLPTR;
+  this->m_pfGetScale = SITK_NULLPTR;
+  this->m_pfTranslate = SITK_NULLPTR;
+  this->m_pfGetMatrix = SITK_NULLPTR;
+  this->m_pfSetMatrix = SITK_NULLPTR;
 
   if (t && (typeid(*t) == typeid(TransformType)))
     {
@@ -203,26 +205,21 @@ void Similarity3DTransform::InternalInitialization(TransformType *t)
   SITK_TRANSFORM_SET_MPF_GetMatrix();
   SITK_TRANSFORM_SET_MPF_SetMatrix();
 
-  this->m_pfSetRotation1 = [t](const std::vector<double> &v) {
-    t->SetRotation(sitkSTLVectorToITKVersor<double>(v));
-  };
+  void  (TransformType::*pfSetRotation1) (const typename TransformType::VersorType &) = &TransformType::SetRotation;
+  this->m_pfSetRotation1 = nsstd::bind(pfSetRotation1,t,nsstd::bind(&sitkSTLVectorToITKVersor<double, double>,nsstd::placeholders::_1));
 
-  this->m_pfSetRotation2 = [t](const std::vector<double> &v, double d) {
-    t->SetRotation(sitkSTLVectorToITK<typename TransformType::AxisType>(v),d);
-  };
+  typename TransformType::OutputVectorType (*pfSTLVectorToITK)(const std::vector<double> &) = &sitkSTLVectorToITK<typename TransformType::OutputVectorType, double>;
+  void  (TransformType::*pfSetRotation2) (const typename TransformType::AxisType &, double) = &TransformType::SetRotation;
+  this->m_pfSetRotation2 = nsstd::bind(pfSetRotation2,t,nsstd::bind(pfSTLVectorToITK,nsstd::placeholders::_1),nsstd::placeholders::_2);
 
-  this->m_pfGetVersor = [t] () {
-    return sitkITKVersorToSTL<double>(t->GetVersor());
-  };
+  this->m_pfGetVersor  = nsstd::bind(&sitkITKVersorToSTL<double, double>,nsstd::bind(&TransformType::GetVersor,t));
 
-  this->m_pfSetScale = std::bind(&TransformType::SetScale,t,std::placeholders::_1);
-  this->m_pfGetScale = std::bind(&TransformType::GetScale,t);
+  this->m_pfSetScale = nsstd::bind(&TransformType::SetScale,t,nsstd::placeholders::_1);
+  this->m_pfGetScale = nsstd::bind(&TransformType::GetScale,t);
 
   // pre argument has no effect
-  // pre argument has no effect
-  this->m_pfTranslate = [t] (const std::vector<double> &v) {
-    t->Translate( sitkSTLVectorToITK<typename TransformType::OutputVectorType>(v), false );
-  };
+  this->m_pfTranslate = nsstd::bind(&TransformType::Translate,t,nsstd::bind(pfSTLVectorToITK,nsstd::placeholders::_1), false);
+
 }
 
 }

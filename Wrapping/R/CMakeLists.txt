@@ -74,14 +74,11 @@ configure_file(
 # data store.
 include(sitkExternalData)
 
-
-set(_algo "sha512")
-
-file( GLOB_RECURSE image_links RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/SimpleITK/inst/extdata/*.${_algo}" )
+file( GLOB_RECURSE image_links RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/SimpleITK/inst/extdata/*.md5" )
 
 foreach(link ${image_links})
-  string( REGEX REPLACE "\\.${_algo}$" "" link ${link} )
-  ExternalData_Expand_Arguments(  SimpleITKRpackageData
+  string( REGEX REPLACE "\\.md5$" "" link ${link} )
+  ExternalData_Expand_Arguments( SimpleITKRpackageData
     image_location
     DATA{${link}}
     )
@@ -92,11 +89,11 @@ endforeach()
 # The downloaded tar ball of documentation has been generated with
 # the "Utilities/GenerateDocs/SwigDocUpdate.sh". This documentation
 # should be generated for each release.
-file( GLOB_RECURSE doc_links RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/SimpleITK/man/*.${_algo}" )
+file( GLOB_RECURSE doc_links RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/SimpleITK/man/*.md5" )
 
 foreach(link ${doc_links})
-  string( REGEX REPLACE "\\.${_algo}$" "" link ${link} )
-  ExternalData_Expand_Arguments(  SimpleITKRpackageData
+  string( REGEX REPLACE "\\.md5$" "" link ${link} )
+  ExternalData_Expand_Arguments( SimpleITKRpackageData
     doc_location
     DATA{${link}}
     )

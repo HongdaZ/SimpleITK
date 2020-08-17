@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -44,8 +44,6 @@ namespace itk.simple.examples {
         len *= (int)size[dim];
       }
       IntPtr buffer = input.GetBufferAsFloat();
-      // Note: C# also has a GetConstBufferAs... methods which do not
-      // implicitly call MakeUnique.
 
       // There are two ways to access the buffer:
 

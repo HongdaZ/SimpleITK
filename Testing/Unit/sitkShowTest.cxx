@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ int main (int argc, char *argv[])
   sitk::ImageViewer viewer;
 
   sitk::ImageViewer::SetGlobalDefaultDebug(true);
+  viewer.SetTitle("sitkShowTest");
 
   std::cout << "Starting sitkShowTest\n";
 
@@ -39,14 +40,11 @@ int main (int argc, char *argv[])
     {
     for (int i=1; i<argc; i++)
       {
-      std::string title;
       try
         {
         std::cout << "Reading " << argv[i] << std::endl;
         img = sitk::ReadImage( argv[i] );
         std::cout << "Showing " << argv[i] << std::endl;
-        title = "Show Test " + std::to_string(i);
-        viewer.SetTitle(title);
         viewer.Execute(img);
         }
       catch (std::exception &e)
@@ -69,7 +67,7 @@ int main (int argc, char *argv[])
       std::cout << "Read 1\n";
       img = sitk::ReadImage( dataFinder.GetFile ( "Input/RA-Float.nrrd" ) );
       std::cout << "Show 1\n";
-      sitk::Show(img, "Show Test 1", true);
+      sitk::Show(img);
       }
     catch (std::exception &e)
       {
@@ -88,7 +86,7 @@ int main (int argc, char *argv[])
       std::cout << "Read 2\n";
       img = sitk::ReadImage( dataFinder.GetFile ( "Input/VM1111Shrink-RGB.png" ) );
       std::cout << "Show 2\n";
-      sitk::Show(img, "Show Test 2", true);
+      sitk::Show(img);
       }
     catch (std::exception &e)
       {
@@ -106,7 +104,7 @@ int main (int argc, char *argv[])
       std::cout << "Read 3\n";
       img = sitk::ReadImage( dataFinder.GetFile ( "Input/cthead1-Float.mha" ) );
       std::cout << "Show 3\n";
-      sitk::Show(img, "Show Test 3", true);
+      sitk::Show(img, "Dave was here", true);
       }
     catch (std::exception &e)
       {

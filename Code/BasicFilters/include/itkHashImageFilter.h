@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -41,13 +41,13 @@ class HashImageFilter:
     public CastImageFilter< TImageType, TImageType >
 {
 public:
-  /** Standard Self type alias */
-  using Self = HashImageFilter;
-  using Superclass = CastImageFilter< TImageType, TImageType >;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  /** Standard Self typedef */
+  typedef HashImageFilter                           Self;
+  typedef CastImageFilter< TImageType, TImageType > Superclass;
+  typedef SmartPointer< Self >                      Pointer;
+  typedef SmartPointer< const Self >                ConstPointer;
 
-  using RegionType = typename TImageType::RegionType;
+  typedef typename TImageType::RegionType RegionType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -56,10 +56,10 @@ public:
   itkTypeMacro(HashImageFilter, CastImageFilter);
 
   /** Smart Pointer type to a DataObject. */
-  using DataObjectPointer = typename DataObject::Pointer;
+  typedef typename DataObject::Pointer DataObjectPointer;
 
   /** Type of DataObjects used for scalar outputs */
-  using HashObjectType = SimpleDataObjectDecorator< std::string >;
+  typedef SimpleDataObjectDecorator< std::string >  HashObjectType;
 
   /** Get the computed Hash values */
   std::string GetHash() const
@@ -77,9 +77,9 @@ public:
 
 /** Make a DataObject of the correct type to be used as the specified
    * output. */
-  using DataObjectPointerArraySizeType = ProcessObject::DataObjectPointerArraySizeType;
+  typedef ProcessObject::DataObjectPointerArraySizeType DataObjectPointerArraySizeType;
   using Superclass::MakeOutput;
-  DataObjectPointer MakeOutput(DataObjectPointerArraySizeType idx) override;
+  virtual DataObjectPointer MakeOutput(DataObjectPointerArraySizeType idx) ITK_OVERRIDE;
 
 protected:
 
@@ -87,18 +87,18 @@ protected:
 
   // virtual ~HashImageFilter(); // implementation not needed
 
-  void PrintSelf(std::ostream & os, Indent indent) const override;
+  virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
 
   // See superclass for doxygen documentation
   //
   // This method is to do work after the superclass potential threaded
   // copy.
-  void AfterThreadedGenerateData() override;
+  void AfterThreadedGenerateData() ITK_OVERRIDE;
 
   // See superclass for doxygen documentation
   //
   // Override since the filter produces all of its output
-  void EnlargeOutputRequestedRegion(DataObject *data) override;
+  void EnlargeOutputRequestedRegion(DataObject *data) ITK_OVERRIDE;
 
 private:
   HashImageFilter(const Self &); //purposely not implemented

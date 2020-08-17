@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -58,7 +58,10 @@ BSplineTransformInitializerFilter::BSplineTransformInitializerFilter ()
 //
 // Destructor
 //
-BSplineTransformInitializerFilter::~BSplineTransformInitializerFilter () = default;
+BSplineTransformInitializerFilter::~BSplineTransformInitializerFilter ()
+{
+
+}
 
 
 //
@@ -81,6 +84,15 @@ std::string BSplineTransformInitializerFilter::ToString() const
 //
 // Execute
 //
+BSplineTransform BSplineTransformInitializerFilter::Execute ( const Image& image1, const std::vector<uint32_t> & transformDomainMeshSize, unsigned int order )
+{
+  this->SetTransformDomainMeshSize ( transformDomainMeshSize );
+  this->SetOrder(order);
+
+  return this->Execute ( image1 );
+}
+
+
 BSplineTransform BSplineTransformInitializerFilter::Execute ( const Image& image1 )
 {
   PixelIDValueEnum type = image1.GetPixelID();
@@ -129,13 +141,13 @@ template <unsigned int NDimension, unsigned int NOrder>
 BSplineTransform  BSplineTransformInitializerFilter::ExecuteInternalWithOrder ( const Image& inImage1 )
 {
   // Define the input and output image types
-  using InputImageType = itk::ImageBase<NDimension>;
+  typedef itk::ImageBase<NDimension> InputImageType;
 
   // Get the pointer to the ITK image contained in image1
   typename InputImageType::ConstPointer image1 = this->CastImageToITK<InputImageType>( inImage1 );
 
 
-  using FilterType = itk::BSplineTransformInitializer< itk::BSplineTransform< double, NDimension, NOrder >, InputImageType>;
+  typedef itk::BSplineTransformInitializer< itk::BSplineTransform< double, NDimension, NOrder >, InputImageType> FilterType;
   // Set up the ITK filter
   typename FilterType::Pointer filter = FilterType::New();
 
@@ -171,9 +183,7 @@ BSplineTransform  BSplineTransformInitializerFilter::ExecuteInternalWithOrder ( 
 BSplineTransform BSplineTransformInitializer ( const Image& image1, const std::vector<uint32_t> & transformDomainMeshSize, unsigned int order )
 {
   BSplineTransformInitializerFilter filter;
-  filter.SetTransformDomainMeshSize( transformDomainMeshSize );
-  filter.SetOrder( order );
-  return filter.Execute ( image1 );
+  return filter.Execute ( image1, transformDomainMeshSize, order );
 }
 
 

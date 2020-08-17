@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -85,8 +85,8 @@ TEST(ImageViewerTest,GlobalDefaults)
   itk::simple::ImageViewer iv;
 
   std::vector<std::string> words;
-  words.emplace_back("alpha" );
-  words.emplace_back("beta" );
+  words.push_back( std::string("alpha") );
+  words.push_back( std::string("beta") );
 
   std::vector<std::string> path;
   iv.SetGlobalDefaultSearchPath( words );

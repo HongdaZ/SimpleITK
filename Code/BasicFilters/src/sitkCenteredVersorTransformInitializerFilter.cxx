@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -55,7 +55,10 @@ CenteredVersorTransformInitializerFilter::CenteredVersorTransformInitializerFilt
 //
 // Destructor
 //
-CenteredVersorTransformInitializerFilter::~CenteredVersorTransformInitializerFilter () = default;
+CenteredVersorTransformInitializerFilter::~CenteredVersorTransformInitializerFilter ()
+{
+
+}
 
 
 //
@@ -76,6 +79,14 @@ std::string CenteredVersorTransformInitializerFilter::ToString() const
 //
 // Execute
 //
+Transform CenteredVersorTransformInitializerFilter::Execute ( const Image & fixedImage, const Image & movingImage, const Transform & transform,  bool computeRotation )
+{
+  this->SetComputeRotation ( computeRotation );
+
+  return this->Execute ( fixedImage, movingImage, transform );
+}
+
+
 Transform CenteredVersorTransformInitializerFilter::Execute ( const Image & fixedImage, const Image & movingImage, const Transform & transform )
 {
   PixelIDValueEnum type = fixedImage.GetPixelID();
@@ -109,17 +120,17 @@ template <class TImageType>
 Transform CenteredVersorTransformInitializerFilter::ExecuteInternal ( const Image * inFixedImage, const Image * inMovingImage, const Transform * inTransform )
 {
 
-  using FilterType = itk::CenteredVersorTransformInitializer< TImageType, TImageType>;
+  typedef itk::CenteredVersorTransformInitializer< TImageType, TImageType> FilterType;
   // Set up the ITK filter
   typename FilterType::Pointer filter = FilterType::New();
 
 
-  assert( inFixedImage );
+  assert( inFixedImage != NULL );
   filter->SetFixedImage( this->CastImageToITK<typename FilterType::FixedImageType>(*inFixedImage) );
-  assert( inMovingImage );
+  assert( inMovingImage != NULL );
   typename FilterType::MovingImageType::ConstPointer image2 = this->CastImageToITK<typename FilterType::MovingImageType>( *inMovingImage );
   filter->SetMovingImage( image2 );
-  assert( inTransform );
+  assert( inTransform != NULL );
 
   // This initializers modifies the input, we copy the transform to
   // prevent this change
@@ -146,8 +157,7 @@ Transform CenteredVersorTransformInitializerFilter::ExecuteInternal ( const Imag
 Transform CenteredVersorTransformInitializer ( const Image & fixedImage, const Image & movingImage, const Transform & transform, bool computeRotation )
 {
   CenteredVersorTransformInitializerFilter filter;
-  filter.SetComputeRotation( computeRotation );
-  return filter.Execute( fixedImage, movingImage, transform  );
+  return filter.Execute( fixedImage, movingImage, transform, computeRotation );
 }
 
 } // end namespace simple

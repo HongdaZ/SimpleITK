@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -25,7 +25,9 @@ namespace itk
 namespace simple
 {
 
-TranslationTransform::~TranslationTransform() = default;
+TranslationTransform::~TranslationTransform()
+{
+}
 
 TranslationTransform::TranslationTransform(unsigned int dimensions,
                                            const std::vector<double> &offset)
@@ -90,12 +92,12 @@ void TranslationTransform::InternalInitialization(itk::TransformBase *transform)
   typelist::Visit<TransformTypeList> callInternalInitialization;
 
   // explicitly remove all function pointer with reference to prior transform
-  this->m_pfSetOffset = nullptr;
-  this->m_pfGetOffset = nullptr;
+  this->m_pfSetOffset = SITK_NULLPTR;
+  this->m_pfGetOffset = SITK_NULLPTR;
 
   callInternalInitialization(visitor);
 
-  if ( this->m_pfSetOffset == nullptr )
+  if ( this->m_pfSetOffset == SITK_NULLPTR )
     {
     sitkExceptionMacro("Transform is not of type " << this->GetName() << "!" );
     }

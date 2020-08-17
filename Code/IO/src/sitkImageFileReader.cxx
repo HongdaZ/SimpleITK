@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 *  limitations under the License.
 *
 *=========================================================================*/
-#ifdef _MSC_VER
+#ifdef _MFC_VER
 #pragma warning(disable:4996)
 #endif
 
@@ -29,14 +29,13 @@
 namespace itk {
   namespace simple {
 
-  constexpr unsigned int SITK_IO_INPUT_MAX_DIMENSION = 5 > SITK_MAX_DIMENSION ? 5 : SITK_MAX_DIMENSION;
   namespace {
 
       // Simple ITK must use a zero based index
       template< class TImageType>
       static void FixNonZeroIndex( TImageType * img )
       {
-        assert( img != nullptr );
+        assert( img != SITK_NULLPTR );
 
         typename TImageType::RegionType r = img->GetLargestPossibleRegion();
         typename TImageType::IndexType idx = r.GetIndex();
@@ -76,7 +75,8 @@ namespace itk {
 
 
   ImageFileReader::~ImageFileReader()
-  = default;
+  {
+  }
 
   ImageFileReader::ImageFileReader() :
     m_PixelType(sitkUnknown),
@@ -84,11 +84,13 @@ namespace itk {
     m_NumberOfComponents(0)
   {
     // list of pixel types supported
-    using PixelIDTypeList = NonLabelPixelIDTypeList;
+    typedef NonLabelPixelIDTypeList PixelIDTypeList;
 
     this->m_MemberFactory.reset( new detail::MemberFunctionFactory<MemberFunctionType>( this ) );
 
-    this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2, SITK_MAX_DIMENSION > ();
+    this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 4 > ();
+    this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 3 > ();
+    this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2 > ();
   }
 
     std::string ImageFileReader::ToString() const {
@@ -151,9 +153,9 @@ namespace itk {
       // release functions bound to old meta data dictionary
       if (m_MetaDataDictionary.get())
         {
-        this->m_pfGetMetaDataKeys = nullptr;
-        this->m_pfHasMetaDataKey = nullptr;
-        this->m_pfGetMetaData =  nullptr;
+        this->m_pfGetMetaDataKeys = SITK_NULLPTR;
+        this->m_pfHasMetaDataKey = SITK_NULLPTR;
+        this->m_pfGetMetaData =  SITK_NULLPTR;
         }
 
       this->m_MetaDataDictionary.reset(new MetaDataDictionary(iobase->GetMetaDataDictionary()));
@@ -169,49 +171,49 @@ namespace itk {
       swap(spacing, m_Spacing);
       swap(size, m_Size);
 
-      this->m_pfGetMetaDataKeys = std::bind(&MetaDataDictionary::GetKeys, this->m_MetaDataDictionary.get());
-      this->m_pfHasMetaDataKey = std::bind(&MetaDataDictionary::HasKey, this->m_MetaDataDictionary.get(), std::placeholders::_1);
-      this->m_pfGetMetaData = std::bind(&GetMetaDataDictionaryCustomCast::CustomCast, this->m_MetaDataDictionary.get(), std::placeholders::_1);
+      this->m_pfGetMetaDataKeys = nsstd::bind(&MetaDataDictionary::GetKeys, this->m_MetaDataDictionary.get());
+      this->m_pfHasMetaDataKey = nsstd::bind(&MetaDataDictionary::HasKey, this->m_MetaDataDictionary.get(), nsstd::placeholders::_1);
+      this->m_pfGetMetaData = nsstd::bind(&GetMetaDataDictionaryCustomCast::CustomCast, this->m_MetaDataDictionary.get(), nsstd::placeholders::_1);
     }
 
     PixelIDValueEnum
     ImageFileReader
-    ::GetPixelID( ) const
+    ::GetPixelID( void ) const
     {
       return this->m_PixelType;
     }
 
     PixelIDValueType
     ImageFileReader
-    ::GetPixelIDValue( ) const
+    ::GetPixelIDValue( void ) const
     {
       return this->m_PixelType;
     }
 
     unsigned int
     ImageFileReader
-    ::GetDimension( ) const
+    ::GetDimension( void ) const
     {
       return this->m_Dimension;
     }
 
     unsigned int
     ImageFileReader
-    ::GetNumberOfComponents( ) const
+    ::GetNumberOfComponents( void ) const
     {
       return this->m_NumberOfComponents;
     }
 
     const std::vector<double> &
     ImageFileReader
-    ::GetOrigin( ) const
+    ::GetOrigin( void ) const
     {
       return this->m_Origin;
     }
 
     const std::vector<double> &
     ImageFileReader
-    ::GetSpacing( ) const
+    ::GetSpacing( void ) const
     {
       return this->m_Spacing;
     }
@@ -225,14 +227,14 @@ namespace itk {
 
     const std::vector<uint64_t> &
     ImageFileReader
-    ::GetSize( ) const
+    ::GetSize( void ) const
     {
       return this->m_Size;
     }
 
     void
     ImageFileReader
-    ::ReadImageInformation( )
+    ::ReadImageInformation( void )
     {
       itk::ImageIOBase::Pointer imageio = this->GetImageIOBase( this->m_FileName );
       this->UpdateImageInformationFromImageIO(imageio);
@@ -242,7 +244,7 @@ namespace itk {
 
     std::vector<std::string>
     ImageFileReader
-    ::GetMetaDataKeys( ) const
+    ::GetMetaDataKeys( void ) const
     {
       return this->m_pfGetMetaDataKeys();
     }
@@ -297,13 +299,6 @@ namespace itk {
 
 
       unsigned int dimension = this->GetDimension();
-
-      if ( dimension < 2 || dimension > SITK_IO_INPUT_MAX_DIMENSION )
-        {
-        sitkExceptionMacro( "The file has unsupported image dimension of " << dimension << ".\n"
-                            << "The maximum supported IO dimension is " << SITK_IO_INPUT_MAX_DIMENSION << "." );
-        }
-
       if (!m_ExtractSize.empty())
         {
         dimension = 0;
@@ -314,20 +309,21 @@ namespace itk {
             ++dimension;
             }
           }
-        if ( dimension < 2 || dimension > SITK_MAX_DIMENSION )
-          {
-          sitkExceptionMacro( "The extraction region has unsupported output dimension of " << dimension << "."
-                              << "The maximum supported output Image dimension is " << SITK_MAX_DIMENSION << "." );
-          }
         }
-
-
 
       if (type == sitkUnknown)
         {
         type = this->GetPixelIDValue();
         }
 
+#ifdef SITK_4D_IMAGES
+      if ( dimension != 2 && dimension != 3  && dimension != 4 )
+#else
+      if ( dimension != 2 && dimension != 3 )
+#endif
+        {
+        sitkExceptionMacro( "The file has unsupported " << dimension << " dimensions." );
+        }
 
       if ( !this->m_MemberFactory->HasMemberFunction( type, dimension ) )
         {
@@ -345,16 +341,17 @@ namespace itk {
   ImageFileReader::ExecuteInternal( itk::ImageIOBase *imageio )
   {
 
-    using ImageType = TImageType;
-    using Reader = itk::ImageFileReader<ImageType>;
+    const unsigned int MAX_DIMENSION = 5;
+    typedef TImageType                      ImageType;
+    typedef itk::ImageFileReader<ImageType> Reader;
 
-    using InternalImageType = typename ImageType::template Rebind<typename ImageType::PixelType, SITK_IO_INPUT_MAX_DIMENSION>::Type;
-    using InternalReader = itk::ImageFileReader<InternalImageType>;
+    typedef typename ImageType::template Rebind<typename ImageType::PixelType, MAX_DIMENSION>::Type InternalImageType;
+    typedef itk::ImageFileReader<InternalImageType> InternalReader;
 
     // if the InstantiatedToken is correctly implemented this should
     // not occur
     assert( ImageTypeToPixelIDValue<ImageType>::Result != (int)sitkUnknown );
-    assert( imageio != nullptr );
+    assert( imageio != SITK_NULLPTR );
 
 
     if ( m_ExtractSize.empty() || m_ExtractSize.size() == ImageType::ImageDimension)
@@ -392,10 +389,10 @@ namespace itk {
   Image
   ImageFileReader::ExecuteExtract( TInternalImageType * itkImage )
   {
-    using InternalImageType = TInternalImageType;
-    using ImageType = TImageType;
+    typedef TInternalImageType InternalImageType;
+    typedef TImageType         ImageType;
 
-    using ExtractType = itk::ExtractImageFilter<InternalImageType, ImageType>;
+    typedef itk::ExtractImageFilter<InternalImageType, ImageType> ExtractType;
     typename ExtractType::Pointer extractor = ExtractType::New();
 
     extractor->InPlaceOn();
@@ -445,7 +442,7 @@ namespace itk {
                           << itkImage->GetLargestPossibleRegion() );
       }
 
-    assert(itkImage->GetSource() != nullptr);
+    assert(itkImage->GetSource() != SITK_NULLPTR);
     this->PreUpdate( itkImage->GetSource().GetPointer() );
 
     extractor->Update();

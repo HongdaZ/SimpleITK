@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ TransformCompare::TransformCompare()
 }
 
 
-float TransformCompare::Compare( const itk::simple::Transform &transform,
+
+bool TransformCompare::Compare( const itk::simple::Transform &transform,
                                 const itk::simple::Transform &baselineTransform,
                                 const itk::simple::Image &fixedImage )
 {
@@ -41,37 +42,38 @@ float TransformCompare::Compare( const itk::simple::Transform &transform,
 }
 
 
-float
-TransformCompare::Compare(const itk::simple::Transform & transform,
-                          const itk::simple::Image &     baselineDisplacement,
-                          bool                           reportErrors)
+bool TransformCompare::Compare( const itk::simple::Transform &transform,
+                                const itk::simple::Image &baselineDisplacement )
 {
   namespace sitk = itk::simple;
 
   sitk::TransformToDisplacementFieldFilter toDisplacementField;
-  toDisplacementField.SetOutputPixelType(baselineDisplacement.GetPixelID());
-  toDisplacementField.SetReferenceImage(baselineDisplacement);
-  sitk::Image displacement = toDisplacementField.Execute(transform);
+  toDisplacementField.SetOutputPixelType( baselineDisplacement.GetPixelID() );
+  toDisplacementField.SetReferenceImage( baselineDisplacement );
+  sitk::Image displacement = toDisplacementField.Execute( transform );
 
-  sitk::Image magnitude = sitk::VectorMagnitude(sitk::Subtract(displacement, baselineDisplacement));
+  sitk::Image diff =  sitk::Subtract( displacement, baselineDisplacement );
 
-  sitk::Image diff_squared = sitk::Multiply(magnitude, magnitude);
+  diff = sitk::VectorMagnitude(diff);
+  diff = sitk::Multiply(diff, diff);
 
   sitk::StatisticsImageFilter stats;
-  stats.Execute(diff_squared);
-  double rms = std::sqrt(stats.GetMean());
+  stats.Execute ( diff );
+  double rms = std::sqrt ( stats.GetMean() );
 
-  if (reportErrors && rms > m_Tolerance)
-  {
+  std::cout << "<DartMeasurement name=\"RMSDifference\" type=\"numeric/float\">" << rms << "</DartMeasurement>" << std::endl;
+
+  if ( rms > m_Tolerance )
+    {
     std::ostringstream msg;
-    msg << "TransformCompare: transformed image points Root Mean Square (RMS) difference was " << rms
-        << " which exceeds the tolerance of " << m_Tolerance;
+    msg << "TransformCompare: transformed image points Root Mean Square (RMS) difference was " << rms << " which exceeds the tolerance of " << m_Tolerance;
     msg << "\n";
     m_Message = msg.str();
 
-    std::cout << "<DartMeasurement name=\"Tolerance\" type=\"numeric/float\">" << m_Tolerance << "</DartMeasurement>"
-              << std::endl;
-  }
+    std::cout << "<DartMeasurement name=\"Tolerance\" type=\"numeric/float\">" << m_Tolerance << "</DartMeasurement>" << std::endl;
 
-  return float(rms);
+    return false;
+    }
+
+  return true;
 }

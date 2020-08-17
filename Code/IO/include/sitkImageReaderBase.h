@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 namespace itk {
 
-// Forward declaration for pointer
+// Forward decalaration for pointer
 class ImageIOBase;
 
 template<class T>
@@ -40,9 +40,9 @@ class SmartPointer;
       public ProcessObject
     {
     public:
-      using Self = ImageReaderBase;
+      typedef ImageReaderBase Self;
 
-      ~ImageReaderBase() override;
+      virtual ~ImageReaderBase();
 
       ImageReaderBase();
 
@@ -56,12 +56,12 @@ class SmartPointer;
        * @{
        */
       SITK_RETURN_SELF_TYPE_HEADER SetOutputPixelType( PixelIDValueEnum pixelID );
-      PixelIDValueEnum GetOutputPixelType( ) const;
+      PixelIDValueEnum GetOutputPixelType( void ) const;
       /* @} */
 
       virtual Image Execute() = 0;
 
-      std::string ToString() const override;
+      virtual std::string ToString() const;
 
       /** \brief Get a vector of the names of registered itk ImageIOs
        */
@@ -93,18 +93,9 @@ class SmartPointer;
        * @{
        */
       virtual SITK_RETURN_SELF_TYPE_HEADER SetImageIO(const std::string &imageio);
-      virtual std::string GetImageIO( ) const;
+      virtual std::string GetImageIO( void ) const;
       /* @} */
 
-      /** \brief Get the automatic ImageIO from the ImageIOFactory
-       *
-       * Returns the name of ImageIO automatically detected to read the
-       * file. The file is required to exist, and the file may be opened
-       * and/or the file extension examined. If an error is
-       * encountered such as the file does not exist, then an empty
-       * string ("") will be returned.
-       */
-      static std::string GetImageIOFromFileName(const std::string &fileName);
 
     protected:
 

@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -30,14 +30,12 @@ class TransformCompare
 public:
   TransformCompare();
 
-   float Compare( const itk::simple::Transform &transform,
+   bool Compare( const itk::simple::Transform &transform,
                  const itk::simple::Transform &baselineTransform,
                  const itk::simple::Image &fixedImage );
 
-  float Compare( const itk::simple::Transform &transform,
-                const itk::simple::Image &baselineDisplacement,
-                bool reportErrors=true);
-
+  bool Compare( const itk::simple::Transform &transform,
+                const itk::simple::Image &baselineDisplacement );
 
   // Return the message from the previous image comparison.
   const std::string &GetMessage() const { return m_Message; }

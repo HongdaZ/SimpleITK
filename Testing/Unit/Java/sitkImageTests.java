@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 *=========================================================================*/
 
 import java.math.BigInteger;
-import static java.lang.Math.toIntExact;
 import org.itk.simple.*;
 
 /* This class is needed because on some systems uint64_t gets converted to long
@@ -88,8 +87,13 @@ class sitkImageTests
 
   public static boolean BasicImageTest()
     {
-    long[] v = {1,1};
-    VectorUInt32 idx = new VectorUInt32( v );
+    int[] v = {1,1};
+    VectorUInt32 idx = new VectorUInt32( v.length );
+
+    for (int i = 0; i < v.length; i++)
+      {
+      idx.set( i, v[i] );
+      }
 
     int size = 10;
     short val = 42;
@@ -131,14 +135,14 @@ class sitkImageTests
   public static boolean LabelShapeStatisticsTest()
     {
     int size = 10;
-    long i;
+    int i;
     long j;
     short val = 1;
 
 
     /* Make a 10x10 test image */
     Image image = new Image(size, size, PixelIDValueEnum.sitkUInt8);
-    VectorUInt32 idx = new VectorUInt32( 2, 0 );
+    VectorUInt32 idx = new VectorUInt32( 2 );
 
     /* Fill in a 4x4 square in the middle of the image */
     for (j=4; j<8; j++)
@@ -158,8 +162,8 @@ class sitkImageTests
       filter.execute(image);
 
       VectorInt64 labels = filter.getLabels();
-      long numberOfLabels =  BigIntegerFix.Convert( filter.getNumberOfLabels() );
-      if (numberOfLabels != 1)
+      j = BigIntegerFix.Convert( filter.getNumberOfLabels() );
+      if (j != 1)
         {
         throw new Exception("Wrong number of labels");
         }
@@ -167,12 +171,11 @@ class sitkImageTests
       double perim;
 
       System.out.println("Label,\t#pix,\tperimeter");
-      for (i=0; i<numberOfLabels; i++)
+      for (i=0; i<j; i++)
         {
-        int label = toIntExact(labels.get(toIntExact(i)));
-        npix =  BigIntegerFix.Convert( filter.getNumberOfPixels(label) );
-        perim = filter.getPerimeter(label);
-        System.out.format( "%d,\t%d,\t%f\n", label, npix, perim );
+        npix = BigIntegerFix.Convert( filter.getNumberOfPixels(labels.get(i)) );
+        perim = filter.getPerimeter( labels.get(i) );
+        System.out.format( "%d,\t%d,\t%f\n", labels.get(i), npix, perim );
 
         /* The first (and only) label should have 16 pixels */
         if (i==0)

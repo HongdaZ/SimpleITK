@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -148,7 +148,10 @@ void ImageViewer::initializeDefaults()
 #ifdef _WIN32
 
   std::string ProgramFiles;
-  std::vector<std::string> win_dirs = { "PROGRAMFILES", "PROGRAMFILES(x86)", "PROGRAMW6432" };
+  std::vector<std::string> win_dirs;
+  win_dirs.push_back("PROGRAMFILES");
+  win_dirs.push_back("PROGRAMFILES(x86)");
+  win_dirs.push_back("PROGRAMW6432");
 
   for (unsigned int i=0; i<win_dirs.size(); i++)
     {
@@ -167,26 +170,23 @@ void ImageViewer::initializeDefaults()
 #elif defined(__APPLE__)
 
   // Common places on the Mac to look
-  m_GlobalDefaultSearchPath = { "/Applications/", "/Developer/", "/opt/", "/usr/local/" };
-  std::string homedir;
-  if ( itksys::SystemTools::GetEnv ( "HOME", homedir ) )
-    {
-    m_GlobalDefaultSearchPath.push_back( homedir + "/Applications/" );
-    }
-
+  m_GlobalDefaultSearchPath.push_back( "/Applications/" );
+  m_GlobalDefaultSearchPath.push_back(  "/Developer/" );
+  m_GlobalDefaultSearchPath.push_back(  "/opt/" );
+  m_GlobalDefaultSearchPath.push_back(  "/usr/local/" );
 
 #else
 
   // linux and other systems
-  m_GlobalDefaultSearchPath = { "./" };
+  m_GlobalDefaultSearchPath.push_back( "./" );
   std::string homedir;
   if ( itksys::SystemTools::GetEnv ( "HOME", homedir ) )
     {
     m_GlobalDefaultSearchPath.push_back( homedir + "/bin/" );
     }
 
-  m_GlobalDefaultSearchPath.emplace_back("/opt/" );
-  m_GlobalDefaultSearchPath.emplace_back("/usr/local/" );
+  m_GlobalDefaultSearchPath.push_back( "/opt/" );
+  m_GlobalDefaultSearchPath.push_back( "/usr/local/" );
 
 #endif
 
@@ -196,12 +196,14 @@ void ImageViewer::initializeDefaults()
   //  Set the ExecutableNames
   //
 #if defined(_WIN32)
-  m_GlobalDefaultExecutableNames = { "Fiji.app/ImageJ-win64.exe", "Fiji.app/ImageJ-win32.exe" };
+  m_GlobalDefaultExecutableNames.push_back( "Fiji.app/ImageJ-win64.exe" );
+  m_GlobalDefaultExecutableNames.push_back( "Fiji.app/ImageJ-win32.exe" );
 #elif defined(__APPLE__)
-  m_GlobalDefaultExecutableNames = { "Fiji.app" };
+  m_GlobalDefaultExecutableNames.push_back( "Fiji.app" );
 #else
   // Linux
-  m_GlobalDefaultExecutableNames = { "Fiji.app/ImageJ-linux64", "Fiji.app/ImageJ-linux32" };
+  m_GlobalDefaultExecutableNames.push_back( "Fiji.app/ImageJ-linux64" );
+  m_GlobalDefaultExecutableNames.push_back( "Fiji.app/ImageJ-linux32" );
 #endif
 
 #ifdef _WIN32
@@ -686,7 +688,7 @@ std::vector<std::string> ConvertCommand( const std::string & command, const std:
   {
 
   std::string t;
-  if (title.empty())
+  if (title == "")
     {
     t = filename;
     }
@@ -711,7 +713,7 @@ std::vector<std::string> ConvertCommand( const std::string & command, const std:
       case '\'':
       case '\"':
         word.push_back(new_command[i]);
-        if (!quoteStack.empty())
+        if (quoteStack.size())
           {
           if (new_command[i] == quoteStack[quoteStack.size()-1])
             {
@@ -732,7 +734,7 @@ std::vector<std::string> ConvertCommand( const std::string & command, const std:
         break;
 
       case ' ':
-        if (!quoteStack.empty())
+        if (quoteStack.size())
           {
           // the space occurs inside a quote, so tack it onto the current word.
           word.push_back(new_command[i]);
@@ -783,7 +785,7 @@ std::string FormatFileName ( const std::string & TempDirectory, const std::strin
 
   std::ostringstream tmp;
 
-  if ( !name.empty() )
+  if ( name != "" )
     {
     std::string n = name;
     // remove whitespace

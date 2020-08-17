@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -22,31 +22,31 @@ class TypeListTest
   : public ::testing::Test
 {
 public:
-  TypeListTest() = default;;
+  TypeListTest() {};
   struct CountPredicate
   {
-    CountPredicate( ) : count(0) {}
+    CountPredicate( void ) : count(0) {}
 
     template<class TType>
-    void operator()( )
+    void operator()( void )
       {
         ++count;
       }
 
     template<class TType1, class TType2>
-    void operator()( )
+    void operator()( void )
       {
         ++count;
       }
 
     template<class TType>
-    void operator()( ) const
+    void operator()( void ) const
       {
         ++count;
       }
 
     template<class TType1, class TType2>
-    void operator()( ) const
+    void operator()( void ) const
       {
         ++count;
         std::cout << typeid(TType1).name() << " " << typeid( TType2 ).name() << std::endl;
@@ -62,7 +62,7 @@ public:
 
 TEST_F(TypeListTest, Visit) {
 
-  using MyTypeList = typelist::MakeTypeList<int, char, void>::Type;
+  typedef typelist::MakeTypeList<int, char, void>::Type MyTypeList;
 
   typelist::Visit<MyTypeList> ListVisitor;
   ListVisitor( pred );
@@ -75,7 +75,7 @@ TEST_F(TypeListTest, Visit) {
 
 TEST_F(TypeListTest, DualVisit) {
 
-  using MyTypeList = typelist::MakeTypeList<int, char, short>::Type;
+  typedef typelist::MakeTypeList<int, char, short>::Type MyTypeList;
 
   typelist::DualVisit<MyTypeList,MyTypeList> ListVisitor;
   ListVisitor( pred );

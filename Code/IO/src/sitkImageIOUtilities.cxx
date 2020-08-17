@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ void PrintRegisteredImageIOs(std::ostream &out)
 
       const itk::ImageIOBase::ArrayOfExtensionsType &ioExtensions = io->GetSupportedReadExtensions();
       // print the extensions if they are listed
-      if ( !ioExtensions.empty() )
+      if ( ioExtensions.size() )
         {
         out << " (";
         for (itk::ImageIOBase::ArrayOfExtensionsType::const_iterator j = ioExtensions.begin(); j != ioExtensions.end(); ++j)
@@ -73,7 +73,7 @@ std::vector<std::string> GetRegisteredImageIOs()
     if(io)
       {
 
-      out.emplace_back(io->GetNameOfClass() );
+      out.push_back( io->GetNameOfClass() );
 
       }
     }

@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@
 
 #include "itkProcessObject.h"
 #include "itkCommand.h"
-#include "sitkFunctionCommand.h"
 #include "itkImageToImageFilter.h"
 #include "itkTextOutput.h"
 
 #include <iostream>
 #include <algorithm>
 #include <cstring>
-#include <functional>
+
+#include "nsstd/functional.h"
 
 namespace itk {
 namespace simple {
@@ -55,8 +55,8 @@ class SimpleAdaptorCommand
 {
 public:
 
-  using Self = SimpleAdaptorCommand;
-  using Pointer = SmartPointer< Self >;
+  typedef SimpleAdaptorCommand Self;
+  typedef SmartPointer< Self > Pointer;
 
   itkNewMacro(Self);
 
@@ -68,7 +68,7 @@ public:
     }
 
   /**  Invoke the member function. */
-  void Execute(Object *, const EventObject & ) override
+  virtual void Execute(Object *, const EventObject & ) SITK_OVERRIDE
   {
     if (m_That)
       {
@@ -77,7 +77,7 @@ public:
   }
 
   /**  Invoke the member function with a const object */
-  void Execute(const Object *, const EventObject & ) override
+  virtual void Execute(const Object *, const EventObject & ) SITK_OVERRIDE
   {
     if ( m_That )
       {
@@ -85,13 +85,14 @@ public:
       }
   }
 
-  SimpleAdaptorCommand(const Self &) = delete;
-  void operator=(const Self &) = delete;
-
 protected:
   itk::simple::Command *                    m_That;
   SimpleAdaptorCommand():m_That(0) {}
-  ~SimpleAdaptorCommand() override = default;
+  virtual ~SimpleAdaptorCommand() {}
+
+private:
+  SimpleAdaptorCommand(const Self &); //purposely not implemented
+  void operator=(const Self &);        //purposely not implemented
 };
 
 } // end anonymous namespace
@@ -103,9 +104,8 @@ protected:
 //
 ProcessObject::ProcessObject ()
   : m_Debug(ProcessObject::GetGlobalDefaultDebug()),
-    m_NumberOfThreads(itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads()),
-    m_NumberOfWorkUnits(0),
-    m_ActiveProcess(nullptr),
+    m_NumberOfThreads(ProcessObject::GetGlobalDefaultNumberOfThreads()),
+    m_ActiveProcess(SITK_NULLPTR),
     m_ProgressMeasurement(0.0)
 {
   static bool firstTime=true;
@@ -138,9 +138,6 @@ std::string ProcessObject::ToString() const
 
   out << "  NumberOfThreads: ";
   this->ToStringHelper(out, this->m_NumberOfThreads) << std::endl;
-
-  out << "  NumberOfWorkUnits: ";
-  this->ToStringHelper(out, this->m_NumberOfWorkUnits) << std::endl;
 
   out << "  Commands:" << (m_Commands.empty()?" (none)":"") << std::endl;
   for( std::list<EventCommand>::const_iterator i = m_Commands.begin();
@@ -281,33 +278,13 @@ void ProcessObject::SetGlobalDefaultDirectionTolerance(double tolerance)
 
 void ProcessObject::SetGlobalDefaultNumberOfThreads(unsigned int n)
 {
-  itk::MultiThreaderBase::SetGlobalDefaultNumberOfThreads(n);
+  itk::ProcessObject::MultiThreaderType::SetGlobalDefaultNumberOfThreads(n);
 }
+
 
 unsigned int ProcessObject::GetGlobalDefaultNumberOfThreads()
 {
-  return itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads();
-}
-
-bool ProcessObject::SetGlobalDefaultThreader(const std::string &threader)
-{
-  auto threaderEnum = itk::MultiThreaderBase::ThreaderTypeFromString(threader);
-  if (threaderEnum == itk::MultiThreaderBase::ThreaderEnum::Unknown
-#if !defined(ITK_USE_TBB)
-      || threaderEnum == itk::MultiThreaderBase::ThreaderEnum::Unknown
-#endif
-    )
-    {
-    return false;
-    }
-  itk::MultiThreaderBase::SetGlobalDefaultThreader(threaderEnum);
-  return true;
-}
-
-std::string ProcessObject::GetGlobalDefaultThreader()
-{
-  auto threaderEnum =  itk::MultiThreaderBase::GetGlobalDefaultThreader();
-  return itk::MultiThreaderBase::ThreaderTypeToString(threaderEnum);
+  return itk::ProcessObject::MultiThreaderType::GetGlobalDefaultNumberOfThreads();
 }
 
 
@@ -323,22 +300,10 @@ unsigned int ProcessObject::GetNumberOfThreads() const
 }
 
 
-void ProcessObject::SetNumberOfWorkUnits(unsigned int n)
-{
-  m_NumberOfWorkUnits = n;
-}
-
-
-unsigned int ProcessObject::GetNumberOfWorkUnits() const
-{
-  return m_NumberOfWorkUnits;
-}
-
-
 int ProcessObject::AddCommand(EventEnum event, Command &cmd)
 {
   // add to our list of event, command pairs
-  m_Commands.emplace_back(event,&cmd);
+  m_Commands.push_back(EventCommand(event,&cmd));
 
   // register ourselves with the command
   cmd.AddProcessObject(this);
@@ -353,17 +318,6 @@ int ProcessObject::AddCommand(EventEnum event, Command &cmd)
     }
 
   return 0;
-}
-
-int ProcessObject::AddCommand(itk::simple::EventEnum event, const std::function<void()> &func)
-{
-  std::unique_ptr<FunctionCommand> cmd(new FunctionCommand());
-  cmd->SetCallbackFunction(func);
-
-  int id = this->AddCommand(event, *cmd.get());
-  cmd->OwnedByProcessObjectsOn();
-  cmd.release();
-  return id;
 }
 
 
@@ -434,12 +388,12 @@ void ProcessObject::PreUpdate(itk::ProcessObject *p)
   assert(p);
 
   // propagate number of threads
-  if ( this->GetNumberOfWorkUnits() != 0 )
-    {
-    p->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
-    }
+  #if ITK_VERSION_MAJOR < 5
+  p->SetNumberOfThreads(this->GetNumberOfThreads());
+  #else
+  p->SetNumberOfWorkUnits(this->GetNumberOfThreads());
+  #endif
 
-  p->GetMultiThreader()->SetMaximumNumberOfThreads(this->GetNumberOfThreads());
 
   try
     {
@@ -461,7 +415,7 @@ void ProcessObject::PreUpdate(itk::ProcessObject *p)
     }
   catch (...)
     {
-    this->m_ActiveProcess = nullptr;
+    this->m_ActiveProcess = SITK_NULLPTR;
     throw;
     }
 
@@ -542,11 +496,11 @@ void ProcessObject::OnActiveProcessDelete( )
       i->m_ITKTag = std::numeric_limits<unsigned long>::max();
       }
 
-  this->m_ActiveProcess = nullptr;
+  this->m_ActiveProcess = SITK_NULLPTR;
 }
 
 
-void ProcessObject::onCommandDelete(const itk::simple::Command *cmd) noexcept
+void ProcessObject::onCommandDelete(const itk::simple::Command *cmd) SITK_NOEXCEPT
 {
   // remove command from m_Command book keeping list, and remove it
   // from the  ITK ProcessObject

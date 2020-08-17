@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -37,32 +37,39 @@ namespace itk
 {
   namespace simple
   {
-    void Image::Allocate ( const std::vector<unsigned int> &_size, PixelIDValueEnum ValueEnum, unsigned int numberOfComponents )
+    void Image::Allocate ( unsigned int Width, unsigned int Height, unsigned int Depth, unsigned int dim4, PixelIDValueEnum ValueEnum, unsigned int numberOfComponents )
     {
       // initialize member function factory for allocating images
 
       // The pixel IDs supported
-      using PixelIDTypeList = AllPixelIDTypeList;
+      typedef AllPixelIDTypeList              PixelIDTypeList;
 
-      typedef void ( Self::*MemberFunctionType )( const std::vector<unsigned int> &, unsigned int );
+      typedef void ( Self::*MemberFunctionType )( unsigned int, unsigned int, unsigned int, unsigned int, unsigned int );
 
-      using AllocateAddressor = AllocateMemberFunctionAddressor< MemberFunctionType >;
+      typedef AllocateMemberFunctionAddressor< MemberFunctionType > AllocateAddressor;
 
       detail::MemberFunctionFactory< MemberFunctionType > allocateMemberFactory( this );
-      allocateMemberFactory.RegisterMemberFunctions< PixelIDTypeList, 2, SITK_MAX_DIMENSION, AllocateAddressor > ();
+      allocateMemberFactory.RegisterMemberFunctions< PixelIDTypeList, 2, AllocateAddressor > ();
+      allocateMemberFactory.RegisterMemberFunctions< PixelIDTypeList, 3, AllocateAddressor > ();
+      allocateMemberFactory.RegisterMemberFunctions< PixelIDTypeList, 4, AllocateAddressor > ();
 
       if ( ValueEnum == sitkUnknown )
         {
         sitkExceptionMacro( "Unable to construct image of unsupported pixel type" );
         }
 
-      if (_size.size() < 2 || _size.size() > SITK_MAX_DIMENSION)
+      if ( Depth == 0 )
         {
-        sitkExceptionMacro("Unsupported number of dimesions specified by size: " << _size << "!\n"
-                           << "The maximum supported Image dimension is " << SITK_MAX_DIMENSION << "." );
+        allocateMemberFactory.GetMemberFunction( ValueEnum, 2 )( Width, Height, Depth, dim4, numberOfComponents );
         }
-
-      allocateMemberFactory.GetMemberFunction( ValueEnum, _size.size() )( _size, numberOfComponents );
+      else if ( dim4 == 0 )
+        {
+        allocateMemberFactory.GetMemberFunction( ValueEnum, 3 )( Width, Height, Depth, dim4, numberOfComponents );
+        }
+      else
+        {
+        allocateMemberFactory.GetMemberFunction( ValueEnum, 4 )( Width, Height, Depth, dim4, numberOfComponents );
+        }
     }
   }
 }
@@ -76,31 +83,18 @@ namespace itk
 // explicitly instantiate for the expected image types.
 //
 
-#define SITK_TEMPLATE_InternalInitialization_D( I, D )                \
+#define SITK_TEMPLATE_InternalInitialization_D( _I, _D )                \
   namespace itk { namespace simple {                                    \
-  template SITKCommon_EXPORT void \
-  Image::InternalInitialization<I,D>(  PixelIDToImageType< typelist::TypeAt<InstantiatedPixelIDTypeList, \
-                                       I>::Result,                      \
-                                       D>::ImageType *i );              \
+  template SITKCommon_EXPORT void Image::InternalInitialization<_I,_D>(  PixelIDToImageType< typelist::TypeAt<InstantiatedPixelIDTypeList, \
+                                                                                            _I>::Result, \
+                                                                           _D>::ImageType *i ); \
   } }
 
-#if SITK_MAX_DIMENSION < 2 || SITK_MAX_DIMENSION > 9
-#error "Unsupported SITK_MAX_DIMENSION value".
+#ifdef SITK_4D_IMAGES
+#define SITK_TEMPLATE_InternalInitialization( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 2 ) SITK_TEMPLATE_InternalInitialization_D( _I, 3 ) SITK_TEMPLATE_InternalInitialization_D( _I, 4 )
+#else
+#define SITK_TEMPLATE_InternalInitialization( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 2 ) SITK_TEMPLATE_InternalInitialization_D( _I, 3 )
 #endif
-
-#define SITK_TEMPLATE_InternalInitialization_2( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 2 )
-#define SITK_TEMPLATE_InternalInitialization_3( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 3 ) SITK_TEMPLATE_InternalInitialization_2( _I )
-#define SITK_TEMPLATE_InternalInitialization_4( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 4 ) SITK_TEMPLATE_InternalInitialization_3( _I )
-#define SITK_TEMPLATE_InternalInitialization_5( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 5 ) SITK_TEMPLATE_InternalInitialization_4( _I )
-#define SITK_TEMPLATE_InternalInitialization_6( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 6 ) SITK_TEMPLATE_InternalInitialization_5( _I )
-#define SITK_TEMPLATE_InternalInitialization_7( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 7 ) SITK_TEMPLATE_InternalInitialization_6( _I )
-#define SITK_TEMPLATE_InternalInitialization_8( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 8 ) SITK_TEMPLATE_InternalInitialization_7( _I )
-#define SITK_TEMPLATE_InternalInitialization_9( _I ) SITK_TEMPLATE_InternalInitialization_D( _I, 9 ) SITK_TEMPLATE_InternalInitialization_8( _I )
-
-
-#define SITK_TEMPLATE_InternalInitialization_CONCAT( I ) sitkMacroJoin( SITK_TEMPLATE_InternalInitialization_, SITK_MAX_DIMENSION ) ( I )
-
-#define SITK_TEMPLATE_InternalInitialization( I ) SITK_TEMPLATE_InternalInitialization_CONCAT ( I )
 
 
 // Instantiate for all types in the lists
@@ -136,4 +130,4 @@ SITK_TEMPLATE_InternalInitialization( 28 );
 SITK_TEMPLATE_InternalInitialization( 29 );
 
 
-static_assert( typelist::Length<itk::simple::InstantiatedPixelIDTypeList>::Result < 30, "Number of explicitly instantiated pixel types is more then expected!" );
+sitkStaticAssert( typelist::Length<itk::simple::InstantiatedPixelIDTypeList>::Result < 30, "Number of explicitly instantiated pixel types is more then expected!" );

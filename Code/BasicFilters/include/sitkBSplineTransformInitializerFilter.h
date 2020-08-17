@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -47,17 +47,17 @@ SetTransformDomainMeshSize()before calling InitializeTransform().
      */
     class SITKBasicFilters_EXPORT BSplineTransformInitializerFilter : public ProcessObject {
     public:
-      using Self = BSplineTransformInitializerFilter;
+      typedef BSplineTransformInitializerFilter Self;
 
       /** Default Constructor that takes no arguments and initializes
        * default parameters */
       BSplineTransformInitializerFilter();
 
       /** Destructor */
-      ~BSplineTransformInitializerFilter() override;
+      virtual ~BSplineTransformInitializerFilter();
 
       /** Define the pixels types supported by this filter */
-      using PixelIDTypeList = AllPixelIDTypeList;
+      typedef AllPixelIDTypeList  PixelIDTypeList;
 
 
       /**
@@ -77,14 +77,19 @@ SetTransformDomainMeshSize()before calling InitializeTransform().
       unsigned int GetOrder() const {return this->m_Order;}
 
       /** Name of this class */
-      std::string GetName() const override { return std::string ("BSplineTransformInitializerFilter"); }
+      std::string GetName() const { return std::string ("BSplineTransformInitializerFilter"); }
 
       /** Print ourselves out */
-      std::string ToString() const override;
+      std::string ToString() const;
 
 
       /** Execute the filter on the input image */
       BSplineTransform Execute ( const Image& image1 );
+
+
+      /** Execute the filter on the input image with the given parameters */
+      BSplineTransform Execute ( const Image& image1, const std::vector<uint32_t> & transformDomainMeshSize, unsigned int order );
+
 
     private:
 
@@ -98,7 +103,7 @@ SetTransformDomainMeshSize()before calling InitializeTransform().
 
       friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
 
-      std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+      nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
 
 
       std::vector<uint32_t>  m_TransformDomainMeshSize;

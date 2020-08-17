@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -56,8 +56,8 @@ namespace typelist
 template <typename H, typename T>
 struct SITK_ABI_HIDDEN TypeList
 {
-  using Head = H;
-  using Tail = T;
+  typedef H Head;
+  typedef T Tail;
 };
 
 /** \class NullType
@@ -78,7 +78,7 @@ struct SITK_ABI_HIDDEN NullType {};
  *
  * Example:
  * \code
- * using MyTypeList = typelist::MakeTypeList< int, char, short>::Type;
+ * typedef typelist::MakeTypeList< int, char, short>::Type MyTypeList;
  * \endcode
  *
  */
@@ -112,12 +112,12 @@ private:
   T29, T30
   >::Type TailType;
 public:
-  using Type = TypeList< T1, TailType >;
+  typedef TypeList< T1, TailType > Type;
 };
 template <>
 struct SITK_ABI_HIDDEN MakeTypeList<>
 {
-  using Type = NullType;
+  typedef NullType Type;
 };
 
 
@@ -128,7 +128,7 @@ template <typename TTypeList> struct SITK_ABI_HIDDEN Length;
  *
  * Example:
  * \code
- * using MyTypeList = typelist::MakeTypeList<int, char, short>::Type;
+ * typedef typelist::MakeTypeList<int, char, short>::Type MyTypeList;
  * int len = typelist::Length<MyTypeList>::Result;
  * \endcode
  * returns a compile-time constant containing the length of TTypeList,
@@ -155,7 +155,7 @@ template <> struct SITK_ABI_HIDDEN Length<NullType>
  *
  * Example:
  * \code
- * using MyTypeList = typelist::MakeTypeList<int, char, short>::Type;
+ * typedef typelist::MakeTypeList<int, char, short>::Type MyTypeList;
  * typelist::TypeAt<MyTypeList, 0>::Result intVariable;
  * \endcode
  *
@@ -169,19 +169,19 @@ template <class TTypeList, unsigned int index> struct SITK_ABI_HIDDEN TypeAt;
 template <class Head, class Tail>
 struct SITK_ABI_HIDDEN TypeAt<TypeList<Head, Tail>, 0>
 {
-  using Result = Head;
+  typedef Head Result;
 };
 
 template <class Head, class Tail, unsigned int i>
 struct SITK_ABI_HIDDEN TypeAt<TypeList<Head, Tail>, i>
 {
-  using Result = typename TypeAt<Tail, i - 1>::Result;
+  typedef typename TypeAt<Tail, i - 1>::Result Result;
 };
 
 template < unsigned int i>
 struct SITK_ABI_HIDDEN TypeAt<NullType, i>
 {
-  using Result = NullType;
+  typedef NullType Result;
 };
 
 
@@ -191,15 +191,15 @@ template <class TTypeList1, class TTypeList2> struct SITK_ABI_HIDDEN Append;
  *
  * Example 1:
  * \code
- * using MyTypeList1 = typelist::MakeTypeList<int, char>::Type;
- * using MyTypeList2 = typelist::MakeTypeList<short, unsigned short>::Type;
- * using MyCombinedList = typelist::Append<MyList1, MyList2>::Type;
+ * typedef typelist::MakeTypeList<int, char>::Type MyTypeList1;
+ * typedef typelist::MakeTypeList<short, unsigned short>::Type MyTypeList2;
+ * typedef typelist::Append<MyList1, MyList2>::Type  MyCombinedList;
  * \endcode
  *
  * Example 2:
  * \code
- * using MyTypeList = typelist::MakeTypeList<int, char>::Type;
- * using MyAddedTypeList = typelist::Append<MyTypeList, short>::Type;
+ * typedef typelist::MakeTypeList<int, char>::Type MyTypeList;
+ * typedef typelist::Append<MyTypeList, short>::Type MyAddedTypeList;
  * \endcode
  *
  *  returns a typelist that is TTypeList1 followed by TTypeList2
@@ -210,31 +210,31 @@ template <class TTypeList1, class TTypeList2> struct SITK_ABI_HIDDEN Append;
 template <class Head, class Tail, class T>
 struct SITK_ABI_HIDDEN Append<TypeList<Head, Tail>, T>
 {
-  using Type = TypeList<Head, typename Append<Tail, T>::Type>;
+  typedef TypeList<Head, typename Append<Tail, T>::Type> Type;
 };
 
 /** \cond TYPELIST_IMPLEMENTATION */
 template <> struct SITK_ABI_HIDDEN Append<NullType, NullType>
 {
-  using Type = NullType;
+  typedef NullType Type;
 };
 template <class T> struct SITK_ABI_HIDDEN Append<NullType, T>
 {
-  using Type = TypeList<T,NullType>;
+  typedef TypeList<T,NullType> Type;
 };
 template <class T> struct SITK_ABI_HIDDEN Append<T, NullType>
 {
-  using Type = TypeList<T,NullType>;
+  typedef TypeList<T,NullType> Type;
 };
 template <class Head, class Tail>
 struct SITK_ABI_HIDDEN Append<NullType, TypeList<Head, Tail> >
 {
-  using Type = TypeList<Head, Tail>;
+  typedef TypeList<Head, Tail> Type;
 };
 template <class Head, class Tail>
 struct SITK_ABI_HIDDEN Append<TypeList<Head, Tail>, NullType>
 {
-  using Type = TypeList<Head, Tail>;
+  typedef TypeList<Head, Tail> Type;
 };
 /** \endcond */
 
@@ -243,7 +243,7 @@ struct SITK_ABI_HIDDEN Append<TypeList<Head, Tail>, NullType>
  *
  * Example:
  * \code
- * using MyTypeList = typelist::MakeTypeList<int, char>::Type;
+ * typedef typelist::MakeTypeList<int, char>::Type MyTypeList;
  * int index = typelist::IndexOf<MyTypeList, int>::Result;
  * \endcode
  *
@@ -276,7 +276,7 @@ public:
  *
  * Example:
  * \code
- * using MyTypeList = typelist::MakeTypeList<int, char>::Type;
+ * typedef typelist::MakeTypeList<int, char>::Type MyTypeList;
  * bool query = typelist::HasType<MyTypeList, short>::Result;
  * \endcode
  *
@@ -310,7 +310,7 @@ struct SITK_ABI_HIDDEN HasType<TypeList<Head, TTail>, TType> {
  *     { std::cout << typeid(TType).name() << std::endl; }
  * }
  *
- * using MyTypeList = typelist::MakeTypeList<int, char>::Type;
+ * typedef typelist::MakeTypeList<int, char>::Type MyTypeList;
  * typelist::Visit<MyTypeList>( Predicate() );
  *
  * \endcode
@@ -323,8 +323,8 @@ struct SITK_ABI_HIDDEN Visit
   template < class Predicate >
   void operator()( Predicate &visitor )
   {
-    using Head = typename TTypeList::Head;
-    using Tail = typename TTypeList::Tail;
+    typedef typename TTypeList::Head Head;
+    typedef typename TTypeList::Tail Tail;
     visitor.CLANG_TEMPLATE operator()<Head>( );
     Visit<Tail> next;
     next.CLANG_TEMPLATE operator()<Predicate>( visitor );
@@ -332,8 +332,8 @@ struct SITK_ABI_HIDDEN Visit
   template < class Predicate >
   void operator()( const Predicate &visitor )
   {
-    using Head = typename TTypeList::Head;
-    using Tail = typename TTypeList::Tail;
+    typedef typename TTypeList::Head Head;
+    typedef typename TTypeList::Tail Tail;
     visitor.CLANG_TEMPLATE operator()<Head>( );
     Visit<Tail> next;
     next.CLANG_TEMPLATE operator()<Predicate>( visitor );
@@ -363,7 +363,7 @@ struct SITK_ABI_HIDDEN DualVisitImpl;
  * std::endl; }
  * }
  *
- * using MyTypeList = typelist::MakeTypeList<int, char>::Type;
+ * typedef typelist::MakeTypeList<int, char>::Type MyTypeList;
  * typelist::DualVisit<MyTypeList, MyTypeList>( Predicate() );
  *
  * \endcode
@@ -404,10 +404,10 @@ struct SITK_ABI_HIDDEN DualVisit
 template < typename TLeftTypeList, typename TRightTypeList >
 struct SITK_ABI_HIDDEN DualVisitImpl
 {
-  using LeftHead = typename TLeftTypeList::Head;
-  using RightHead = typename TRightTypeList::Head;
-  using LeftTail = typename TLeftTypeList::Tail;
-  using RightTail = typename TRightTypeList::Tail;
+  typedef typename TLeftTypeList::Head  LeftHead;
+  typedef typename TRightTypeList::Head RightHead;
+  typedef typename TLeftTypeList::Tail  LeftTail;
+  typedef typename TRightTypeList::Tail RightTail;
 
   template <typename Visitor>
   void operator()( Visitor &visitor ) const

@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -33,11 +33,12 @@ namespace itk {
    * All SimpleITK filters which take one input image should inherit from this
    * class
    */
+  template < unsigned int N>
   class SITKBasicFilters0_EXPORT ImageFilter:
       public ProcessObject
   {
     public:
-      using Self = ImageFilter;
+      typedef ImageFilter Self;
 
       //
       // Type List Setup
@@ -64,7 +65,7 @@ namespace itk {
       template< class TImageType>
       static void FixNonZeroIndex( TImageType * img )
       {
-        assert( img );
+        assert( img != NULL );
 
         typename TImageType::RegionType r = img->GetLargestPossibleRegion();
         typename TImageType::IndexType idx = r.GetIndex();
@@ -91,21 +92,9 @@ namespace itk {
 
       }
 
-      /** Verify the dimension of image1 matches the dimension of
-       * image2, and if not then an exception is thrown.
-       */
-      void CheckImageMatchingDimension(const Image &image1, const Image& image2, const std::string &image2Name );
+    };
 
-      /** Verify the pixel type of image1 matches the pixel type of
-       * image2, and if different then an exception is thrown.
-       */
-      void CheckImageMatchingPixelType(const Image &image1, const Image& image2, const std::string &image2Name );
 
-      /** Verify the size in pixel of image1 matches the size of
-       * image2, and if different then an exception is thrown.
-       */
-      void CheckImageMatchingSize(const Image &image1, const Image& image2, const std::string &image2Name );
-  };
   }
 }
 #endif

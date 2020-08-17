@@ -21,6 +21,5 @@
   "briefdescription" : "Computes the tangent of each input pixel.",
   "detaileddescription" : "The computations are performed using std::tan(x).",
   "itk_module" : "ITKImageIntensity",
-  "itk_group" : "ImageIntensity",
-  "in_place" : true
+  "itk_group" : "ImageIntensity"
 }

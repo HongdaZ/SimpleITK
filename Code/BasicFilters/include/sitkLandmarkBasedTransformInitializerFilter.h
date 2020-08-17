@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -72,12 +72,12 @@ in ITK" by Kim E.Y., Johnson H., Williams N. available at http://midasjournal.co
 \sa itk::simple::LandmarkBasedTransformInitializerFilter for the procedural interface
 \sa itk::LandmarkBasedTransformInitializer for the Doxygen on the original ITK class.
      */
-    class SITKBasicFilters_EXPORT LandmarkBasedTransformInitializerFilter : public ImageFilter {
+    class SITKBasicFilters_EXPORT LandmarkBasedTransformInitializerFilter : public ImageFilter<0> {
     public:
-      using Self = LandmarkBasedTransformInitializerFilter;
+      typedef LandmarkBasedTransformInitializerFilter Self;
 
       /** Destructor */
-      ~LandmarkBasedTransformInitializerFilter() override;
+      virtual ~LandmarkBasedTransformInitializerFilter();
 
 
       /** Default Constructor that takes no arguments and initializes
@@ -85,7 +85,7 @@ in ITK" by Kim E.Y., Johnson H., Williams N. available at http://midasjournal.co
       LandmarkBasedTransformInitializerFilter();
 
       /** Define the pixels types supported by this filter */
-      using PixelIDTypeList = typelist::MakeTypeList<BasicPixelID<float> >::Type;
+      typedef typelist::MakeTypeList<BasicPixelID<float> >::Type PixelIDTypeList;
 
 
       /**
@@ -137,14 +137,23 @@ in ITK" by Kim E.Y., Johnson H., Williams N. available at http://midasjournal.co
        */
         unsigned int GetBSplineNumberOfControlPoints() const { return this->m_BSplineNumberOfControlPoints; }
       /** Name of this class */
-      std::string GetName() const override { return std::string ("LandmarkBasedTransformInitializerFilter"); }
+      std::string GetName() const { return std::string ("LandmarkBasedTransformInitializerFilter"); }
 
       /** Print ourselves out */
-      std::string ToString() const override;
+      std::string ToString() const;
 
 
       /** Execute the filter on the input image */
       Transform Execute ( const Transform & transform );
+
+
+      /** Execute the filter on the input image with the given parameters */
+      Transform Execute ( const Transform & transform,
+                          const std::vector<double> & fixedLandmarks,
+                          const std::vector<double> & movingLandmarks,
+                          const std::vector<double> & landmarkWeight,
+                          const Image & referenceImage,
+                          unsigned int numberOfControlPoints );
 
 
     private:
@@ -157,7 +166,7 @@ in ITK" by Kim E.Y., Johnson H., Williams N. available at http://midasjournal.co
 
       friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
 
-      std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+      nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
 
 
       /*  */

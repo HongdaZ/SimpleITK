@@ -52,12 +52,12 @@ Code
 
   .. tab:: Python
 
-    .. literalinclude:: ../../Examples/ImageGridManipulation/ImageGridManipulation.py
+    .. literalinclude:: ImageGridManipulation.py
        :language: python
        :lines: 1,19-
 
   .. tab:: R
 
-    .. literalinclude:: ../../Examples/ImageGridManipulation/ImageGridManipulation.R
+    .. literalinclude:: ImageGridManipulation.R
        :language: R
        :lines: 18-
