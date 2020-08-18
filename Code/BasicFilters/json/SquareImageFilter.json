@@ -21,6 +21,5 @@
   "briefdescription" : "Computes the square of the intensity values pixel-wise.",
   "detaileddescription" : "",
   "itk_module" : "ITKImageIntensity",
-  "itk_group" : "ImageIntensity",
-  "in_place" : true
+  "itk_group" : "ImageIntensity"
 }

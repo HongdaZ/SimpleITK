@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -50,7 +50,6 @@
 #include "sitkTranslationTransform.h"
 #include "sitkVersorTransform.h"
 #include "sitkVersorRigid3DTransform.h"
-#include "sitkCompositeTransform.h"
 #include "sitkShow.h"
 
 #include "sitkInterpolator.h"
@@ -81,7 +80,6 @@
 #include "sitkCenteredVersorTransformInitializerFilter.h"
 #include "sitkLandmarkBasedTransformInitializerFilter.h"
 #include "sitkCastImageFilter.h"
-#include "sitkExtractImageFilter.h"
 
 #include "sitkAdditionalProcedures.h"
 

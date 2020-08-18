@@ -91,11 +91,8 @@ list(APPEND SimpleITK_PRIVATE_COMPILE_OPTIONS ${CXX_ADDITIONAL_WARNING_FLAGS})
 option(BUILD_SHARED_LIBS "Build SimpleITK ITK with shared libraries. This does not effect wrapped languages." OFF)
 set(SITK_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
 
-set(SimpleITK_EXPLICIT_INSTATIATION_DEFAULT OFF)
-if(MSCV)
-  set(SimpleITK_EXPLICIT_INSTATIATION_DEFAULT ON)
-endif()
-option(SimpleITK_EXPLICIT_INSTANTIATION "Enable an ITK static library of explicitly instantiated templates." ${SimpleITK_EXPLICIT_INSTATIATION_DEFAULT})
+
+option(SimpleITK_EXPLICIT_INSTANTIATION "Enable an ITK static library of explicitly instantiated templates." ON)
 sitk_legacy_naming(SimpleITK_EXPLICIT_INSTANTIATION)
 
 if ( MSVC AND SITK_BUILD_SHARED_LIBS )
@@ -118,7 +115,18 @@ option( SimpleITK_INT64_PIXELIDS "Instantiate 64-bit integer pixels, including u
   ${SimpleITK_INT64_PIXELIDS_DEFAULT} )
 sitk_legacy_naming(SimpleITK_INT64_PIXELIDS)
 
-include(sitkMaxDimensionOption)
+
+
+set(SimpleITK_4D_IMAGES_DEFAULT ON)
+# 1900 = VS 14.0 (Visual Studio 2015)
+if(MSVC AND MSVC_VERSION VERSION_LESS 1900)
+  set( SimpleITK_4D_IMAGES_DEFAULT OFF )
+  message("disable")
+endif()
+option( SimpleITK_4D_IMAGES "Add Image and I/O support for four spatial dimensions." ${SimpleITK_4D_IMAGES_DEFAULT} )
+mark_as_advanced( SimpleITK_4D_IMAGES )
+sitk_legacy_naming(SimpleITK_4D_IMAGES)
+
 
 # Setup build locations.
 if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
@@ -244,6 +252,9 @@ endif()
 #-----------------------------------------------------------
 # Place all checks and try compile variable for sitkConfigure.h here
 
+include(sitkCheckCXX11)
+
+
 include(CheckIncludeFileCXX)
 
 
@@ -251,7 +262,11 @@ include(CheckIncludeFileCXX)
 # This generates a configuration error if the compiler is not supported
 check_include_file_cxx( stdint.h SITK_HAS_STDINT_H )
 if(NOT SITK_HAS_STDINT_H)
-  message(FATAL_ERROR "Unable to find require \"stdint.h\" header file.")
+    if(MSVC)
+      add_subdirectory("${SimpleITK_SOURCE_DIR}/Utilities/C99")
+    else()
+      message(FATAL_ERROR "Unable to find require \"stdint.h\" header file.")
+    endif()
 endif()
 
 #------------------------------------------------------------------------------
@@ -445,6 +460,7 @@ install(FILES ${__files}
 install(
   DIRECTORY
     ${CMAKE_SOURCE_DIR}/Code/Common/include/Ancillary
+    ${CMAKE_SOURCE_DIR}/Code/Common/include/nsstd
   DESTINATION
     ${SimpleITK_INSTALL_INCLUDE_DIR}/
   COMPONENT Development

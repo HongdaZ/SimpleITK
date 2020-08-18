@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -22,11 +22,9 @@
 
 #include "sitkInterpolator.h"
 #include "sitkRandomSeed.h"
-#include "sitkKernel.h"
 
 // todo this should be moved to a more local place
 #include "sitkTransform.h"
-#include <map>
 
 #if defined( SITKDLL )
   #ifdef SimpleITKBasicFilters0_EXPORTS

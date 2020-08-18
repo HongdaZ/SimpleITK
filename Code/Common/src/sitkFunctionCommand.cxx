@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -23,14 +23,16 @@ namespace itk
 namespace simple
 {
 
-FunctionCommand::~FunctionCommand( ) = default;
+FunctionCommand::~FunctionCommand( )
+{
+}
 
 FunctionCommand::FunctionCommand( )
 {
   Command::SetName("FunctionCommand");
 }
 
-void FunctionCommand::Execute()
+void FunctionCommand::Execute(void)
 {
   if (bool(this->m_Function))
     {
@@ -45,13 +47,9 @@ void FunctionCommand::SetCallbackFunction ( void(* pFunction )() )
 
 void FunctionCommand::SetCallbackFunction( void(* pFunction )(void *), void *clientData )
 {
-  m_Function = std::bind(pFunction, clientData);
+  m_Function = nsstd::bind(pFunction, clientData);
 }
 
-void FunctionCommand::SetCallbackFunction(const std::function<void()> &func)
-{
-  m_Function = func;
-}
 
 } // end namespace simple
 } // end namespace itk

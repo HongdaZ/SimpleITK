@@ -19,30 +19,30 @@ Code
 
   .. tab:: C++
 
-    .. literalinclude:: ../../Examples/DicomSeriesReader/DicomSeriesReader.cxx
+    .. literalinclude:: DicomSeriesReader.cxx
        :language: c++
        :lines: 18-
 
   .. tab:: Java
 
-    .. literalinclude:: ../../Examples/DicomSeriesReader/DicomSeriesReader.java
+    .. literalinclude:: DicomSeriesReader.java
        :language: java
        :lines: 18-
 
   .. tab:: Lua
 
-    .. literalinclude:: ../../Examples/DicomSeriesReader/DicomSeriesReader.lua
+    .. literalinclude:: DicomSeriesReader.lua
        :language: lua
        :lines:  18-
 
   .. tab:: Python
 
-    .. literalinclude:: ../../Examples/DicomSeriesReader/DicomSeriesReader.py
+    .. literalinclude:: DicomSeriesReader.py
        :language: python
        :lines: 1,19-
 
   .. tab:: R
 
-    .. literalinclude:: ../../Examples/DicomSeriesReader/DicomSeriesReader.R
+    .. literalinclude:: DicomSeriesReader.R
        :language: R
        :lines:  23-

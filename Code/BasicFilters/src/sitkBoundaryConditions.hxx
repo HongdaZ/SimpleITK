@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -27,15 +27,15 @@ namespace itk {
   namespace simple {
 
   /** Creates a boundary condition object from an enum. Uses an
-   * unique_ptr for dynamically allocated object, to enforce the user to
+   * auto_ptr for dynamically allocated object, to enforce the user to
    * take ownership of the object.
    *
    */
   template< class TFilter, class TInternalFilter >
-  std::unique_ptr<ImageBoundaryCondition< typename TInternalFilter::InputImageType > >
+  nsstd::auto_ptr<ImageBoundaryCondition< typename TInternalFilter::InputImageType > >
   CreateNewBoundaryConditionInstance(typename TFilter::BoundaryConditionType bc)
   {
-    using PointerType = std::unique_ptr<ImageBoundaryCondition< typename TInternalFilter::InputImageType > >;
+    typedef nsstd::auto_ptr<ImageBoundaryCondition< typename TInternalFilter::InputImageType > > PointerType;
 
     switch ( bc )
       {

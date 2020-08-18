@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ typedef typelist::MakeTypeList<BasicPixelID<int8_t>,
  *
  * \sa BasicPixelID
  */
-using ScalarPixelIDTypeList = BasicPixelIDTypeList;
+typedef BasicPixelIDTypeList ScalarPixelIDTypeList;
 
 
 /** List of pixel ids which are integer types for the itk::Image class.
@@ -164,7 +164,7 @@ typedef typelist::MakeTypeList<LabelPixelID<uint8_t>,
 #endif
                                >::Type LabelPixelIDTypeList;
 
-using IntegerLabelPixelIDTypeList = UnsignedIntegerPixelIDTypeList;
+typedef UnsignedIntegerPixelIDTypeList IntegerLabelPixelIDTypeList;
 
 /** List of all pixel ids available, but itk::LabelMap this include image of itk::Image,
  * itk::VectorImage
@@ -204,7 +204,7 @@ typedef typelist::Append<
  * \sa VectorPixelID
  * \sa LabelPixelID
  */
-using InstantiatedPixelIDTypeList = AllPixelIDTypeList;
+typedef AllPixelIDTypeList InstantiatedPixelIDTypeList;
 
 }
 }

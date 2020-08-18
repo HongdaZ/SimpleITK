@@ -1,6 +1,6 @@
 #=========================================================================
 #
-#  Copyright NumFOCUS
+#  Copyright Insight Software Consortium
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -68,17 +68,17 @@ R$SetOptimizerAsGradientDescent(learningRate=1.0,
                                 estimateLearningRate = 'EachIteration')
 R$SetOptimizerScalesFromPhysicalShift()
 
-R$SetInitialTransform(initialTx)
+R$SetInitialTransform(initialTx, inPlace=TRUE)
 
 R$SetInterpolator('sitkLinear')
 
 R$AddCommand( 'sitkIterationEvent', function() commandIteration(R) )
 R$AddCommand( 'sitkMultiResolutionIterationEvent', function() commandMultiIteration(R) )
 
-outTx1 <- R$Execute(fixed, moving)
+outTx <- R$Execute(fixed, moving)
 
 cat("-------\n")
-outTx1
+outTx
 cat("Optimizer stop condition:", R$GetOptimizerStopConditionDescription(), '\n')
 cat("Iteration:", R$GetOptimizerIteration(), '\n')
 cat("Metric value:", R$GetMetricValue(), '\n')
@@ -91,7 +91,7 @@ rm(displacementField)
 displacementTx$SetSmoothingGaussianOnUpdate(varianceForUpdateField=0.0,
                                             varianceForTotalField=1.5)
 
-R$SetMovingInitialTransform(outTx1)
+R$SetMovingInitialTransform(outTx)
 R$SetInitialTransform(displacementTx, inPlace=TRUE)
 
 R$SetMetricAsANTSNeighborhoodCorrelation(4)
@@ -107,18 +107,12 @@ R$SetOptimizerAsGradientDescent(learningRate=1,
                                 convergenceWindowSize=10,
                                 estimateLearningRate = 'EachIteration')
 
-R$Execute(fixed, moving)
-
-
+outTx$AddTransform( R$Execute(fixed, moving) )
 
 cat("-------\n")
-displacementTx
+outTx
 cat("Optimizer stop condition:", R$GetOptimizerStopConditionDescription(), '\n')
 cat("Iteration:", R$GetOptimizerIteration(), '\n')
 cat("Metric value:", R$GetMetricValue(), '\n')
-
-outTx <- CompositeTransform(outTx1$GetDimension())
-outTx$AddTransform(outTx1)
-outTx$AddTransform(displacementTx)
 
 WriteTransform(outTx,  args[[3]])

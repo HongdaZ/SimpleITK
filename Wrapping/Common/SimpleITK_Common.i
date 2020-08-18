@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -69,7 +69,6 @@
 %ignore itk::simple::Image::GetBufferAsUInt64;
 %ignore itk::simple::Image::GetBufferAsFloat;
 %ignore itk::simple::Image::GetBufferAsDouble;
-%ignore itk::simple::Image::GetBufferAsVoid;
 #endif
 
 
@@ -96,7 +95,6 @@ namespace std
   %template(VectorFloat) vector<float>;
   %template(VectorDouble) vector<double>;
   %template(VectorOfImage) vector< itk::simple::Image >;
-  %template(VectorOfTransform) vector< itk::simple::Transform >;
   %template(VectorUIntList) vector< vector<unsigned int> >;
   %template(VectorString) vector< std::string >;
 
@@ -129,6 +127,10 @@ namespace std
 
 #ifndef SITK_RETURN_SELF_TYPE_HEADER
 #define SITK_RETURN_SELF_TYPE_HEADER void
+#endif
+
+#ifndef SITK_NOEXCEPT
+#define SITK_NOEXCEPT
 #endif
 
 
@@ -173,12 +175,18 @@ namespace std
 %include "sitkTranslationTransform.h"
 %include "sitkVersorTransform.h"
 %include "sitkVersorRigid3DTransform.h"
-%include "sitkCompositeTransform.h"
 
 
 // Basic Filter Base
 %include "sitkProcessObject.h"
 %include "sitkImageFilter.h"
+
+%template(ImageFilter_0) itk::simple::ImageFilter<0>;
+%template(ImageFilter_1) itk::simple::ImageFilter<1>;
+%template(ImageFilter_2) itk::simple::ImageFilter<2>;
+%template(ImageFilter_3) itk::simple::ImageFilter<3>;
+%template(ImageFilter_4) itk::simple::ImageFilter<4>;
+%template(ImageFilter_5) itk::simple::ImageFilter<5>;
 
 // IO
 %include "sitkShow.h"
@@ -196,7 +204,6 @@ namespace std
 %include "sitkCenteredVersorTransformInitializerFilter.h"
 %include "sitkLandmarkBasedTransformInitializerFilter.h"
 %include "sitkCastImageFilter.h"
-%include "sitkExtractImageFilter.h"
 %include "sitkAdditionalProcedures.h"
 
 // Registration

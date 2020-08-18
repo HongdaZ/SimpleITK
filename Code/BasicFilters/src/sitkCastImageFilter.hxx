@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -40,12 +40,12 @@ template<typename TImageType, typename TOutputImageType>
 Image
 CastImageFilter::ExecuteInternalCast( const Image& inImage )
 {
-  using InputImageType = TImageType;
-  using OutputImageType = TOutputImageType;
+  typedef TImageType       InputImageType;
+  typedef TOutputImageType OutputImageType;
 
   typename InputImageType::ConstPointer image = this->CastImageToITK<InputImageType>( inImage );
 
-  using FilterType = itk::CastImageFilter<InputImageType, OutputImageType>;
+  typedef itk::CastImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
 
   filter->SetInput ( image );
@@ -62,18 +62,18 @@ template<typename TImageType, typename TOutputImageType>
 Image CastImageFilter::ExecuteInternalToVector( const Image& inImage )
 {
 
-  using InputImageType = TImageType;
-  using OutputImageType = TOutputImageType;
+  typedef TImageType       InputImageType;
+  typedef TOutputImageType OutputImageType;
 
   typename InputImageType::ConstPointer image = this->CastImageToITK<InputImageType>( inImage );
 
-  using FilterType = itk::ComposeImageFilter<InputImageType>;
+  typedef itk::ComposeImageFilter<InputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetInput ( image );
 
   this->PreUpdate( filter.GetPointer() );
 
-  using CastFilterType = itk::CastImageFilter< typename FilterType::OutputImageType, OutputImageType >;
+  typedef itk::CastImageFilter< typename FilterType::OutputImageType, OutputImageType > CastFilterType;
   typename CastFilterType::Pointer caster = CastFilterType::New();
   caster->SetInput( filter->GetOutput() );
   caster->InPlaceOn();
@@ -91,13 +91,13 @@ Image CastImageFilter::ExecuteInternalToVector( const Image& inImage )
 template<typename TImageType, typename TOutputImageType>
 Image CastImageFilter::ExecuteInternalToLabel( const Image& inImage )
 {
-  using InputImageType = TImageType;
-  using OutputImageType = TOutputImageType;
+  typedef TImageType                                InputImageType;
+  typedef TOutputImageType                          OutputImageType;
 
 
   typename InputImageType::ConstPointer image = this->CastImageToITK<InputImageType>( inImage );
 
-  using FilterType = itk::LabelImageToLabelMapFilter<InputImageType, OutputImageType>;
+  typedef itk::LabelImageToLabelMapFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetInput ( image );
 
@@ -112,13 +112,13 @@ Image CastImageFilter::ExecuteInternalToLabel( const Image& inImage )
 template<typename TImageType, typename TOutputImageType>
 Image CastImageFilter::ExecuteInternalLabelToImage( const Image& inImage )
 {
-  using InputImageType = TImageType;
-  using OutputImageType = TOutputImageType;
+  typedef TImageType                                InputImageType;
+  typedef TOutputImageType                          OutputImageType;
 
   typename InputImageType::ConstPointer image = this->CastImageToITK<InputImageType>( inImage );
 
 
-  using FilterType = itk::LabelMapToLabelImageFilter<InputImageType, OutputImageType>;
+  typedef itk::LabelMapToLabelImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetInput ( image );
 

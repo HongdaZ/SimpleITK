@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -64,17 +64,18 @@ assumption will probably not hold in multi-modality registration.
      */
     class SITKBasicFilters_EXPORT  CenteredTransformInitializerFilter : public ProcessObject {
     public:
-      using Self = CenteredTransformInitializerFilter;
+      typedef  CenteredTransformInitializerFilter Self;
 
       /** Destructor */
-      ~CenteredTransformInitializerFilter() override;
+      virtual ~CenteredTransformInitializerFilter();
 
       /** Default Constructor that takes no arguments and initializes
        * default parameters */
        CenteredTransformInitializerFilter();
 
       /** Define the pixels types supported by this filter */
-      using PixelIDTypeList = BasicPixelIDTypeList;
+      typedef BasicPixelIDTypeList  PixelIDTypeList;
+
 
       typedef enum {GEOMETRY,MOMENTS} OperationModeType;
 
@@ -86,14 +87,19 @@ assumption will probably not hold in multi-modality registration.
        */
         OperationModeType GetOperationMode() const { return this->m_OperationMode; }
       /** Name of this class */
-      std::string GetName() const override { return std::string ("CenteredTransformInitializerFilter"); }
+      std::string GetName() const { return std::string ("CenteredTransformInitializerFilter"); }
 
       /** Print ourselves out */
-      std::string ToString() const override;
+      std::string ToString() const;
 
 
       /** Execute the filter on the input image */
       Transform Execute ( const Image & fixedImage, const Image & movingImage, const Transform & transform );
+
+
+      /** Execute the filter on the input image with the given parameters */
+      Transform Execute ( const Image & fixedImage, const Image & movingImage, const Transform & transform,  CenteredTransformInitializerFilter::OperationModeType operationMode );
+
 
       /** Select between using the geometrical center of the images or using the center of mass given by the image intensities. */
       SITK_RETURN_SELF_TYPE_HEADER MomentsOn( ) { this->SetOperationMode( MOMENTS ); return *this; }
@@ -112,7 +118,7 @@ assumption will probably not hold in multi-modality registration.
 
       friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
 
-      std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+      nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
 
 
       OperationModeType  m_OperationMode;

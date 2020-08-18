@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -30,15 +30,21 @@ namespace itk {
   namespace simple {
 
     HashImageFilter::~HashImageFilter ()
-    = default;
+    {
+    }
 
     HashImageFilter::HashImageFilter () {
       this->m_HashFunction = SHA1;
 
       this->m_MemberFactory.reset( new detail::MemberFunctionFactory<MemberFunctionType>( this ) );
 
-      this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2, SITK_MAX_DIMENSION > ();
-      this->m_MemberFactory->RegisterMemberFunctions < LabelPixelIDTypeList, 2, SITK_MAX_DIMENSION, detail::ExecuteInternalLabelImageAddressor<MemberFunctionType> > ();
+      this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 4 > ();
+      this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 3 > ();
+      this->m_MemberFactory->RegisterMemberFunctions< PixelIDTypeList, 2 > ();
+
+      this->m_MemberFactory->RegisterMemberFunctions < LabelPixelIDTypeList, 4, detail::ExecuteInternalLabelImageAddressor<MemberFunctionType> > ();
+      this->m_MemberFactory->RegisterMemberFunctions < LabelPixelIDTypeList, 3, detail::ExecuteInternalLabelImageAddressor<MemberFunctionType> > ();
+      this->m_MemberFactory->RegisterMemberFunctions < LabelPixelIDTypeList, 2, detail::ExecuteInternalLabelImageAddressor<MemberFunctionType> > ();
     }
 
     std::string HashImageFilter::ToString() const {
@@ -81,9 +87,9 @@ namespace itk {
     template <class TLabelImageType>
     std::string HashImageFilter::ExecuteInternalLabelImage( const Image &inImage )
     {
-      using LabelImageType = TLabelImageType;
+      typedef TLabelImageType LabelImageType;
 
-      using ScalarImageType = itk::Image< typename LabelImageType::PixelType, LabelImageType::ImageDimension >;
+      typedef itk::Image< typename LabelImageType::PixelType, LabelImageType::ImageDimension > ScalarImageType;
 
       // The image id for a scalar image of the label map image
       PixelIDValueEnum scalarID = static_cast<PixelIDValueEnum>(PixelIDToPixelIDValue< typename ImageTypeToPixelID<ScalarImageType>::PixelIDType >::Result);
@@ -97,12 +103,12 @@ namespace itk {
     template <class TImageType>
     std::string HashImageFilter::ExecuteInternal ( const Image& inImage )
     {
-      using InputImageType = TImageType;
+      typedef TImageType                                   InputImageType;
 
       typename InputImageType::ConstPointer image =
         dynamic_cast <const InputImageType*> ( inImage.GetITKBase() );
 
-      using HashFilterType = itk::HashImageFilter<InputImageType>;
+      typedef itk::HashImageFilter<InputImageType> HashFilterType;
       typename HashFilterType::Pointer hasher = HashFilterType::New();
       hasher->SetInput( image );
       hasher->InPlaceOff(); // pointless copy of data needed
@@ -126,9 +132,7 @@ namespace itk {
 
     std::string Hash ( const Image& image, HashImageFilter::HashFunction function )
     {
-      HashImageFilter filter;
-      filter.SetHashFunction( function );
-      return filter.Execute ( image );
+      return HashImageFilter().SetHashFunction ( function ).Execute ( image );
     }
   }
 }

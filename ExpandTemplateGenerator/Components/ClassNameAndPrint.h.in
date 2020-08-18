@@ -1,4 +1,3 @@
-
       /** Name of this class */
       std::string GetName() const { return std::string ("${name}"); }
 

@@ -10,6 +10,6 @@ Code
 ----
 
 
-.. literalinclude:: ../../Examples/CSharp/ImageGetBuffer.cs
+.. literalinclude:: ImageGetBuffer.cs
    :language: c#
    :lines: 18-

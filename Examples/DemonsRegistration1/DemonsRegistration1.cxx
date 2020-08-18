@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public:
     : m_Filter(m)
     {}
 
-  void Execute( ) override
+  virtual void Execute( )
     {
       // use sitk's output operator for std::vector etc..
       using sitk::operator<<;

@@ -23,12 +23,12 @@ Code
 
   .. tab:: Python
 
-    .. literalinclude:: ../../Examples/DicomSeriesReadModifyWrite/DicomSeriesReadModifySeriesWrite.py
+    .. literalinclude:: DicomSeriesReadModifySeriesWrite.py
        :language: python
        :lines: 19-
 
   .. tab:: R
 
-    .. literalinclude:: ../../Examples/DicomSeriesReadModifyWrite/DicomSeriesReadModifySeriesWrite.R
+    .. literalinclude:: DicomSeriesReadModifySeriesWrite.R
        :language: r
        :lines:  18-

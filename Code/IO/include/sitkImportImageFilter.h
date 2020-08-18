@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -47,17 +47,17 @@ namespace itk {
     class SITKIO_EXPORT ImportImageFilter
       : public ImageReaderBase {
     public:
-      using Self = ImportImageFilter;
+      typedef ImportImageFilter Self;
 
-      ~ImportImageFilter() override;
+      virtual ~ImportImageFilter();
 
       ImportImageFilter();
 
       /** Print ourselves to string */
-      std::string ToString() const override;
+      virtual std::string ToString() const;
 
       /** return user readable name of the filter */
-      std::string GetName() const override { return std::string("ImportImageFilter"); }
+      virtual std::string GetName() const { return std::string("ImportImageFilter"); }
 
       SITK_RETURN_SELF_TYPE_HEADER SetSize( const std::vector< unsigned int > &size );
       const std::vector< unsigned int > &GetSize( ) const;
@@ -82,31 +82,31 @@ namespace itk {
       SITK_RETURN_SELF_TYPE_HEADER SetBufferAsFloat( float * buffer, unsigned int numberOfComponents = 1 );
       SITK_RETURN_SELF_TYPE_HEADER SetBufferAsDouble( double * buffer, unsigned int numberOfComponents = 1 );
 
-      Image Execute() override;
+      Image Execute();
 
     protected:
 
       // Internal method called by the template dispatch system
-      template <class TImageType> Image ExecuteInternal ( );
+      template <class TImageType> Image ExecuteInternal ( void );
 
       // If the output image type is a VectorImage then the number of
       // components per pixel needs to be set, otherwise the method
-      // does not exist. This is done with the enable if idiom.
+      // does not exist. This is done with the EnableIf Idiom.
       template <class TImageType>
-        typename std::enable_if<!IsVector<TImageType>::Value>::type
+      typename DisableIf<IsVector<TImageType>::Value>::Type
       SetNumberOfComponentsOnImage( TImageType* ) {}
       template <class TImageType>
-        typename std::enable_if<IsVector<TImageType>::Value>::type
+      typename EnableIf<IsVector<TImageType>::Value>::Type
       SetNumberOfComponentsOnImage( TImageType* );
 
     private:
 
       // function pointer type
-      typedef Image (Self::*MemberFunctionType)( );
+      typedef Image (Self::*MemberFunctionType)( void );
 
       // friend to get access to executeInternal member
       friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
-      std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+      nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
 
       unsigned int     m_NumberOfComponentsPerPixel;
       PixelIDValueType m_PixelIDValue;

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #==========================================================================
 #
-#   Copyright NumFOCUS
+#   Copyright Insight Software Consortium
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -78,38 +78,31 @@ elif test ${git_version_arr[0]} -eq $git_required_major_version; then
 fi
 echo -e "Git version $git_version is OK.\n"
 
+cd "${BASH_SOURCE%/*}/.." &&
 Utilities/GitSetup/setup-user && echo &&
-Utilities/GitSetup/setup-hooks && echo &&
-(Utilities/GitSetup/setup-upstream ||
- echo 'Failed to setup origin.  Run this again to retry.') && echo &&
-(Utilities/GitSetup/setup-github ||
- echo 'Failed to setup GitHub.  Run this again to retry.') && echo &&
-Utilities/GitSetup/tips &&
-Utilities/GitSetup/github-tips
+Utilities/GitSetup/setup-hooks && Utilities/DevelopmentSetupScripts/SetupHooks.sh && echo &&
+( read -ep "Do you want to setup access itk.org? [y/N]: " access;
+    if [ "$access" == "y" ] || [ "$access" == "Y" ]; then
+        Utilities/GitSetup/setup-upstream && echo &&
+        Utilities/GitSetup/setup-stage && echo &&
+        Utilities/GitSetup/setup-ssh ||
+        echo 'Failed to setup SSH.  Run this again to retry.'
+   fi)  && echo &&
+Utilities/GitSetup/tips
 
 
-### LOCAL CONFIG TO REVIEW
 
-# Rebase master by default
-git config rebase.stat true
-git config branch.master.rebase true
+cd Utilities/DevelopmentSetupScripts
 
+echo "Setting up useful Git aliases..."
+./SetupGitAliases.sh || exit 1
+echo
 
 # Disable legacy Gerrit hooks
-hook=$(git config --get hooks.GerritId) &&
-if "$hook"; then
-    echo "Disable legacy Gerrit hook..." &&
-	git config hooks.GerritId false &&
-        (git config --get remote.gerrit.url > /dev/null &&
-        git remote remove gerrit)
-fi
-
-git config --get remote.stage.url > /dev/null &&
-    ( echo "Removing legacy stage repo..." &&
-          git remote remove stage )
-
+echo "Disable legacy Gerrit hook..."
+git config --unset hooks.GerritId
 
 
 # Record the version of this setup so Hooks/pre-commit can check it.
-SetupForDevelopment_VERSION=4
+SetupForDevelopment_VERSION=3
 git config hooks.SetupForDevelopment ${SetupForDevelopment_VERSION}

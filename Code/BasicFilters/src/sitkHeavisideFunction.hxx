@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -26,17 +26,17 @@ namespace itk {
 namespace simple {
 
   if (m_HeavisideStepFunction == AtanRegularizedHeaviside) {
-    using DomainFunctionType = itk::AtanRegularizedHeavisideStepFunction< typename InputImageType::PixelType, typename InputImageType::PixelType >;
+    typedef itk::AtanRegularizedHeavisideStepFunction< typename InputImageType::PixelType, typename InputImageType::PixelType >  DomainFunctionType;
     typename DomainFunctionType::Pointer domainFunction = DomainFunctionType::New();
     domainFunction->SetLambda(m_Lambda);
     filter->GetDifferenceFunction(0)->SetDomainFunction( domainFunction );
   } else if ( m_HeavisideStepFunction == SinRegularizedHeaviside ) {
-    using DomainFunctionType = itk::AtanRegularizedHeavisideStepFunction< typename InputImageType::PixelType, typename InputImageType::PixelType >;
+    typedef itk::AtanRegularizedHeavisideStepFunction< typename InputImageType::PixelType, typename InputImageType::PixelType >  DomainFunctionType;
     typename DomainFunctionType::Pointer domainFunction = DomainFunctionType::New();
     domainFunction->SetLambda(m_Lambda);
     filter->GetDifferenceFunction(0)->SetDomainFunction( domainFunction );
   } else {
-    using DomainFunctionType = itk::HeavisideStepFunction< typename InputImageType::PixelType, typename InputImageType::PixelType >;
+    typedef itk::HeavisideStepFunction< typename InputImageType::PixelType, typename InputImageType::PixelType >  DomainFunctionType;
     typename DomainFunctionType::Pointer domainFunction = DomainFunctionType::New();
     filter->GetDifferenceFunction(0)->SetDomainFunction( domainFunction );
   }

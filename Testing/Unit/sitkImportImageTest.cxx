@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 class Import
   : public ::testing::Test {
 public:
-  void SetUp() override {
+  virtual void SetUp() {
     spacing1 = std::vector<double>( 3, 1.0 );
     spacing2.push_back( 1.1 );
     spacing2.push_back( 1.2 );
@@ -69,7 +69,7 @@ TEST_F(Import,Required) {
   // methods, and to imporve coverage
 
   // Check has Self
-  using ImportFilterType = itk::simple::ImportImageFilter::Self;
+  typedef itk::simple::ImportImageFilter::Self ImportFilterType;
 
   // default constructable
   ImportFilterType  importer;

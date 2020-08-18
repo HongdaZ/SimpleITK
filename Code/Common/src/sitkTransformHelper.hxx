@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -19,20 +19,27 @@
 #define sitkTransformHelper_hxx
 
 
-#define SITK_TRANSFORM_SET_MPF(NAME, ITK_TYPENAME, COMPONENT)                      \
+#define SITK_TRANSFORM_SET_MPF(NAME,ITK_TYPENAME, COMPONENT)                      \
   {                                                                     \
-  this->m_pfSet##NAME = [t](const std::vector<COMPONENT> &arg){ t->Set##NAME(sitkSTLVectorToITK<ITK_TYPENAME>(arg));};\
-  this->m_pfGet##NAME = [t](){ return sitkITKVectorToSTL<COMPONENT>(t->Get##NAME());}; \
+  typedef ITK_TYPENAME itkType;                                         \
+  itkType (*pfSTLToITK)(const std::vector<COMPONENT> &) = &sitkSTLVectorToITK<itkType, COMPONENT>; \
+  this->m_pfSet##NAME = nsstd::bind(&TransformType::Set##NAME,t,nsstd::bind(pfSTLToITK,nsstd::placeholders::_1)); \
+                                                                        \
+  std::vector<COMPONENT> (*pfITKToSTL)( const itkType &) = &sitkITKVectorToSTL<COMPONENT,itkType>; \
+  this->m_pfGet##NAME = nsstd::bind(pfITKToSTL,nsstd::bind(&TransformType::Get##NAME,t)); \
   }
 
 #define SITK_TRANSFORM_SET_MPF_GetMatrix()                              \
   {                                                                     \
-  this->m_pfGetMatrix =[t](){ return sitkITKDirectionToSTL<typename TransformType::MatrixType>(t->GetMatrix());}; \
+  std::vector<double>  (*pfITKDirectionToSTL)(const typename TransformType::MatrixType &) = &sitkITKDirectionToSTL<typename TransformType::MatrixType>; \
+  this->m_pfGetMatrix = nsstd::bind(pfITKDirectionToSTL,nsstd::bind(&TransformType::GetMatrix,t)); \
   }
 
 #define SITK_TRANSFORM_SET_MPF_SetMatrix()                              \
   {                                                                     \
-    this->m_pfSetMatrix = [t](const std::vector<double> &arg, double tolerance){t->SetMatrix(sitkSTLToITKDirection<typename TransformType::MatrixType>(arg), tolerance);}; \
+  void (TransformType::*pfSetMatrix) (const typename TransformType::MatrixType &, double) = &TransformType::SetMatrix; \
+  typename TransformType::MatrixType (*pfSTLToITKDirection)(const std::vector<double> &) = &sitkSTLToITKDirection<typename TransformType::MatrixType>; \
+  this->m_pfSetMatrix = nsstd::bind(pfSetMatrix, t, nsstd::bind(pfSTLToITKDirection, nsstd::placeholders::_1), nsstd::placeholders::_2); \
   }
 
 

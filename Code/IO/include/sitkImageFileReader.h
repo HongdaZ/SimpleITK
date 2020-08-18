@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -61,22 +61,22 @@ namespace itk {
       : public ImageReaderBase
     {
     public:
-      using Self = ImageFileReader;
+      typedef ImageFileReader Self;
 
-      ~ImageFileReader() override;
+      virtual ~ImageFileReader();
 
       ImageFileReader();
 
       /** Print ourselves to string */
-      std::string ToString() const override;
+      virtual std::string ToString() const;
 
       /** return user readable name of the filter */
-      std::string GetName() const override { return std::string("ImageFileReader"); }
+      virtual std::string GetName() const { return std::string("ImageFileReader"); }
 
       SITK_RETURN_SELF_TYPE_HEADER SetFileName ( const std::string &fn );
       std::string GetFileName() const;
 
-      Image Execute() override;
+      Image Execute();
 
       // Interface methods to access image file's meta-data and image
       // information after calling Execute or after calling
@@ -90,7 +90,7 @@ namespace itk {
        * certain dimension or type, the meta-information can still be
        * read.
        */
-      void ReadImageInformation();
+      void ReadImageInformation(void);
 
       /** \brief Image information methods updated via ReadImageInformation
        *
@@ -106,14 +106,14 @@ namespace itk {
        * as a SimpleITK Image.
        * @{
        */
-      PixelIDValueEnum GetPixelID( ) const;
-      PixelIDValueType GetPixelIDValue( ) const;
-      unsigned int GetDimension( ) const;
-      unsigned int GetNumberOfComponents( ) const;
-      const std::vector<double> &GetOrigin( ) const;
-      const std::vector<double> &GetSpacing( ) const;
+      PixelIDValueEnum GetPixelID( void ) const;
+      PixelIDValueType GetPixelIDValue( void ) const;
+      unsigned int GetDimension( void ) const;
+      unsigned int GetNumberOfComponents( void ) const;
+      const std::vector<double> &GetOrigin( void ) const;
+      const std::vector<double> &GetSpacing( void ) const;
       const std::vector<double> &GetDirection() const;
-      const std::vector<uint64_t> &GetSize( ) const;
+      const std::vector<uint64_t> &GetSize( void ) const;
       /* @} */
 
       /** \brief Get the meta-data dictionary keys
@@ -125,7 +125,7 @@ namespace itk {
        * file's meta-data dictionary. Iterate through with these keys
        * to get the values.
        **/
-      std::vector<std::string> GetMetaDataKeys( ) const;
+      std::vector<std::string> GetMetaDataKeys( void ) const;
 
       /** \brief Query a meta-data dictionary for the existence of a key.
        **/
@@ -201,16 +201,16 @@ namespace itk {
 
       // friend to get access to executeInternal member
       friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
-      std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+      nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
 
 
-      std::function<std::vector<std::string>()> m_pfGetMetaDataKeys;
-      std::function<bool(const std::string &)> m_pfHasMetaDataKey;
-      std::function<std::string(const std::string &)> m_pfGetMetaData;
+      nsstd::function<std::vector<std::string>()> m_pfGetMetaDataKeys;
+      nsstd::function<bool(const std::string &)> m_pfHasMetaDataKey;
+      nsstd::function<std::string(const std::string &)> m_pfGetMetaData;
 
       std::string m_FileName;
 
-      std::unique_ptr<MetaDataDictionary> m_MetaDataDictionary;
+      nsstd::auto_ptr<MetaDataDictionary> m_MetaDataDictionary;
 
       PixelIDValueEnum     m_PixelType;
       unsigned int         m_Dimension;

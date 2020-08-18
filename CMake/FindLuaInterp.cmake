@@ -10,18 +10,8 @@
 #   LUA_EXECUTABLE_FOUND          - If false, don't attempt to use lua
 #   LUA_EXECUTABLE_VERSION_STRING - version of lua found
 
-
-set(_NAMES lua)
-
-if(NOT LuaInterp_FIND_VERSION_MAJOR EQUAL 0)
-  list(INSERT _NAMES 0 lua${LuaInterp_FIND_VERSION_MAJOR})
-  if(NOT LuaInterp_FIND_VERSION_MINOR EQUAL 0)
-    list(INSERT _NAMES 0 lua${LuaInterp_FIND_VERSION_MAJOR}.${LuaInterp_FIND_VERSION_MINOR})
-  endif()
-endif()
-
 find_program(LUA_EXECUTABLE
-  NAMES ${_NAMES}
+  NAMES lua
   )
 
 if(LUA_EXECUTABLE)
@@ -48,8 +38,8 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set LUA_FOUND to TRUE if
 # all listed variables are TRUE
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LuaInterp
+find_package_handle_standard_args(Lua
                                   REQUIRED_VARS LUA_EXECUTABLE
-                                  VERSION_VAR LUA_VERSION)
+                                  VERSION_VAR LUA_VERSION_STRING)
 
 mark_as_advanced(LUA_EXECUTABLE)

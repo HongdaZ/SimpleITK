@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ namespace detail
  *
  *  Example member function and pointer:
  *  \code
- *  type alias Image::Pointer (Self::*MemberFunctionType)( Image::Pointer );
+ *  typedef Image::Pointer (Self::*MemberFunctionType)( Image::Pointer );
  *
  *  template<typename TImageType1, TImageType2>
  *  Image::Pointer ExecuteInternal( Image::Pointer );
@@ -63,17 +63,17 @@ namespace detail
  */
 template <typename TMemberFunctionPointer>
 class DualMemberFunctionFactory
-  : protected MemberFunctionFactoryBase<TMemberFunctionPointer, std::tuple<unsigned int, int, unsigned int, int> >
+  : protected MemberFunctionFactoryBase<TMemberFunctionPointer, std::pair<int, int> >
 {
 
 public:
 
-  using Superclass = MemberFunctionFactoryBase<TMemberFunctionPointer, std::tuple<unsigned int, int, unsigned int, int> >;
-  using Self = DualMemberFunctionFactory;
+  typedef MemberFunctionFactoryBase<TMemberFunctionPointer, std::pair<int, int> > Superclass;
+  typedef DualMemberFunctionFactory                                               Self;
 
-  using MemberFunctionType = TMemberFunctionPointer;
-  using ObjectType = typename ::detail::FunctionTraits<MemberFunctionType>::ClassType;
-  using FunctionObjectType = typename Superclass::FunctionObjectType;
+  typedef TMemberFunctionPointer                                           MemberFunctionType;
+  typedef typename ::detail::FunctionTraits<MemberFunctionType>::ClassType ObjectType;
+  typedef typename Superclass::FunctionObjectType                          FunctionObjectType;
 
   /** \brief Constructor which permanently binds the constructed
    * object to pObject */
@@ -106,7 +106,7 @@ public:
    * template < class TMemberFunctionPointer >
    *    struct MyCustomAddressor
    *    {
-   *      using ObjectType = typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType;
+   *      typedef typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType ObjectType;
    *
    *      template< typename TImageType1, typename TImageType2 >
    *      TMemberFunctionPointer operator() ( void ) const
@@ -126,13 +126,13 @@ public:
              typename TPixelIDTypeList2,
              unsigned int VImageDimension,
              typename TAddressor >
-  void RegisterMemberFunctions( );
+  void RegisterMemberFunctions( void );
   template < typename TPixelIDTypeList1,
              typename TPixelIDTypeList2,
              unsigned int VImageDimension >
-  void RegisterMemberFunctions( )
+  void RegisterMemberFunctions( void )
   {
-    using AddressorType = detail::DualExecuteInternalAddressor<MemberFunctionType>;
+    typedef detail::DualExecuteInternalAddressor<MemberFunctionType> AddressorType;
     this->RegisterMemberFunctions< TPixelIDTypeList1, TPixelIDTypeList2, VImageDimension, AddressorType>();
   }
   /** @} */
@@ -142,7 +142,7 @@ public:
     */
   bool HasMemberFunction( PixelIDValueType pixelID1,
                           PixelIDValueType pixelID2,
-                          unsigned int imageDimension  ) const noexcept;
+                          unsigned int imageDimension  ) const SITK_NOEXCEPT;
 
 
   /** \brief Returns a function object for the combination of

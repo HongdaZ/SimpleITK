@@ -14,8 +14,7 @@ elseif members[i].point_vec and (members[i].point_vec == 1) then
 else
   OUT=OUT..members[i].type
 end
-OUT=OUT..[[  m_]]..members[i].name..[[{]]..members[i].default..[[};
-]]
+OUT=OUT..'  m_'..members[i].name..';'
 
 end)$(when measurements
 
@@ -25,7 +24,7 @@ OUT=[[
       /* ${doc} */]]end)
 $(if active then
 OUT=[[
-      std::function<${type}($(if parameters then
+      nsstd::function<${type}($(if parameters then
 for inum=1,#parameters do
   if inum>1 then
     OUT = OUT .. ', '
@@ -35,7 +34,7 @@ end end))> m_pfGet${name};
 ]]
     else
 OUT=[[
-      ${type} m_${name}{${default}};
+      ${type} m_${name};
 ]]
 end)))
 $(if measurements then
@@ -48,12 +47,7 @@ end
 if temp then
 OUT=[[
       // Holder of process object for active measurements
-      itk::ProcessObject *m_Filter{nullptr};
+      itk::ProcessObject *m_Filter;
 ]]
 end
-end)
-$(if in_place then
-OUT=[[
-      bool m_InPlace{false};
-]]
 end)

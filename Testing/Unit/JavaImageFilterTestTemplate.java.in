@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright NumFOCUS
+ *  Copyright Insight Software Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -105,16 +105,22 @@ end)
 $(if parameter == "SeedList" then
       OUT=[[filter.clearSeeds();
       $(for i=1,#value do OUT=OUT .. "{\
-        long v[] = " .. value[i] .. ";\
-        VectorUInt32 idx = new VectorUInt32(v);\
+        int v[] = " .. value[i] .. ";\
+        VectorUInt32 idx = new VectorUInt32();\
+        for (int i = 0; i < inputs[0].getDimension(); i++) {\
+          idx.add(v[i]);\
+        }\
         filter.addSeed(idx);\
       }\
       " end)]]
 elseif parameter == "TrialPoints" then
       OUT=[[filter.clearTrialPoints();
       $(for i=1,#value do OUT=OUT .. "{\
-        long v[] = " .. value[i] .. ";\
-        VectorUInt32 idx = new VectorUInt32(v);\
+        int v[] = " .. value[i] .. ";\
+        VectorUInt32 idx = new VectorUInt32();\
+        for (int i = 0; i < inputs[0].getDimension(); i++) {\
+          idx.add(v[i]);\
+        }\
         filter.addTrialPoint(idx);\
       }\
       " end)]]
@@ -125,8 +131,11 @@ elseif point_vec and point_vec == 1 then
     for i=1,#value do
       OUT=OUT.. [[
                 {
-                  long v[] = ]] .. value[i] .. [[;
-                  VectorUInt32 pts = new VectorUInt32(v );
+                  int v[] = ]] .. value[i] .. [[;
+                  VectorUInt32 pts = new VectorUInt32( );
+                  for (int i = 0; i < inputs[0].getDimension(); i++) {
+                    pts.add(v[i]);
+                  }
                   filter.add${parameter:gsub('s([0-9]?)$','%1')}(pts);
                 }
 ]]
@@ -137,17 +146,17 @@ elseif dim_vec == 1 then
         $(if type == "bool" then
           OUT="Boolean"
         elseif type == "unsigned int" then
-          OUT="long"
+          OUT="int"
         elseif type == "unsigned long" then
           OUT="long"
         elseif type == "unsigned short" then
-          OUT="int"
+          OUT="short"
         elseif type == "uint8_t" then
           OUT="short"
         elseif type == "uint16_t" then
-          OUT="int"
+          OUT="short"
         elseif type == "uint32_t" then
-          OUT="long"
+          OUT="int"
         elseif type == "uint64_t" then
           OUT="long"
         else
@@ -162,41 +171,44 @@ elseif dim_vec == 1 then
           OUT=OUT..value[#value]..'}'
           end);
         $(if type == "bool" then
-          OUT="VectorBool idx = new VectorBool( );\n        for (int i = 0; i < v.length; i++) {idx.add( i, v[i] );}"
+          OUT="VectorBool idx = new VectorBool( v.length );"
         elseif type == "unsigned int" then
-          OUT="VectorUInt32 idx = new VectorUInt32( v );"
+          OUT="VectorUInt32 idx = new VectorUInt32( v.length );"
         elseif type == "int" then
-          OUT="VectorInt32 idx = new VectorInt32( v );"
+          OUT="VectorInt32 idx = new VectorInt32( v.length );"
         elseif type == "unsigned long" then
-         OUT="VectorULong idx = new VectorULong( v );"
+         OUT="VectorULong idx = new VectorULong( v.length );"
         elseif type == "long" then
-         OUT="VectorLong idx = new VectorLong( v );"
+         OUT="VectorLong idx = new VectorLong( v.length );"
         elseif type == "unsigned short" then
-          OUT="VectorUShort idx = new VectorUShort( v );"
+          OUT="VectorUShort idx = new VectorUShort( v.length );"
         elseif type == "short" then
-          OUT="VectorShort idx = new VectorShort( v );"
+          OUT="VectorShort idx = new VectorShort( v.length );"
         elseif type == "float" then
-          OUT="VectorFloat idx = new VectorFloat( v );"
+          OUT="VectorFloat idx = new VectorFloat( v.length );"
         elseif type == "double" then
-          OUT="VectorDouble idx = new VectorDouble( v );"
+          OUT="VectorDouble idx = new VectorDouble( v.length );"
         elseif type == "uint8_t" then
-          OUT="VectorUInt8 idx = new VectorUInt8( v );"
+          OUT="VectorUInt8 idx = new VectorUInt8( v.length );"
         elseif type == "uint16_t" then
-          OUT="VectorUInt16 idx = new VectorUInt16( v );"
+          OUT="VectorUInt16 idx = new VectorUInt16( v.length );"
         elseif type == "uint32_t" then
-          OUT="VectorUInt32 idx = new VectorUInt32( v );"
+          OUT="VectorUInt32 idx = new VectorUInt32( v.length );"
         elseif type == "uint64_t" then
-          OUT="VectorUInt64 idx = new VectorUInt64( v );"
+          OUT="VectorUInt64 idx = new VectorUInt64( v.length );"
         elseif type == "int8_t" then
-          OUT="VectorInt8 idx = new VectorInt8( v );"
+          OUT="VectorInt8 idx = new VectorInt8( v.length );"
         elseif type == "int16_t" then
-          OUT="VectorInt16 idx = new VectorInt16( v );"
+          OUT="VectorInt16 idx = new VectorInt16( v.length );"
         elseif type == "int32_t" then
-          OUT="VectorInt32 idx = new VectorInt32( v );"
+          OUT="VectorInt32 idx = new VectorInt32( v.length );"
         elseif type == "int64_t" then
-          OUT="VectorInt64 idx = new VectorInt64( v );"
+          OUT="VectorInt64 idx = new VectorInt64( v.length );"
         end)
 
+        for (int i = 0; i < v.length; i++) {
+          idx.set( i, v[i] );
+        }
         filter.set${parameter}(idx);
       }]]
 elseif type == "uint64_t" then
@@ -225,7 +237,6 @@ OUT=[[
         }
 
       // Write output
-      writer.useCompressionOn();
       writer.setFileName( argv[argv.length - 1] );
       writer.execute( output );
 ]]

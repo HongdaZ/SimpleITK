@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@
 #include "sitkPimpleImageBase.h"
 #include "sitkPixelIDTypeLists.h"
 
-#include <utility>
-
 
 namespace itk
 {
@@ -35,147 +33,142 @@ namespace itk
   Image::~Image( )
   {
     delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
+    this->m_PimpleImage = SITK_NULLPTR;
   }
 
   Image::Image( )
-    : m_PimpleImage( nullptr )
+    : m_PimpleImage( SITK_NULLPTR )
   {
-    Allocate ( {0, 0}, sitkUInt8, 1 );
+    Allocate ( 0, 0, 0, 0, sitkUInt8, 1 );
   }
 
   Image::Image( const Image &img )
-  : m_PimpleImage( img.m_PimpleImage->ShallowCopy())
   {
-  }
-
-  Image::Image( Image && img ) noexcept
-  : m_PimpleImage( img.m_PimpleImage )
-  {
-    img.m_PimpleImage = nullptr;
+    this->m_PimpleImage = img.m_PimpleImage->ShallowCopy();
   }
 
   Image& Image::operator=( const Image &img )
   {
-    return *this = Image(img);
-  }
-
-  Image &Image::operator=(Image && img) noexcept
-  {
-    using std::swap;
-    swap(m_PimpleImage, img.m_PimpleImage);
+    // note: If img and this are this same, the following statement
+    // will still be safe. It is also exception safe.
+    nsstd::auto_ptr<PimpleImageBase> temp( img.m_PimpleImage->ShallowCopy() );
+    delete this->m_PimpleImage;
+    this->m_PimpleImage = temp.release();
     return *this;
   }
 
     Image::Image( unsigned int Width, unsigned int Height, PixelIDValueEnum ValueEnum )
-      : m_PimpleImage( nullptr )
+      : m_PimpleImage( SITK_NULLPTR )
     {
-      Allocate ( {Width, Height}, ValueEnum, 0 );
+      Allocate ( Width, Height, 0, 0, ValueEnum, 0 );
     }
 
     Image::Image( unsigned int Width, unsigned int Height, unsigned int Depth, PixelIDValueEnum ValueEnum )
-      : m_PimpleImage( nullptr )
+      : m_PimpleImage( SITK_NULLPTR )
     {
-      Allocate ( {Width, Height, Depth}, ValueEnum, 0 );
+      Allocate ( Width, Height, Depth, 0, ValueEnum, 0 );
     }
 
     Image::Image( const std::vector< unsigned int > &size, PixelIDValueEnum ValueEnum, unsigned int numberOfComponents )
-      : m_PimpleImage( nullptr )
+      : m_PimpleImage( SITK_NULLPTR )
     {
-      Allocate( size, ValueEnum, numberOfComponents );
-    }
-
-    itk::DataObject* Image::GetITKBase( )
-    {
-      if ( m_PimpleImage )
+      if ( size.size() == 2 )
         {
-        this->MakeUnique();
-        return m_PimpleImage->GetDataBase();
+        Allocate ( size[0], size[1], 0, 0, ValueEnum, numberOfComponents );
+        }
+      else if ( size.size() == 3 )
+        {
+        Allocate ( size[0], size[1], size[2], 0, ValueEnum, numberOfComponents );
+        }
+      else if ( size.size() == 4 )
+        {
+        Allocate ( size[0], size[1], size[2], size[3], ValueEnum, numberOfComponents );
         }
       else
         {
-        return nullptr;
+        sitkExceptionMacro("Unsupported number of dimesions specified by size: " << size << "!");
         }
     }
 
-    const itk::DataObject* Image::GetITKBase( ) const
+    itk::DataObject* Image::GetITKBase( void )
     {
-      if ( m_PimpleImage )
-        {
-        return m_PimpleImage->GetDataBase();
-        }
-      else
-        {
-        return nullptr;
-        }
+      assert( m_PimpleImage );
+      this->MakeUnique();
+      return m_PimpleImage->GetDataBase();
     }
 
-    PixelIDValueType Image::GetPixelIDValue( ) const
+    const itk::DataObject* Image::GetITKBase( void ) const
+    {
+      assert( m_PimpleImage );
+      return m_PimpleImage->GetDataBase();
+    }
+
+    PixelIDValueType Image::GetPixelIDValue( void ) const
     {
       return this->GetPixelID();
     }
 
-    PixelIDValueEnum Image::GetPixelID( ) const
+    PixelIDValueEnum Image::GetPixelID( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetPixelID();
     }
 
-    unsigned int Image::GetDimension( ) const
+    unsigned int Image::GetDimension( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetDimension();
     }
 
-    unsigned int Image::GetNumberOfComponentsPerPixel( ) const
+    unsigned int Image::GetNumberOfComponentsPerPixel( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetNumberOfComponentsPerPixel();
     }
 
-    uint64_t Image::GetNumberOfPixels( ) const
+    uint64_t Image::GetNumberOfPixels( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetNumberOfPixels();
     }
 
-    std::string Image::GetPixelIDTypeAsString( ) const
+    std::string Image::GetPixelIDTypeAsString( void ) const
     {
       return std::string( GetPixelIDValueAsString( this->GetPixelIDValue() ) );
     }
 
-    std::string Image::ToString( ) const
+    std::string Image::ToString( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->ToString();
     }
 
-    std::vector< unsigned int > Image::GetSize( ) const
+    std::vector< unsigned int > Image::GetSize( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetSize();
     }
 
-    unsigned int Image::GetWidth( ) const
+    unsigned int Image::GetWidth( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetWidth();
     }
 
-    unsigned int Image::GetHeight( ) const
+    unsigned int Image::GetHeight( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetHeight();
     }
 
-    unsigned int Image::GetDepth( ) const
+    unsigned int Image::GetDepth( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetDepth();
     }
 
     // Get Origin
-    std::vector< double > Image::GetOrigin( ) const
+    std::vector< double > Image::GetOrigin( void ) const
     {
        assert( m_PimpleImage );
       return this->m_PimpleImage->GetOrigin();
@@ -190,7 +183,7 @@ namespace itk
     }
 
     // Get Spacing
-    std::vector< double > Image::GetSpacing( ) const
+    std::vector< double > Image::GetSpacing( void ) const
     {
        assert( m_PimpleImage );
       return this->m_PimpleImage->GetSpacing();
@@ -205,7 +198,7 @@ namespace itk
     }
 
     // Get Direction
-    std::vector< double > Image::GetDirection( ) const
+    std::vector< double > Image::GetDirection( void ) const
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetDirection();
@@ -240,7 +233,7 @@ namespace itk
       this->SetDirection( srcImage.GetDirection() );
     }
 
-    std::vector<std::string> Image::GetMetaDataKeys( ) const
+    std::vector<std::string> Image::GetMetaDataKeys( void ) const
     {
       assert( m_PimpleImage );
       const itk::MetaDataDictionary &mdd = this->m_PimpleImage->GetDataBase()->GetMetaDataDictionary();
@@ -514,13 +507,6 @@ namespace itk
       return this->m_PimpleImage->GetBufferAsDouble( );
     }
 
-    void *Image::GetBufferAsVoid( )
-    {
-      assert( m_PimpleImage );
-      this->MakeUnique();
-      return this->m_PimpleImage->GetBufferAsVoid( );
-    }
-
     const int8_t *Image::GetBufferAsInt8( ) const
     {
       assert( m_PimpleImage );
@@ -579,12 +565,6 @@ namespace itk
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->GetBufferAsDouble( );
-    }
-
-    const void *Image::GetBufferAsVoid ( ) const
-    {
-      assert( m_PimpleImage );
-      return this->m_PimpleImage->GetBufferAsVoid( );
     }
 
     void Image::SetPixelAsInt8( const std::vector<uint32_t> &idx, int8_t v )
@@ -742,23 +722,16 @@ namespace itk
     }
 
 
-    void Image::MakeUnique( )
+    void Image::MakeUnique( void )
     {
-      assert( m_PimpleImage );
       if ( this->m_PimpleImage->GetReferenceCountOfImage() > 1 )
         {
         // note: care is take here to be exception safe with memory allocation
-        std::unique_ptr<PimpleImageBase> temp( this->m_PimpleImage->DeepCopy() );
+        nsstd::auto_ptr<PimpleImageBase> temp( this->m_PimpleImage->DeepCopy() );
         delete this->m_PimpleImage;
         this->m_PimpleImage = temp.release();
         }
 
-    }
-
-    bool Image::IsUnique( ) const
-    {
-      assert( m_PimpleImage );
-      return this->m_PimpleImage->GetReferenceCountOfImage() == 1;
     }
   } // end namespace simple
 } // end namespace itk

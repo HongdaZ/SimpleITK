@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -207,7 +207,9 @@ Image ImportAsDouble(
     return import.Execute();
 }
 
-ImportImageFilter::~ImportImageFilter() = default;
+ImportImageFilter::~ImportImageFilter()
+{
+}
 
 ImportImageFilter::ImportImageFilter()
 {
@@ -218,7 +220,7 @@ ImportImageFilter::ImportImageFilter()
   this->m_Buffer = NULL;
 
   // list of pixel types supported
-  using PixelIDTypeList = NonLabelPixelIDTypeList;
+  typedef NonLabelPixelIDTypeList PixelIDTypeList;
 
   this->m_MemberFactory.reset( new detail::MemberFunctionFactory<MemberFunctionType>( this ) );
 
@@ -465,7 +467,7 @@ template <class TImageType>
 Image ImportImageFilter::ExecuteInternal( )
 {
 
-  using ImageType = TImageType;
+  typedef TImageType                            ImageType;
   const unsigned int Dimension = ImageType::ImageDimension;
 
   // if the InstantiatedToken is correctly implemented this should
@@ -500,7 +502,7 @@ Image ImportImageFilter::ExecuteInternal( )
   // Direction, if m_Direction is not set, use ITK's default which is
   // an identity.
   //
-  if (!this->m_Direction.empty() )
+  if (this->m_Direction.size() != 0 )
     {
     image->SetDirection(  sitkSTLToITKDirection<typename ImageType::DirectionType>( this->m_Direction ) );
     }
@@ -531,7 +533,7 @@ Image ImportImageFilter::ExecuteInternal( )
 }
 
 template <class TFilterType>
-typename std::enable_if<IsVector<TFilterType>::Value>::type
+typename EnableIf<IsVector<TFilterType>::Value>::Type
 ImportImageFilter::SetNumberOfComponentsOnImage ( TFilterType*image )
 {
   image->SetNumberOfComponentsPerPixel( m_NumberOfComponentsPerPixel );

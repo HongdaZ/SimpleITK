@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -48,27 +48,24 @@ SITKBasicFilters_EXPORT Image Resample ( const Image& image1,
                                          Transform transform = itk::simple::Transform(),
                                          InterpolatorEnum interpolator = itk::simple::sitkLinear,
                                          double defaultPixelValue = 0.0,
-                                         PixelIDValueEnum outputPixelType = sitkUnknown,
-                                         bool useNearestNeighborExtrapolator = false);
+                                         PixelIDValueEnum outputPixelType = sitkUnknown );
 
 SITKBasicFilters_EXPORT Image Resample ( const Image& image1,
                                          const Image& referenceImage,
                                          Transform transform = itk::simple::Transform(),
                                          InterpolatorEnum interpolator = itk::simple::sitkLinear,
                                          double defaultPixelValue = 0.0,
-                                         PixelIDValueEnum outputPixelType = sitkUnknown,
-                                         bool useNearestNeighborExtrapolator = false);
+                                         PixelIDValueEnum outputPixelType = sitkUnknown );
 
 SITKBasicFilters_EXPORT Image Resample ( const Image& image1,
-                                         const std::vector<uint32_t> &size,
+                                         std::vector<uint32_t> size,
                                          Transform transform = itk::simple::Transform(),
                                          InterpolatorEnum interpolator = itk::simple::sitkLinear,
-                                         const std::vector<double> &outputOrigin = std::vector<double>(3, 0.0),
-                                         const std::vector<double> &outputSpacing = std::vector<double>(3, 1.0),
-                                         const std::vector<double> &outputDirection = std::vector<double>(),
+                                         std::vector<double> outputOrigin = std::vector<double>(3, 0.0),
+                                         std::vector<double> outputSpacing = std::vector<double>(3, 1.0),
+                                         std::vector<double> outputDirection = std::vector<double>(),
                                          double defaultPixelValue = 0.0,
-                                         PixelIDValueEnum outputPixelType = sitkUnknown,
-                                         bool useNearestNeighborExtrapolator = false);
+                                         PixelIDValueEnum outputPixelType = sitkUnknown );
     /**@}*/
 
 

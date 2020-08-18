@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ namespace itk
   template <unsigned int VImageDimension>
   struct PixelIDToImageType< typelist::NullType , VImageDimension >
   {
-    using ImageType = void;
+    typedef void ImageType;
   };
 
   // This method is explicitly instantiated, and in-turn implicitly
@@ -59,20 +59,20 @@ namespace itk
   }
 
   template<int VPixelIDValue, typename TImageType>
-  typename std::enable_if<!std::is_same<TImageType, void>::value>::type
+  typename DisableIf<nsstd::is_same<TImageType, void>::value>::Type
   Image::ConditionalInternalInitialization( TImageType *image )
   {
     // no need to check if null
     delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
+    this->m_PimpleImage = SITK_NULLPTR;
 
     this->m_PimpleImage = new PimpleImage<TImageType>( image );
   }
 
 
   template<class TImageType>
-  typename std::enable_if<IsBasic<TImageType>::Value>::type
-  Image::AllocateInternal ( const std::vector<unsigned int > &_size, unsigned int numberOfComponents )
+  typename EnableIf<IsBasic<TImageType>::Value>::Type
+  Image::AllocateInternal ( unsigned int Width, unsigned int Height, unsigned int Depth, unsigned int dim4, unsigned int numberOfComponents )
   {
     if ( numberOfComponents != 1  && numberOfComponents != 0 )
       {
@@ -80,26 +80,43 @@ namespace itk
                           << " but did not specify pixelID as a vector type!" );
       }
 
-    typename TImageType::IndexType index;
+    typename TImageType::IndexType  index;
+    typename TImageType::SizeType   size;
+    typename TImageType::RegionType region;
+
     index.Fill ( 0 );
+    size.Fill(1);
+    size[0] = Width;
+    size[1] = Height;
 
-    typename TImageType::SizeType size = sitkSTLVectorToITK<typename TImageType::SizeType>(_size);
+    if ( TImageType::ImageDimension > 2 )
+      {
+      assert( Depth != 0 );
+      size[2] = Depth;
+      }
 
-    typename TImageType::RegionType region{index, size};
+    if ( TImageType::ImageDimension > 3 )
+      {
+      assert(  dim4 != 0 );
+      size[3] =  dim4;
+      }
+
+    region.SetSize ( size );
+    region.SetIndex ( index );
 
     typename TImageType::Pointer image = TImageType::New();
     image->SetRegions ( region );
     image->Allocate();
-    image->FillBuffer ( itk::NumericTraits<typename TImageType::PixelType>::ZeroValue() );
+    image->FillBuffer ( itk::NumericTraits<typename TImageType::PixelType>::Zero );
 
     delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
+    this->m_PimpleImage = SITK_NULLPTR;
     m_PimpleImage =  new PimpleImage<TImageType>( image );
   }
 
   template<class TImageType>
-  typename std::enable_if<IsVector<TImageType>::Value>::type
-  Image::AllocateInternal ( const std::vector<unsigned int > &_size, unsigned int numberOfComponents )
+  typename EnableIf<IsVector<TImageType>::Value>::Type
+  Image::AllocateInternal ( unsigned int Width, unsigned int Height, unsigned int Depth, unsigned int dim4, unsigned int numberOfComponents )
   {
     if ( numberOfComponents == 0 )
       {
@@ -107,12 +124,29 @@ namespace itk
       }
 
     typename TImageType::IndexType  index;
-    index.Fill ( 0 );
-
-    typename TImageType::SizeType   size = sitkSTLVectorToITK<typename TImageType::SizeType>(_size);
-
-    typename TImageType::RegionType region{index, size};
+    typename TImageType::SizeType   size;
+    typename TImageType::RegionType region;
     typename TImageType::PixelType  zero;
+
+    index.Fill ( 0 );
+    size.Fill(1);
+    size[0] = Width;
+    size[1] = Height;
+
+    if ( TImageType::ImageDimension > 2 )
+      {
+      assert( Depth != 0 );
+      size[2] = Depth;
+      }
+
+    if ( TImageType::ImageDimension > 3 )
+      {
+      assert(  dim4 != 0 );
+      size[3] =  dim4;
+      }
+
+    region.SetSize ( size );
+    region.SetIndex ( index );
 
     zero.SetSize( numberOfComponents );
     zero.Fill ( itk::NumericTraits<typename TImageType::PixelType::ValueType>::Zero );
@@ -124,14 +158,14 @@ namespace itk
     image->FillBuffer ( zero );
 
     delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
+    this->m_PimpleImage = SITK_NULLPTR;
 
     m_PimpleImage = new PimpleImage<TImageType>( image );
   }
 
   template<class TImageType>
-  typename std::enable_if<IsLabel<TImageType>::Value>::type
-  Image::AllocateInternal ( const std::vector<unsigned int > &_size, unsigned int numberOfComponents )
+  typename EnableIf<IsLabel<TImageType>::Value>::Type
+  Image::AllocateInternal ( unsigned int Width, unsigned int Height, unsigned int Depth, unsigned int dim4, unsigned int numberOfComponents )
   {
     if ( numberOfComponents != 1 && numberOfComponents != 0 )
       {
@@ -139,12 +173,29 @@ namespace itk
                           << " but did not specify pixelID as a vector type!" );
       }
 
-    typename TImageType::IndexType index;
+    typename TImageType::IndexType  index;
+    typename TImageType::SizeType   size;
+    typename TImageType::RegionType region;
+
     index.Fill ( 0 );
+    size.Fill(1);
+    size[0] = Width;
+    size[1] = Height;
 
-    typename TImageType::SizeType size = sitkSTLVectorToITK<typename TImageType::SizeType>(_size);
+    if ( TImageType::ImageDimension > 2 )
+      {
+      assert( Depth != 0 );
+      size[2] = Depth;
+      }
 
-    typename TImageType::RegionType region{index, size};
+    if ( TImageType::ImageDimension > 3 )
+      {
+      assert(  dim4 != 0 );
+      size[3] =  dim4;
+      }
+
+    region.SetSize ( size );
+    region.SetIndex ( index );
 
     typename TImageType::Pointer image = TImageType::New();
     image->SetRegions ( region );
@@ -152,7 +203,7 @@ namespace itk
     image->SetBackgroundValue( 0 );
 
     delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
+    this->m_PimpleImage = SITK_NULLPTR;
 
     m_PimpleImage = new PimpleImage<TImageType>( image );
   }

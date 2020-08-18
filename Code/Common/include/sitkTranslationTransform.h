@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -36,38 +36,37 @@ class SITKCommon_EXPORT TranslationTransform
   : public Transform
 {
 public:
-using Self = TranslationTransform;
-using Superclass = Transform;
+typedef TranslationTransform Self;
+typedef Transform            Superclass;
 
-~TranslationTransform() override;
+virtual ~TranslationTransform();
 
 explicit TranslationTransform(unsigned int dimensions,
                               const std::vector<double> &offset = std::vector<double>(3,0.0) );
 
 TranslationTransform( const TranslationTransform & );
 
-explicit TranslationTransform( const Transform & );
+TranslationTransform( const Transform & );
 
 TranslationTransform &operator=( const TranslationTransform & );
-
-/** Name of this class */
-std::string GetName() const override { return std::string ("TranslationTransform"); }
 
 SITK_RETURN_SELF_TYPE_HEADER SetOffset(const std::vector<double> &params);
 std::vector<double> GetOffset( ) const;
 
 protected:
 
-void SetPimpleTransform( PimpleTransformBase *pimpleTransform ) override;
+virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
 
 private:
+
+using Superclass::AddTransform;
 
 struct MyVisitor
 {
   itk::TransformBase *transform;
   TranslationTransform *that;
   template< typename TransformType >
-  void operator() ( ) const
+  void operator() ( void ) const
     {
       TransformType *t = dynamic_cast<TransformType*>(transform);
       if (t && (typeid(*t) == typeid(TransformType)))
@@ -82,8 +81,8 @@ void InternalInitialization(itk::TransformBase *transform);
 template <typename TransformType>
 void InternalInitialization(TransformType *transform);
 
-std::function<void(const std::vector<double> &)> m_pfSetOffset;
-std::function<std::vector<double>()> m_pfGetOffset;
+nsstd::function<void(const std::vector<double> &)> m_pfSetOffset;
+nsstd::function<std::vector<double>()> m_pfGetOffset;
 
 };
 

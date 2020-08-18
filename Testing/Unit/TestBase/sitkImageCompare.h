@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 
 class ImageCompare {
 public:
-  using Self = ImageCompare;
+  typedef ImageCompare Self;
   ImageCompare();
 
   // Compare the image to the named baseline image slice by slice, display the difference in the center slice

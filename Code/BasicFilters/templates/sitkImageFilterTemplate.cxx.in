@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ namespace simple {
 //
 $(include ConstructorSignature.cxx.in)
 {
+$(include ConstructorInitializeMembers.cxx.in)
 $(include ConstructorMemberFunctionSetup.cxx.in)
 
 $(include ConstructorVectorPixels.cxx.in)
@@ -50,7 +51,7 @@ $(include ToStringReturn.cxx.in)
 
 //
 // Execute
-//
+//$(include ExecuteWithParameters.cxx.in)
 $(include ExecuteNoParameters.cxx.in)
 
 //-----------------------------------------------------------------------------
@@ -82,9 +83,7 @@ sitkClangDiagnosticPop();
 //-----------------------------------------------------------------------------
 
 $(include ExecuteInternalVectorImages.cxx.in)
-$(if (not no_procedure) or (no_procedure == 1) then
-OUT=[[$(include ProceduralAPI.cxx.in)]]
-end)
+$(include FunctionalAPI.cxx.in)
 
 } // end namespace simple
 } // end namespace itk

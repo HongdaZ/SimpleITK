@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# =========================================================================
+#=========================================================================
 #
-#  Copyright NumFOCUS
+#  Copyright Insight Software Consortium
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -15,28 +15,27 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-# =========================================================================
+#=========================================================================
 
 from __future__ import print_function
 
 import SimpleITK as sitk
-import sys
+import sys, os
 
-if len(sys.argv) < 2:
-    print("Usage: DicomImagePrintTags <input_file>")
-    sys.exit(1)
+if len ( sys.argv ) < 2:
+    print( "Usage: DicomImagePrintTags <input_file>" )
+    sys.exit ( 1 )
 
 reader = sitk.ImageFileReader()
 
-reader.SetFileName(sys.argv[1])
-reader.LoadPrivateTagsOn()
+reader.SetFileName( sys.argv[1] )
+reader.LoadPrivateTagsOn();
 
-reader.ReadImageInformation()
+reader.ReadImageInformation();
 
 for k in reader.GetMetaDataKeys():
     v = reader.GetMetaData(k)
-    print("({0}) = = \"{1}\"".format(k, v))
+    print("({0}) = = \"{1}\"".format(k,v))
 
-print("Image Size: {0}".format(reader.GetSize()))
-print("Image PixelType: {0}"
-      .format(sitk.GetPixelIDValueAsString(reader.GetPixelID())))
+print("Image Size: {0}".format(reader.GetSize()));
+print("Image PixelType: {0}".format(sitk.GetPixelIDValueAsString(reader.GetPixelID())));

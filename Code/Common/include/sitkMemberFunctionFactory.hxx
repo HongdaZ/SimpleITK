@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 #include "sitkMemberFunctionFactory.h"
 #include "sitkDetail.h"
 #include "sitkPixelIDTokens.h"
+#include "sitkEnableIf.h"
 #include "sitkExceptionObject.h"
 
 namespace itk
@@ -47,22 +48,22 @@ struct MemberFunctionInstantiater
     {}
 
   template <class TPixelIDType>
-  typename std::enable_if< IsInstantiated<TPixelIDType, VImageDimension >::Value >::type
-  operator()( TPixelIDType*id=nullptr ) const
+  typename EnableIf< IsInstantiated<TPixelIDType, VImageDimension >::Value >::Type
+  operator()( TPixelIDType*id=SITK_NULLPTR ) const
     {
       Unused( id );
-      using ImageType = typename PixelIDToImageType<TPixelIDType, VImageDimension>::ImageType;
-      using AddressorType = TAddressor;
+      typedef typename PixelIDToImageType<TPixelIDType, VImageDimension>::ImageType ImageType;
+      typedef TAddressor                                                            AddressorType;
 
       AddressorType addressor;
-      m_Factory.Register(addressor.CLANG_TEMPLATE operator()<ImageType>(), (ImageType*)(nullptr));
+      m_Factory.Register(addressor.CLANG_TEMPLATE operator()<ImageType>(), (ImageType*)(SITK_NULLPTR));
 
     }
 
   // this methods is conditionally enabled when the PixelID is not instantiated
   template <class TPixelIDType>
-  typename std::enable_if< !IsInstantiated<TPixelIDType, VImageDimension>::Value >::type
-  operator()( TPixelIDType*id=nullptr ) const
+  typename DisableIf< IsInstantiated<TPixelIDType, VImageDimension>::Value >::Type
+  operator()( TPixelIDType*id=SITK_NULLPTR ) const
   {
     Unused( id );
   }
@@ -90,13 +91,26 @@ void MemberFunctionFactory<TMemberFunctionPointer>
   // this shouldn't occur, just may be useful for debugging
   assert( pixelID >= 0 && pixelID < typelist::Length< InstantiatedPixelIDTypeList >::Result );
 
-  static_assert( IsInstantiated<TImageType>::Value,
+  sitkStaticAssert( IsInstantiated<TImageType>::Value,
                     "UnInstantiated ImageType or dimension");
-  static_assert( TImageType::ImageDimension <= SITK_MAX_DIMENSION, "Invalid ImageDimensions" );
 
-  auto key = std::pair<unsigned int, int>(TImageType::GetImageDimension(), pixelID);
-
-  Superclass::m_PFunction[key] = Superclass::BindObject( pfunc, m_ObjectPointer );
+  if ( pixelID >= 0 && pixelID < typelist::Length< InstantiatedPixelIDTypeList >::Result )
+    {
+    switch( int(TImageType::ImageDimension) )
+      {
+      case 4:
+        Superclass::m_PFunction4[ pixelID ] = Superclass::BindObject( pfunc, m_ObjectPointer );
+        break;
+      case 3:
+        Superclass::m_PFunction3[ pixelID ] = Superclass::BindObject( pfunc, m_ObjectPointer );
+        break;
+      case 2:
+        Superclass::m_PFunction2[ pixelID ] = Superclass::BindObject( pfunc, m_ObjectPointer );
+        break;
+      default:
+        break;
+      }
+    }
 }
 
 template <typename TMemberFunctionPointer>
@@ -104,9 +118,9 @@ template <typename TPixelIDTypeList,
           unsigned int VImageDimension,
           typename TAddressor>
 void MemberFunctionFactory<TMemberFunctionPointer>
-::RegisterMemberFunctions( )
+::RegisterMemberFunctions( void )
 {
-  using InstantiaterType = MemberFunctionInstantiater< MemberFunctionFactory, VImageDimension,TAddressor >;
+  typedef MemberFunctionInstantiater< MemberFunctionFactory, VImageDimension,TAddressor > InstantiaterType;
 
   // visit each type in the list, and register if instantiated
   typelist::Visit<TPixelIDTypeList> visitEachType;
@@ -117,19 +131,31 @@ void MemberFunctionFactory<TMemberFunctionPointer>
 template <typename TMemberFunctionPointer>
 bool
 MemberFunctionFactory< TMemberFunctionPointer >
-::HasMemberFunction( PixelIDValueType pixelID, unsigned int imageDimension  ) const noexcept
+::HasMemberFunction( PixelIDValueType pixelID, unsigned int imageDimension  ) const SITK_NOEXCEPT
 {
-  auto key = typename Superclass::KeyType( imageDimension, pixelID);
+
   try
     {
-    // check if tr1::function has been set in map
-    return Superclass::m_PFunction.find( key ) != Superclass::m_PFunction.end();
+    switch ( imageDimension )
+      {
+      case 4:
+        // check if tr1::function has been set in map
+        return Superclass::m_PFunction4.find( pixelID ) != Superclass::m_PFunction4.end();
+      case 3:
+        // check if tr1::function has been set in map
+        return Superclass::m_PFunction3.find( pixelID ) != Superclass::m_PFunction3.end();
+      case 2:
+        // check if tr1::function has been set in map
+        return Superclass::m_PFunction2.find( pixelID ) != Superclass::m_PFunction2.end();
+      default:
+        return false;
+      }
     }
   // we do not throw exceptions
   catch(...)
     {
+    return false;
     }
-  return false;
 }
 
 
@@ -143,19 +169,50 @@ MemberFunctionFactory<TMemberFunctionPointer>
     sitkExceptionMacro ( << "unexpected error pixelID is out of range " << pixelID << " "  << typeid(ObjectType).name() );
     }
 
-  auto key = typename Superclass::KeyType(imageDimension, pixelID);
-
-  // check if tr1::function has been set
-  auto ret_pair = Superclass::m_PFunction.find( key ) ;
-  if ( ret_pair != Superclass::m_PFunction.end() )
+  switch ( imageDimension )
     {
-    return ret_pair->second;
-    }
+    case 4:
+      // check if tr1::function has been set
+      if ( Superclass::m_PFunction4.find( pixelID ) != Superclass::m_PFunction4.end() )
+        {
+        return Superclass::m_PFunction4[ pixelID ];
+        }
 
-  sitkExceptionMacro ( << "Pixel type: "
-                       << GetPixelIDValueAsString(pixelID)
-                       << " is not supported in " << imageDimension << "D by "
-                       << typeid(ObjectType).name() << "." );
+      sitkExceptionMacro ( << "Pixel type: "
+                           << GetPixelIDValueAsString(pixelID)
+                           << " is not supported in 4D by "
+                           << typeid(ObjectType).name()
+                           << " or SimpleITK compiled with SimpleITK_4D_IMAGES set to OFF." );
+    case 3:
+      // check if tr1::function has been set
+      if ( Superclass::m_PFunction3.find( pixelID ) != Superclass::m_PFunction3.end() )
+        {
+        return Superclass::m_PFunction3[ pixelID ];
+        }
+
+      sitkExceptionMacro ( << "Pixel type: "
+                           << GetPixelIDValueAsString(pixelID)
+                           << " is not supported in 3D by"
+                           << typeid(ObjectType).name() );
+
+      break;
+    case 2:
+      // check if tr1::function has been set
+      if (  Superclass::m_PFunction2.find( pixelID ) != Superclass::m_PFunction2.end() )
+        {
+        return Superclass::m_PFunction2[ pixelID ];
+        }
+
+        sitkExceptionMacro ( << "Pixel type: "
+                             << GetPixelIDValueAsString(pixelID)
+                             << " is not supported in 2D by"
+                             << typeid(ObjectType).name() );
+
+      break;
+    default:
+      sitkExceptionMacro ( << "Image dimension " << imageDimension << " is not supported" );
+      throw;
+    }
 }
 
 

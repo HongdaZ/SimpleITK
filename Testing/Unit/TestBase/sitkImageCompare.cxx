@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ float ImageCompare::testImages( const itk::simple::Image& testImage,
       {
       // The measurement errors should be reported for both success and errors
       // to facilitate setting tight tolerances of tests.
-      std::cout << "<DartMeasurement name=\"RMSEDifference " << shortFilename <<  "\" type=\"numeric/float\">" << rms << "</DartMeasurement>" << std::endl;
+      std::cout << "<DartMeasurement name=\"RMSeDifference " << shortFilename <<  "\" type=\"numeric/float\">" << rms << "</DartMeasurement>" << std::endl;
       }
     else
       {
@@ -152,7 +152,7 @@ float ImageCompare::testImages( const itk::simple::Image& testImage,
       msg << "\n";
       mMessage = msg.str();
 
-      std::cout << "<DartMeasurement name=\"RMSEDifference\" type=\"numeric/float\">" << rms << "</DartMeasurement>" << std::endl;
+      std::cout << "<DartMeasurement name=\"RMSeDifference\" type=\"numeric/float\">" << rms << "</DartMeasurement>" << std::endl;
       std::cout << "<DartMeasurement name=\"Tolerance\" type=\"numeric/float\">" << mTolerance << "</DartMeasurement>" << std::endl;
 
       std::string volumeName = OutputDir + "/" + shortFilename + ".nrrd";
@@ -230,7 +230,7 @@ bool ImageCompare::compare ( const sitk::Image& image, std::string inTestCase, s
   std::string tag = inTag;
   std::string testName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
 
-  if ( testCase.empty() )
+  if ( testCase == "" )
     {
     testCase = ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
     }
@@ -243,7 +243,7 @@ bool ImageCompare::compare ( const sitk::Image& image, std::string inTestCase, s
     .append( "_" )
     .append(testName);
 
-  if ( !tag.empty() )
+  if ( tag != "" )
     {
     name.append("_").append ( tag );
     }

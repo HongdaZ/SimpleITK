@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright NumFOCUS
+ *  Copyright Insight Software Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 
 #ifndef PyObject_HEAD
 struct _object;
-using PyObject = _object;
+typedef _object PyObject;
 #endif
 
 namespace itk
@@ -47,7 +47,7 @@ class PyCommand
   : public itk::simple::Command
 {
 public:
-  using Super = Command;
+  typedef Command   Super;
 
   PyCommand();
   ~PyCommand();

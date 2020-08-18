@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public:
     : m_Process(po)
     {}
 
-  void Execute( ) override
+  virtual void Execute( )
     {
       // stash the stream state
       std::ios  state(NULL);
@@ -92,12 +92,6 @@ int main ( int argc, char* argv[] ) {
   // write the image
   sitk::ImageFileWriter writer;
   writer.SetFileName ( std::string ( argv[3] ) );
-
-  //! [cpp lambda command]
-  writer.AddCommand(sitk::sitkStartEvent, [] {std::cout << "Writting..." << std::flush;});
-  writer.AddCommand(sitk::sitkEndEvent, [] {std::cout << "done" << std::endl;});
-  //! [cpp lambda command]
-
   writer.Execute ( outputImage );
 
   return 0;

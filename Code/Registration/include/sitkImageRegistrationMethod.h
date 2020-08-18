@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -91,14 +91,14 @@ namespace simple
   {
   public:
 
-    using Self = ImageRegistrationMethod;
-    using Superclass = ProcessObject;
+    typedef ImageRegistrationMethod Self;
+    typedef ProcessObject Superclass;
 
-    ~ImageRegistrationMethod() override;
+    virtual ~ImageRegistrationMethod();
 
     ImageRegistrationMethod();
 
-    std::string GetName() const override { return std::string("ImageRegistrationMethod"); }
+    std::string GetName() const { return std::string("ImageRegistrationMethod"); }
 
     /** \brief Print the information about the object to a string.
      *
@@ -106,7 +106,7 @@ namespace simple
      * callback ), the ITK Optimizer and Transform objects will
      * be printed.
      */
-    std::string ToString() const override;
+    std::string ToString() const;
 
     /** \brief Set and get the interpolator to use.
      *
@@ -662,34 +662,34 @@ namespace simple
       CreateTransformParametersAdaptor(
         TRegistrationMethod* method);
 
-    void PreUpdate( itk::ProcessObject *p ) override;
-    void OnActiveProcessDelete( ) noexcept override;
-    unsigned long AddITKObserver(const itk::EventObject &, itk::Command *) override;
-    void RemoveITKObserver( EventCommand &e ) override;
+    virtual void PreUpdate( itk::ProcessObject *p );
+    virtual void OnActiveProcessDelete( ) SITK_NOEXCEPT;
+    virtual unsigned long AddITKObserver(const itk::EventObject &, itk::Command *);
+    virtual void RemoveITKObserver( EventCommand &e );
 
   private:
 
-    std::function<unsigned int()> m_pfGetOptimizerIteration;
-    std::function<std::vector<double>()> m_pfGetOptimizerPosition;
-    std::function<double()> m_pfGetOptimizerLearningRate;
-    std::function<double()> m_pfGetOptimizerConvergenceValue;
-    std::function<double()> m_pfGetMetricValue;
-    std::function<uint64_t()> m_pfGetMetricNumberOfValidPoints;
-    std::function<std::vector<double>()> m_pfGetOptimizerScales;
-    std::function<std::string()> m_pfGetOptimizerStopConditionDescription;
+    nsstd::function<unsigned int()> m_pfGetOptimizerIteration;
+    nsstd::function<std::vector<double>()> m_pfGetOptimizerPosition;
+    nsstd::function<double()> m_pfGetOptimizerLearningRate;
+    nsstd::function<double()> m_pfGetOptimizerConvergenceValue;
+    nsstd::function<double()> m_pfGetMetricValue;
+    nsstd::function<uint64_t()> m_pfGetMetricNumberOfValidPoints;
+    nsstd::function<std::vector<double>()> m_pfGetOptimizerScales;
+    nsstd::function<std::string()> m_pfGetOptimizerStopConditionDescription;
 
 
-    std::function<unsigned int()> m_pfGetCurrentLevel;
+    nsstd::function<unsigned int()> m_pfGetCurrentLevel;
 
-    std::function<void (itk::TransformBase *outTransform)> m_pfUpdateWithBestValue;
+    nsstd::function<void (itk::TransformBase *outTransform)> m_pfUpdateWithBestValue;
 
     template < class TMemberFunctionPointer >
       struct EvaluateMemberFunctionAddressor
     {
-      using ObjectType = typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType;
+      typedef typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType ObjectType;
 
       template< typename TImageType >
-      TMemberFunctionPointer operator() ( ) const
+      TMemberFunctionPointer operator() ( void ) const
         {
           return &ObjectType::template EvaluateInternal< TImageType >;
         }
@@ -698,8 +698,8 @@ namespace simple
     typedef Transform (ImageRegistrationMethod::*MemberFunctionType)( const Image &fixed, const Image &moving );
     typedef double (ImageRegistrationMethod::*EvaluateMemberFunctionType)( const Image &fixed, const Image &moving );
     friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
-    std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
-    std::unique_ptr<detail::MemberFunctionFactory<EvaluateMemberFunctionType> > m_EvaluateMemberFactory;
+    nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+    nsstd::auto_ptr<detail::MemberFunctionFactory<EvaluateMemberFunctionType> > m_EvaluateMemberFactory;
 
     InterpolatorEnum  m_Interpolator;
     Transform  m_InitialTransform;

@@ -1,6 +1,6 @@
 #==========================================================================
 #
-#   Copyright NumFOCUS
+#   Copyright Insight Software Consortium
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -110,7 +110,6 @@ OUT=[[
     if output.GetPixelIDValue() in labelIDs:
        output = SimpleITK.LabelMapToLabel(output)
 
-    writer.UseCompressionOn()
     writer.SetFileName ( sys.argv[-1] )
     writer.Execute ( output )
 ]]

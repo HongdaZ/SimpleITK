@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -70,10 +70,10 @@ HashImageFilter<TImageType>::AfterThreadedGenerateData()
 
   Superclass::AfterThreadedGenerateData();
 
-  using ImageType = TImageType;
-  using PixelType = typename ImageType::PixelType;
-  using ValueType = typename NumericTraits<PixelType>::ValueType;
-  using Swapper = itk::ByteSwapper<ValueType>;
+  typedef TImageType                                   ImageType;
+  typedef typename ImageType::PixelType                PixelType;
+  typedef typename NumericTraits<PixelType>::ValueType ValueType;
+  typedef itk::ByteSwapper<ValueType>                  Swapper;
 
   struct MD5Holder
   {

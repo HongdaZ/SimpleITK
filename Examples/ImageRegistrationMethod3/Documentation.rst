@@ -1,7 +1,7 @@
 Image Registration Method 3
 ===========================
 
-.. include:: registrationExamplePrefix.rst
+.. include:: ../../Documentation/docs/source/registrationExamplePrefix.rst
 
 Overview
 --------
@@ -13,12 +13,12 @@ Code
 
   .. tab:: Python
 
-    .. literalinclude:: ../../Examples/ImageRegistrationMethod3/ImageRegistrationMethod3.py
+    .. literalinclude:: ImageRegistrationMethod3.py
        :language: python
        :lines: 1,19-
 
   .. tab:: R
 
-    .. literalinclude:: ../../Examples/ImageRegistrationMethod3/ImageRegistrationMethod3.R
+    .. literalinclude:: ImageRegistrationMethod3.R
        :language: R
        :lines: 18-

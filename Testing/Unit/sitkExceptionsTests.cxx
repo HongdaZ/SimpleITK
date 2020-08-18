@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ class sitkExceptionsTest
 {
 public:
 
-  void ThrowsitkException( )
+  void ThrowsitkException( void )
   {
     sitkExceptionMacro( << DESCRIPTION );
   }
@@ -55,7 +55,7 @@ TEST_F(sitkExceptionsTest, Test1) {
 TEST_F(sitkExceptionsTest, Test2) {
 
   // this can only be tested when true, if it was false the file won't compile
-  static_assert( true, "this is just a test" );
+  sitkStaticAssert( true, "this is just a test" );
 
   SUCCEED();
 }
@@ -82,12 +82,9 @@ TEST_F(sitkExceptionsTest, Test3) {
   e0 = e1;
   e0 = empty;
 
-
-  sitkClangDiagnosticPush();
-  sitkClangWarningIgnore("-Wself-assign-overloaded");
   // test self assignment too
   e0 = e0;
-  sitkClangDiagnosticPop();
+
 
   EXPECT_TRUE( e1 == e1 );
   EXPECT_TRUE( empty == empty );

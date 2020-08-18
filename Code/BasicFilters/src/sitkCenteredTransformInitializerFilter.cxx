@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright NumFOCUS
+*  Copyright Insight Software Consortium
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -55,7 +55,10 @@ CenteredTransformInitializerFilter::CenteredTransformInitializerFilter ()
 //
 // Destructor
 //
-CenteredTransformInitializerFilter::~CenteredTransformInitializerFilter () = default;
+CenteredTransformInitializerFilter::~CenteredTransformInitializerFilter ()
+{
+
+}
 
 //
 // ToString
@@ -75,6 +78,18 @@ std::string CenteredTransformInitializerFilter::ToString() const
 //
 // Execute
 //
+
+Transform CenteredTransformInitializerFilter::Execute ( const Image & fixedImage,
+                                                        const Image & movingImage,
+                                                        const Transform & transform,
+                                                        CenteredTransformInitializerFilter::OperationModeType operationMode )
+{
+  this->SetOperationMode ( operationMode );
+
+  return this->Execute ( fixedImage, movingImage, transform );
+}
+
+
 Transform CenteredTransformInitializerFilter::Execute ( const Image & fixedImage, const Image & movingImage, const Transform & transform )
 {
   PixelIDValueEnum type = fixedImage.GetPixelID();
@@ -108,18 +123,18 @@ template <class TImageType>
 Transform CenteredTransformInitializerFilter::ExecuteInternal ( const Image * inFixedImage, const Image * inMovingImage, const Transform * inTransform )
 {
 
-  using TransformType = itk::MatrixOffsetTransformBase< double, TImageType::ImageDimension, TImageType::ImageDimension >;
-  using FilterType = itk::CenteredTransformInitializer< TransformType, TImageType, TImageType>;
+  typedef itk::MatrixOffsetTransformBase< double, TImageType::ImageDimension, TImageType::ImageDimension > TransformType;
+  typedef itk::CenteredTransformInitializer< TransformType, TImageType, TImageType> FilterType;
   // Set up the ITK filter
   typename FilterType::Pointer filter = FilterType::New();
 
 
-  assert( inFixedImage );
+  assert( inFixedImage != NULL );
   filter->SetFixedImage( this->CastImageToITK<typename FilterType::FixedImageType>(*inFixedImage) );
-  assert( inMovingImage );
+  assert( inMovingImage != NULL );
   typename FilterType::MovingImageType::ConstPointer image2 = this->CastImageToITK<typename FilterType::MovingImageType>( *inMovingImage );
   filter->SetMovingImage( image2 );
-  assert( inTransform );
+  assert( inTransform != NULL );
 
   // This initializers modifies the input, we copy the transform to
   // prevent this change
@@ -154,8 +169,7 @@ Transform CenteredTransformInitializerFilter::ExecuteInternal ( const Image * in
 Transform CenteredTransformInitializer ( const Image & fixedImage, const Image & movingImage, const Transform & transform, CenteredTransformInitializerFilter::OperationModeType operationMode )
 {
   CenteredTransformInitializerFilter filter;
-  filter.SetOperationMode(operationMode);
-  return filter.Execute( fixedImage, movingImage, transform );
+  return filter.Execute( fixedImage, movingImage, transform, operationMode );
 }
 
 } // end namespace simple
