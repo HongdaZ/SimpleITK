@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -40,9 +40,7 @@ namespace itk {
 namespace simple {
 
 ImageReaderBase
-::~ImageReaderBase()
-{
-}
+::~ImageReaderBase() = default;
 
 ImageReaderBase
 ::ImageReaderBase()
@@ -82,9 +80,9 @@ ImageReaderBase
 ::GetImageIOBase(const std::string &fileName)
 {
   itk::ImageIOBase::Pointer iobase;
-  if (this->m_ImageIOName == "")
+  if (this->m_ImageIOName.empty())
     {
-    iobase = itk::ImageIOFactory::CreateImageIO( fileName.c_str(), itk::ImageIOFactory::ReadMode);
+    iobase = itk::ImageIOFactory::CreateImageIO( fileName.c_str(), itk::ImageIOFactory::FileModeEnum::ReadMode);
     }
   else
     {
@@ -132,7 +130,7 @@ ImageReaderBase
 
 PixelIDValueEnum
 ImageReaderBase
-::GetOutputPixelType( void ) const
+::GetOutputPixelType( ) const
 {
   return this->m_OutputPixelType;
 }
@@ -178,7 +176,7 @@ ImageReaderBase
 
 std::string
 ImageReaderBase
-::GetImageIO(void) const
+::GetImageIO() const
 {
   return this->m_ImageIOName;
 }
@@ -214,7 +212,7 @@ ImageReaderBase
   if (numberOfComponents == 1 &&
       ( pixelType == itk::ImageIOBase::SCALAR || pixelType == itk::ImageIOBase::COMPLEX ) )
     {
-    outPixelType = this->ExecuteInternalReadScalar( componentType );
+    outPixelType = this->ExecuteInternalReadScalar( static_cast<int>(componentType) );
     return;
     }
   // we try to load anything else into a VectorImage
@@ -226,12 +224,12 @@ ImageReaderBase
             pixelType == itk::ImageIOBase::POINT ||
             pixelType == itk::ImageIOBase::OFFSET )
     {
-    outPixelType = this->ExecuteInternalReadVector( componentType );
+    outPixelType = this->ExecuteInternalReadVector( static_cast<int>(componentType) );
     return;
     }
   else if ( pixelType == itk::ImageIOBase::COMPLEX )
     {
-    outPixelType = this->ExecuteInternalReadComplex( componentType );
+    outPixelType = this->ExecuteInternalReadComplex( static_cast<int>(componentType) );
     return;
     }
   else
@@ -268,7 +266,7 @@ ImageReaderBase
 {
   const unsigned int UnusedDimension = 2;
 
-  switch(componentType)
+  switch(static_cast<ImageIOBase::IOComponentType>(componentType))
     {
     case itk::ImageIOBase::CHAR:
       return ImageTypeToPixelIDValue< itk::Image<int8_t, UnusedDimension> >::Result;
@@ -326,7 +324,7 @@ ImageReaderBase
 {
   const unsigned int UnusedDimension = 2;
 
-  switch(componentType)
+  switch(static_cast<ImageIOBase::IOComponentType>(componentType))
     {
     case itk::ImageIOBase::FLOAT:
       return ImageTypeToPixelIDValue< itk::Image<std::complex<float>, UnusedDimension> >::Result;
@@ -346,7 +344,7 @@ ImageReaderBase
 {
   const unsigned int UnusedDimension = 2;
 
-  switch(componentType)
+  switch(static_cast<ImageIOBase::IOComponentType>(componentType))
     {
     case itk::ImageIOBase::CHAR:
       return ImageTypeToPixelIDValue< itk::VectorImage<int8_t, UnusedDimension> >::Result;

@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ class SITKCommon_EXPORT ScaleTransform
   : public Transform
 {
 public:
-  typedef ScaleTransform Self;
-  typedef Transform      Superclass;
+  using Self = ScaleTransform;
+  using Superclass = Transform;
 
-  virtual ~ScaleTransform();
+  ~ScaleTransform() override;
 
   explicit ScaleTransform(unsigned int dimensions,
                           const std::vector<double> &scale = std::vector<double>(3,1.0) );
@@ -49,7 +49,7 @@ public:
   explicit ScaleTransform( const Transform & );
 
   /** Name of this class */
-  std::string GetName() const { return std::string ("ScaleTransform"); }
+  std::string GetName() const override { return std::string ("ScaleTransform"); }
 
   ScaleTransform &operator=( const ScaleTransform & );
 
@@ -66,18 +66,16 @@ public:
 
 protected:
 
-  virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
+  void SetPimpleTransform( PimpleTransformBase *pimpleTransform ) override;
 
 private:
-
-  using Superclass::AddTransform;
 
   struct MyVisitor
   {
     itk::TransformBase *transform;
     ScaleTransform *that;
     template< typename TransformType >
-    void operator() ( void ) const
+    void operator() ( ) const
       {
         TransformType *t = dynamic_cast<TransformType*>(transform);
         if (t && (typeid(*t) == typeid(TransformType)))
@@ -93,11 +91,11 @@ private:
     void InternalInitialization(TransformType *transform);
 
 
-  nsstd::function<void(std::vector<double>)> m_pfSetCenter;
-  nsstd::function<std::vector<double>()> m_pfGetCenter;
-  nsstd::function<void(std::vector<double>)> m_pfSetScale;
-  nsstd::function<std::vector<double>()> m_pfGetScale;
-  nsstd::function<std::vector<double>()> m_pfGetMatrix;
+  std::function<void(std::vector<double>)> m_pfSetCenter;
+  std::function<std::vector<double>()> m_pfGetCenter;
+  std::function<void(std::vector<double>)> m_pfSetScale;
+  std::function<std::vector<double>()> m_pfGetScale;
+  std::function<std::vector<double>()> m_pfGetMatrix;
 
 
 };

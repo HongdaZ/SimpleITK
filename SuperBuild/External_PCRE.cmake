@@ -19,9 +19,8 @@ if(NOT PCRE_DIR)
   #  PCRE (Perl Compatible Regular Expressions)
   #
 
-  set(PCRE_TARGET_VERSION 8.40)
-  set(PCRE_DOWNLOAD_SOURCE_HASH "890c808122bd90f398e6bc40ec862102")
-  sitkSourceDownload(PCRE_URL "pcre-${PCRE_TARGET_VERSION}.tar.gz" ${PCRE_DOWNLOAD_SOURCE_HASH})
+  set(PCRE_TARGET_VERSION 8.43)
+  sitkSourceDownload(PCRE_URL "pcre-${PCRE_TARGET_VERSION}.tar.gz")
 
 
   # follow the standard EP_PREFIX locations
@@ -43,7 +42,7 @@ if(NOT PCRE_DIR)
 
   ExternalProject_add(PCRE
     URL "${PCRE_URL}"
-    URL_HASH MD5=${PCRE_DOWNLOAD_SOURCE_HASH}
+    URL_HASH "${PCRE_URL_HASH}"
     CONFIGURE_COMMAND ${pcre_CONFIGURE_COMMAND}
     DEPENDS "${PCRE_DEPENDENCIES}"
     ${External_Project_USES_TERMINAL}

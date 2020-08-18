@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ namespace itk
       {
       const char *tokenMod = std::find(strMods, strModsEnd, ';');
 
-      modules_vector.push_back(std::string(strMods, tokenMod));
+      modules_vector.emplace_back(strMods, tokenMod);
 
       strMods = tokenMod+1;
       }

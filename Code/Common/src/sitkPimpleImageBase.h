@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -40,32 +40,33 @@ namespace itk
   class SITKCommon_HIDDEN PimpleImageBase
   {
   public:
-    virtual ~PimpleImageBase( void ) { };
 
-    virtual PixelIDValueEnum GetPixelID(void) const = 0;
-    virtual unsigned int GetDimension( void ) const  = 0;
-    virtual uint64_t GetNumberOfPixels( void ) const = 0;
-    virtual unsigned int GetNumberOfComponentsPerPixel( void ) const = 0;
+    virtual ~PimpleImageBase( ) = default;
 
-    virtual PimpleImageBase *ShallowCopy(void) const = 0;
-    virtual PimpleImageBase *DeepCopy(void) const = 0;
-    virtual itk::DataObject* GetDataBase( void ) = 0;
-    virtual const itk::DataObject* GetDataBase( void ) const = 0;
+    virtual PixelIDValueEnum GetPixelID() const = 0;
+    virtual unsigned int GetDimension( ) const  = 0;
+    virtual uint64_t GetNumberOfPixels( ) const = 0;
+    virtual unsigned int GetNumberOfComponentsPerPixel( ) const = 0;
 
-    virtual unsigned int GetWidth( void ) const { return this->GetSize( 0 ); }
-    virtual unsigned int GetHeight( void ) const { return this->GetSize( 1 ); }
-    virtual unsigned int GetDepth( void ) const { return this->GetSize( 2 ); }
+    virtual PimpleImageBase *ShallowCopy() const = 0;
+    virtual PimpleImageBase *DeepCopy() const = 0;
+    virtual itk::DataObject* GetDataBase( ) = 0;
+    virtual const itk::DataObject* GetDataBase( ) const = 0;
 
-    virtual std::vector< unsigned int > GetSize( void ) const = 0;
+    virtual unsigned int GetWidth( ) const { return this->GetSize( 0 ); }
+    virtual unsigned int GetHeight( ) const { return this->GetSize( 1 ); }
+    virtual unsigned int GetDepth( ) const { return this->GetSize( 2 ); }
+
+    virtual std::vector< unsigned int > GetSize( ) const = 0;
     virtual unsigned int GetSize( unsigned int dimension ) const = 0;
 
 
-    virtual std::vector<double> GetOrigin( void ) const = 0;
+    virtual std::vector<double> GetOrigin( ) const = 0;
     virtual void SetOrigin( const std::vector<double> &orgn ) = 0;
-    virtual std::vector<double> GetSpacing( void ) const = 0;
+    virtual std::vector<double> GetSpacing( ) const = 0;
     virtual void SetSpacing( const std::vector<double> &spc ) = 0;
 
-    virtual std::vector< double > GetDirection( void ) const = 0;
+    virtual std::vector< double > GetDirection( ) const = 0;
     virtual void SetDirection( const std::vector< double > &direction ) = 0;
 
     virtual std::vector<int64_t> TransformPhysicalPointToIndex( const std::vector<double> &pt) const = 0;
@@ -139,6 +140,7 @@ namespace itk
     virtual uint64_t *GetBufferAsUInt64( ) = 0;
     virtual float    *GetBufferAsFloat( ) = 0;
     virtual double   *GetBufferAsDouble( ) = 0;
+    virtual void     *GetBufferAsVoid( ) = 0;
 
     virtual const int8_t   *GetBufferAsInt8( ) const = 0;
     virtual const uint8_t  *GetBufferAsUInt8( ) const = 0;
@@ -150,6 +152,7 @@ namespace itk
     virtual const uint64_t *GetBufferAsUInt64( ) const = 0;
     virtual const float    *GetBufferAsFloat( ) const = 0;
     virtual const double   *GetBufferAsDouble( ) const = 0;
+    virtual const void     *GetBufferAsVoid( ) const = 0;
   };
 
   } // end namespace simple

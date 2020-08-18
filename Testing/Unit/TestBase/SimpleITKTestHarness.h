@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ class ProgressUpdate
 public:
   ProgressUpdate(itk::simple::ProcessObject &po);
 
-  virtual void Execute( );
+  void Execute( ) override;
 
   float m_Progress;
 };
@@ -127,7 +127,7 @@ class AbortAtCommand
 public:
   AbortAtCommand(itk::simple::ProcessObject &po, float abortAt);
 
-  virtual void Execute( );
+  void Execute( ) override;
 
   float m_AbortAt;
 };
@@ -141,13 +141,10 @@ class CountCommand
 public:
   CountCommand(itk::simple::ProcessObject &po);
 
-  virtual void Execute( );
+  void Execute( ) override;
 
   int m_Count;
 };
-
-
-void * GetBufferAsVoid( itk::simple::Image &sitkImage);
 
 
 inline std::vector<double> v2(double v1, double v2)

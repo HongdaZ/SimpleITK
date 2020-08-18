@@ -23,6 +23,7 @@ if(NOT DEFINED Module_SimpleITKFilters)
   set(Module_SimpleITKFilters ON)
 endif()
 
+# set(Module_SimpleITKFilters_GIT_TAG c8c42430626f0123e7ec401c17c72c7d5ce82669 )
 
 get_cmake_property( _varNames VARIABLES )
 
@@ -31,7 +32,9 @@ foreach (_varName ${_varNames})
       OR _varName MATCHES "^ITKV3"
       OR _varName MATCHES "^ITKV4"
       OR _varName MATCHES "FFTW"
-      OR _varName MATCHES "^Module_")
+      OR _varName MATCHES "^GDCM_"
+      OR _varName MATCHES "^Module_"
+      OR _varName STREQUAL "TBB_DIR")
     message( STATUS "Passing variable \"${_varName}=${${_varName}}\" to ITK external project.")
     list(APPEND ITK_VARS ${_varName})
   endif()
@@ -52,7 +55,7 @@ set(ITK_GIT_REPOSITORY "${git_protocol}://github.com/HongdaZ/ITK.git" CACHE STRI
 mark_as_advanced(ITK_GIT_REPOSITORY)
 sitk_legacy_naming(ITK_GIT_REPOSITORY ITK_REPOSITORY)
 
-set(_DEFAULT_ITK_GIT_TAG "ee224ef094f021e5cd6048e3aa21a21c064c43b1") # after 4.13.2 along release-4.13
+set(_DEFAULT_ITK_GIT_TAG "f5d004fa3607b8e11edc30f1ba299df35af8aff8")
 set(ITK_GIT_TAG "${_DEFAULT_ITK_GIT_TAG}" CACHE STRING "Tag in ITK git repo")
 mark_as_advanced(ITK_GIT_TAG)
 set(ITK_TAG_COMMAND GIT_TAG "${ITK_GIT_TAG}")
@@ -75,10 +78,8 @@ endif()
 
 
 if( ITK_GIT_TAG STREQUAL _DEFAULT_ITK_GIT_TAG )
-  # only remove legacy with the tested, and predefined version of ITK
-  list( APPEND ep_itk_args
-    "-DITK_LEGACY_REMOVE:BOOL=ON"
-    )
+  # Unable to use ITK_LEGACY_REMOVE due to change in the enum types.
+  # list( APPEND ep_itk_args "-DITK_LEGACY_REMOVE:BOOL=ON" )
 endif()
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${proj}-build/CMakeCacheInit.txt" "${ep_itk_cache}\n${ep_common_cache}" )

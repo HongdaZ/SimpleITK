@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ namespace itk {
     class SITKBasicFilters_EXPORT HashImageFilter
       : public ProcessObject {
     public:
-      typedef HashImageFilter Self;
+      using Self = HashImageFilter;
 
       // function pointer type
       typedef std::string (Self::*MemberFunctionType)( const Image& );
@@ -46,7 +46,7 @@ namespace itk {
         typelist::Append< BasicPixelIDTypeList, ComplexPixelIDTypeList>::Type,
         VectorPixelIDTypeList >::Type PixelIDTypeList;
 
-      virtual ~HashImageFilter();
+      ~HashImageFilter() override;
 
       HashImageFilter();
 
@@ -55,10 +55,10 @@ namespace itk {
       HashFunction GetHashFunction () const;
 
       /** Name of this class */
-      std::string GetName() const { return std::string ( "Hash"); }
+      std::string GetName() const override { return std::string ( "Hash"); }
 
       // Print ourselves out
-      std::string ToString() const;
+      std::string ToString() const override;
 
       std::string Execute ( const Image& );
 
@@ -73,7 +73,7 @@ namespace itk {
       friend struct detail::MemberFunctionAddressor<MemberFunctionType>;
       friend struct detail::ExecuteInternalLabelImageAddressor<MemberFunctionType>;
 
-      nsstd::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
+      std::unique_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
     };
 
     SITKBasicFilters_EXPORT std::string Hash ( const Image& image, HashImageFilter::HashFunction function = HashImageFilter::SHA1 );

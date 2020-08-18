@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ class SITKCommon_EXPORT Euler3DTransform
   : public Transform
 {
 public:
-typedef Euler3DTransform Self;
-typedef Transform        Superclass;
+using Self = Euler3DTransform;
+using Superclass = Transform;
 
-virtual ~Euler3DTransform();
+~Euler3DTransform() override;
 
 // construct identity
 Euler3DTransform();
@@ -57,7 +57,7 @@ explicit Euler3DTransform( const Transform & );
 Euler3DTransform &operator=( const Euler3DTransform & );
 
 /** Name of this class */
-std::string GetName() const { return std::string ("Euler3DTransform"); }
+std::string GetName() const override { return std::string ("Euler3DTransform"); }
 
 /** fixed parameter */
 SITK_RETURN_SELF_TYPE_HEADER SetCenter(const std::vector<double> &params);
@@ -85,11 +85,9 @@ SITK_RETURN_SELF_TYPE_HEADER ComputeZYXOff () {return this->SetComputeZYX(false)
 
 protected:
 
-virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
+void SetPimpleTransform( PimpleTransformBase *pimpleTransform ) override;
 
 private:
-
-using Superclass::AddTransform;
 
 void InternalInitialization(itk::TransformBase *transform);
 
@@ -97,18 +95,18 @@ template <typename TransformType>
 void InternalInitialization(TransformType *transform);
 
 
-nsstd::function<void(const std::vector<double>&)> m_pfSetCenter;
-nsstd::function<std::vector<double>()> m_pfGetCenter;
-nsstd::function<void(double,double,double)> m_pfSetRotation;
-nsstd::function<double()> m_pfGetAngleX;
-nsstd::function<double()> m_pfGetAngleY;
-nsstd::function<double()> m_pfGetAngleZ;
-nsstd::function<void(const std::vector<double>&)> m_pfSetTranslation;
-nsstd::function<std::vector<double>()> m_pfGetTranslation;
-nsstd::function<void(bool)> m_pfSetComputeZYX;
-nsstd::function<bool()> m_pfGetComputeZYX;
-nsstd::function<std::vector<double>()> m_pfGetMatrix;
-nsstd::function<void(const std::vector<double>&, double)> m_pfSetMatrix;
+std::function<void(const std::vector<double>&)> m_pfSetCenter;
+std::function<std::vector<double>()> m_pfGetCenter;
+std::function<void(double,double,double)> m_pfSetRotation;
+std::function<double()> m_pfGetAngleX;
+std::function<double()> m_pfGetAngleY;
+std::function<double()> m_pfGetAngleZ;
+std::function<void(const std::vector<double>&)> m_pfSetTranslation;
+std::function<std::vector<double>()> m_pfGetTranslation;
+std::function<void(bool)> m_pfSetComputeZYX;
+std::function<bool()> m_pfGetComputeZYX;
+std::function<std::vector<double>()> m_pfGetMatrix;
+std::function<void(const std::vector<double>&, double)> m_pfSetMatrix;
 
 
 };

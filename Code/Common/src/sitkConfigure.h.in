@@ -1,6 +1,6 @@
 /*=========================================================================
 *
-*  Copyright Insight Software Consortium
+*  Copyright NumFOCUS
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -27,29 +27,13 @@
 #endif
 #cmakedefine SITK_SimpleITKExplit_STATIC
 
-
-// defined if the system has C++0x "static_assert" keyword
-#cmakedefine SITK_HAS_CXX11_STATIC_ASSERT
-// defined if the compiler has C++11 "nullptr" keyword
-#cmakedefine SITK_HAS_CXX11_NULLPTR
-#cmakedefine SITK_HAS_CXX11_FUNCTIONAL
-#cmakedefine SITK_HAS_CXX11_TYPE_TRAITS
-#cmakedefine SITK_HAS_CXX11_UNORDERED_MAP
-#cmakedefine SITK_HAS_CXX11_UNIQUE_PTR
-#cmakedefine SITK_HAS_CXX11_ALIAS_TEMPLATE
-
-#cmakedefine SITK_HAS_TR1_SUB_INCLUDE
-
-#cmakedefine SITK_HAS_TR1_FUNCTIONAL
-#cmakedefine SITK_HAS_TR1_TYPE_TRAITS
-#cmakedefine SITK_HAS_TR1_UNORDERED_MAP
+#define SITK_MAX_DIMENSION @SimpleITK_MAX_DIMENSION@
 
 // defined if compiler supports using template keyword to disambiguate
 // dependent names
 #cmakedefine SITK_HAS_TEMPLATE_DISAMBIGUATOR_DEPENDENT_NAME
 
 #cmakedefine SITK_INT64_PIXELIDS
-#cmakedefine SITK_4D_IMAGES
 
 #cmakedefine SITK_EXPLICIT_INSTANTIATION
 
