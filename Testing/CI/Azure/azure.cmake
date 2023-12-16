@@ -22,6 +22,7 @@ function(set_from_env var env_var)
   endif()
 endfunction()
 
+message("CMake Version: ${CMAKE_VERSION}")
 set_from_env(CTEST_SITE "AGENT_MACHINENAME" REQUIRED)
 set(CTEST_SITE "Azure.${CTEST_SITE}")
 
@@ -122,7 +123,6 @@ SET (_dashboard_cache "
 
 set_from_env(dashboard_cache "CTEST_CACHE" DEFAULT ${_dashboard_cache})
 
-endif()
 
 
 

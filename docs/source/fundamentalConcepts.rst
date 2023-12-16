@@ -96,8 +96,9 @@ the intensity values and pixel spacing are the same.
    system. In SimpleITK these are not considered the same image, because they occupy
    different spatial locations. The image on the left
    has its origin at (-136.3, -20.5) with a direction cosine matrix, in row
-   major order, of (0.7, -0.7, 0.7, 0.7). The image on the right's origin is
-   (16.9, 21.4) with a direction cosine matrix of (1,0,0,1).
+   major order, of (0.7, -0.7, 0.7, 0.7), :math:`\left[\begin{array}{cc}0.7&-0.7\\0.7&0.7\end{array}\right]`.
+   The image on the right's origin is
+   (16.9, 21.4) with a direction cosine matrix of (1,0,0,1), :math:`\left[\begin{array}{cc}1&0\\0&1\end{array}\right]`.
 
 .. _lbl_metric_units:
 
@@ -112,11 +113,19 @@ units has `not ended well in the past <https://en.wikipedia.org/wiki/Mars_Climat
 Finally, having convinced you to think of images as objects occupying a physical region
 in space, we need to answer two questions:
 
-1. How do you access the pixel values in an image:
+1. How do you access the pixel values in an image?
 
-   .. code-block:: python
+   a. In dynamically typed languages such as Python and R use a type agnostic function:
 
-     image.GetPixel((0,0))
+      .. code-block:: python
+
+        image.GetPixel((0,0))
+
+   b. In statically typed languages such as C# and C++ use type specific functions:
+
+      .. code-block:: C++
+
+        image.GetPixelAsUInt8( {0, 0} )
 
    SimpleITK functions use a zero based indexing scheme. The toolkit also includes
    syntactic sugar that allows one to use the bracket operator in combination with
@@ -168,6 +177,7 @@ Additional Resources
    `SimpleITK Jupyter notebooks <https://github.com/InsightSoftwareConsortium/SimpleITK-Notebooks>`_
    (Python and R only).
 
+.. _lbl_transforms:
 
 Transforms
 ++++++++++
@@ -237,6 +247,7 @@ Additional Resources
    * `2D or 3D ScaleTransform <https://simpleitk.org/doxygen/latest/html/classitk_1_1simple_1_1ScaleTransform.html>`_.
    * `ScaleVersor3DTransform <https://simpleitk.org/doxygen/latest/html/classitk_1_1simple_1_1ScaleVersor3DTransform.html>`_.
    * `ScaleSkewVersor3DTransform <https://simpleitk.org/doxygen/latest/html/classitk_1_1simple_1_1ScaleSkewVersor3DTransform.html>`_.
+   * `ComposeScaleSkewVersor3DTransform <https://simpleitk.org/doxygen/latest/html/classitk_1_1simple_1_1ComposeScaleSkewVersor3DTransform.html>`_.
    * `2D or 3D AffineTransform <https://simpleitk.org/doxygen/latest/html/classitk_1_1simple_1_1AffineTransform.html>`_.
    * `2D or 3D BSplineTransform <https://simpleitk.org/doxygen/latest/html/classitk_1_1simple_1_1BSplineTransform.html>`_.
    * `2D or 3D DisplacementFieldTransform <https://simpleitk.org/doxygen/latest/html/classitk_1_1simple_1_1DisplacementFieldTransform.html>`_.

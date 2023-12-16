@@ -18,6 +18,18 @@ sitk_add_python_test( Test.IOTest
   "${CMAKE_CURRENT_SOURCE_DIR}/IOTest.py"
   "${SimpleITK_TEST_OUTPUT_DIR}")
 
+sitk_add_python_test( Test.ExternalViewer
+  "${CMAKE_CURRENT_SOURCE_DIR}/sitkExternalViewerTest.py"
+  )
+
+sitk_add_python_test( Test.FlatStaticMethod
+   "${CMAKE_CURRENT_SOURCE_DIR}/sitkFlatStaticMethod.py"
+   )
+
+sitk_add_python_test( Test.GetGDCMSeriesIDs
+  "${CMAKE_CURRENT_SOURCE_DIR}/sitkGetGDCMSeriesIDs.py"
+  )
+
 # Numpy test.
 sitk_add_python_test( Test.Numpy
   "${CMAKE_CURRENT_SOURCE_DIR}/sitkNumpyArrayConversionTest.py"
@@ -31,10 +43,14 @@ sitk_add_python_test( Test.ConcurrentImageRead
   "${CMAKE_CURRENT_SOURCE_DIR}/ConcurrentImageRead.py"
   )
 
-sitk_add_python_test( Test.ImageReadWriteInt64
-  "${CMAKE_CURRENT_SOURCE_DIR}/ImageReadWriteInt64.py"
+sitk_add_python_test( Test.ImageReadWrite
+  "${CMAKE_CURRENT_SOURCE_DIR}/sitkImageReadWrite.py"
   )
 
+if(SimpleITK_USE_ELASTIX)
+  sitk_add_python_test( Test.TransformixImageFilterTest
+    "${CMAKE_CURRENT_SOURCE_DIR}/sitkTransformixImageFilterTest.py" )
+endif()
 
 if(TEST Python.Test.ConcurrentImageRead AND APPLE)
   set_tests_properties( Python.Test.ConcurrentImageRead PROPERTIES LABELS "UNSTABLE" )

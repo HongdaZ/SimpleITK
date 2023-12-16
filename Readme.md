@@ -1,13 +1,12 @@
 SimpleITK
 =========
 
-|  | CircleCI | ReadTheDocs | AzurePipelines |
-|:-------:|:---------:|:-------------:|:-------------:|
-| release | [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/release.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/release) | [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=release)](http://simpleitk.readthedocs.io/en/release/) | [![Build Status](https://dev.azure.com/SimpleITK-DevOps/SimpleITK/_apis/build/status/SimpleITK.SimpleITK?branchName=release)](https://dev.azure.com/SimpleITK-DevOps/SimpleITK/_build/latest?definitionId=2&branchName=release) |
-| master | [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/master.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/master) | [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=master)](http://simpleitk.readthedocs.io/en/master/) | [![Build Status](https://dev.azure.com/SimpleITK-DevOps/SimpleITK/_apis/build/status/SimpleITK.SimpleITK?branchName=master)](https://dev.azure.com/SimpleITK-DevOps/SimpleITK/_build/latest?definitionId=2&branchName=master) |
+|         |                                                                      CircleCI                                                                      |                                                                                            GithubActions                                                                                             |                                                           ReadTheDocs                                                           |
+|:-------:|:--------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
+| release | [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/release.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/release) | [![Batch Build and Test](https://github.com/SimpleITK/SimpleITK/actions/workflows/BatchBuild.yml/badge.svg?branch=release)](https://github.com/SimpleITK/SimpleITK/actions/workflows/BatchBuild.yml) | [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=release)](http://simpleitk.readthedocs.io/en/release/) |
+| master  |  [![CircleCI](https://circleci.com/gh/SimpleITK/SimpleITK/tree/master.svg?style=shield)](https://circleci.com/gh/SimpleITK/SimpleITK/tree/master)  | [![Batch Build and Test](https://github.com/SimpleITK/SimpleITK/actions/workflows/BatchBuild.yml/badge.svg?branch=master)](https://github.com/SimpleITK/SimpleITK/actions/workflows/BatchBuild.yml)  |  [![ReadTheDoc](https://readthedocs.org/projects/simpleitk/badge/?version=master)](http://simpleitk.readthedocs.io/en/master/)  |
 
-
-SimpleITK is an image analysis toolkit with a large number of components supporting general filtering operations, image segmentation and registration. It is built on top of the Insight Segmentation and Registration Toolkit [ITK](https://www.itk.org) with the intent of providing a simplified interface to ITK. SimpleITK itself is written in C++ but is available for a large number of programming languages. Currently these include:
+SimpleITK is an image analysis toolkit with a large number of components supporting general filtering operations, image segmentation and registration. It is built on top of the Insight Segmentation and Registration Toolkit [ITK](https://www.itk.org) with the intent of providing a simplified interface to ITK. SimpleITK itself is written in C++ but is available for a large number of programming languages. Currently, these include:
 
 * [Python](http://www.python.org)
 * [R](https://www.r-project.org)
@@ -48,7 +47,7 @@ If you found SimpleITK useful in your research, support our efforts by citing
 the relevant publication(s):
 
 R. Beare, B. C. Lowekamp, Z. Yaniv, "Image Segmentation, Registration and
-Characterization in R with SimpleITK", *J Stat Softw*, 86(8), https://doi.org/10.18637/jss.v086.i08, 2018.
+Characterization in R with SimpleITK", *J Stat Software*, 86(8), https://doi.org/10.18637/jss.v086.i08, 2018.
 
 Z. Yaniv, B. C. Lowekamp, H. J. Johnson, R. Beare, "SimpleITK Image-Analysis Notebooks: a Collaborative Environment for Education and Reproducible Research", *J Digit Imaging.*, 31(3): 290-303, https://doi.org/10.1007/s10278-017-0037-8, 2018.
 
@@ -60,7 +59,7 @@ With massive libraries like SimpleITK, good documentation is a must. The documen
 1. [API Documentation](https://simpleitk.org/doxygen/latest/html/) - This contains class and function documentation. The descriptions for functions and classes are primarily borrowed from the original ITK C++ classes.
 2. [SimpleITK Documentation](http://simpleitk.readthedocs.io/en/master/) - This site contains high-level guides (fundamental SimpleITK concepts, common conventions, etc.), details with respect to the toolkit's binary distributions, instructions for building the toolkit, as well as SimpleITK examples in all supported programming languages. [This site replaced the
 [SimpleITK Wiki](https://itk.org/Wiki/SimpleITK)  which is mostly of interest for historical reasons.]
-3. [Juypyter Notebook Repository](http://insightsoftwareconsortium.github.io/SimpleITK-Notebooks/) - This repository contains a collection of Jupyter Notebooks illustrating the use of SimpleITK for educational and research activities. The notebooks demonstrate the use of SimpleITK for interactive image analysis using the Python and R programming languages. Recommended reading, if you are starting with SimpleITK.
+3. [Jupyter Notebook Repository](http://insightsoftwareconsortium.github.io/SimpleITK-Notebooks/) - This repository contains a collection of Jupyter Notebooks illustrating the use of SimpleITK for educational and research activities. The notebooks demonstrate the use of SimpleITK for interactive image analysis using the Python and R programming languages. Recommended reading, if you are starting with SimpleITK.
 
 
 Support
@@ -68,20 +67,7 @@ Support
 
 SimpleITK provides access to most of the ITK components, but not all. If you are looking for something specific and can't find it, open an issue on GitHub or ask for support on the [forum](https://discourse.itk.org).
 
-Report an Issue
----------------
+Report and Issue or Request a Feature
+-------------------------------------
 
-Help us improve SimpleITK by reporting issues you encounter. When you report an error, you allow us to address your specific problem, but more importantly you are helping all of the SimpleITK community.
-
-**Thank you for helping making SimpleITK better!**
-
-All issues are reported and managed on the [project's GitHub issue tracker](https://github.com/SimpleITK/SimpleITK/issues). When reporting an issue, please provide as much information as possible to enable us to reproduce the problem.
-
-The following information will allow us to address your issue in a timely manner:
-1. Error message (copy & pasted) and focused description of the problem.
-2. Operating system, and version (e.g. OSX 10.11.6).
-3. Programming language, and version (e.g. Python 2.7.14, R 3.2.3).
-4. Version of SimpleITK (e.g. 1.1.0), just invoke the SimpleITK Version() function.
-5. How did you install SimpleITK, binary distribution (e.g. conda install -c simpleitk simpleitk), or built it from source (e.g. devtools::install_github("SimpleITK/SimpleITKRInstaller")).
-6. A minimal working example which causes the error.
-7. If your code requires input, possibly point to a minimal sized input image.
+Please use the [issue tracker](https://github.com/SimpleITK/SimpleITK/issues) to report problems or request features.

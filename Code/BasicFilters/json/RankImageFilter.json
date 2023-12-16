@@ -5,6 +5,9 @@
   "number_of_inputs" : 1,
   "pixel_types" : "BasicPixelIDTypeList",
   "vector_pixel_types_by_component" : "VectorPixelIDTypeList",
+  "include_files" : [
+    "sitkCreateKernel.h"
+  ],
   "members" : [
     {
       "name" : "Rank",
@@ -21,9 +24,18 @@
       "type" : "unsigned int",
       "default" : "std::vector<unsigned int>(3, 1)",
       "dim_vec" : 1,
-      "set_as_scalar" : 1,
-      "doc" : "",
-      "itk_type" : "typename FilterType::RadiusType"
+      "custom_itk_cast" : "",
+      "doc" : ""
+    },
+    {
+      "name" : "KernelType",
+      "type" : "KernelEnum",
+      "default" : "itk::simple::sitkBox",
+      "custom_itk_cast" : "auto kernel = CreateKernel<InputImageType::ImageDimension>( m_KernelType, m_Radius );\n  filter->SetKernel( kernel );",
+      "briefdescriptionSet" : "",
+      "detaileddescriptionSet" : "Set the kernel or structuring element.",
+      "briefdescriptionGet" : "",
+      "detaileddescriptionGet" : "Get the kernel or structuring element ."
     }
   ],
   "tests" : [
@@ -61,6 +73,42 @@
       ]
     },
     {
+      "tag" : "by10_ball",
+      "description" : "Test by 10",
+      "md5hash" : "21afaad7ebff1ce33cd310ccc46305e7",
+      "settings" : [
+        {
+          "parameter" : "Rank",
+          "type" : "double",
+          "value" : "0.5"
+        },
+        {
+          "parameter" : "Radius",
+          "type" : "unsigned int",
+          "dim_vec" : 1,
+          "value" : [
+            10,
+            10
+          ]
+        },
+        {
+          "parameter" : "KernelType",
+          "value" : "itk::simple::sitkBall",
+          "lua_value" : "SimpleITK.sitkBall",
+          "python_value" : "SimpleITK.sitkBall",
+          "ruby_value" : "Simpleitk::SitkBall",
+          "java_value" : "KernelEnum.sitkBall",
+          "tcl_value" : "$$sitkBall",
+          "csharp_value" : "KernelEnum.sitkBall",
+          "R_value" : "'sitkBall'"
+        }
+
+      ],
+      "inputs" : [
+        "Input/cthead1.png"
+      ]
+    },
+    {
       "tag" : "Vector",
       "description" : "Vector image",
       "md5hash" : "7e1e22bd55e8048ae0a0d3296be973ca",
@@ -71,7 +119,7 @@
     }
   ],
   "briefdescription" : "Rank filter of a greyscale image.",
-  "detaileddescription" : "Nonlinear filter in which each output pixel is a user defined rank of input pixels in a user defined neighborhood. The default rank is 0.5 (median). The boundary conditions are different to the standard itkMedianImageFilter. In this filter the neighborhood is cropped at the boundary, and is therefore smaller.\n\nThis filter uses a recursive implementation - essentially the one by Huang 1979, I believe, to compute the rank, and is therefore usually a lot faster than the direct implementation. The extensions to Huang are support for arbitrary pixel types (using c++ maps) and arbitrary neighborhoods. I presume that these are not new ideas.\n\nThis filter is based on the sliding window code from the consolidatedMorphology package on InsightJournal.\n\nThe structuring element is assumed to be composed of binary values (zero or one). Only elements of the structuring element having values > 0 are candidates for affecting the center pixel.\n\nThis code was contributed in the Insight Journal paper: \"Efficient implementation of kernel filtering\" by Beare R., Lehmann G https://hdl.handle.net/1926/555 http://www.insight-journal.org/browse/publication/160 \n\n\\see MedianImageFilter \n\n\n\\author Richard Beare",
+  "detaileddescription" : "Nonlinear filter in which each output pixel is a user defined rank of input pixels in a user defined neighborhood. The default rank is 0.5 (median). The boundary conditions are different to the standard itkMedianImageFilter. In this filter the neighborhood is cropped at the boundary, and is therefore smaller.\n\nThis filter uses a recursive implementation - essentially the one by Huang 1979, I believe, to compute the rank, and is therefore usually a lot faster than the direct implementation. The extensions to Huang are support for arbitrary pixel types (using c++ maps) and arbitrary neighborhoods. I presume that these are not new ideas.\n\nThis filter is based on the sliding window code from the consolidatedMorphology package on InsightJournal.\n\nThe structuring element is assumed to be composed of binary values (zero or one). Only elements of the structuring element having values > 0 are candidates for affecting the center pixel.\n\nThis code was contributed in the Insight Journal paper: \"Efficient implementation of kernel filtering\" by Beare R., Lehmann G https://www.insight-journal.org/browse/publication/160 \n\n\\see MedianImageFilter \n\n\n\\author Richard Beare",
   "itk_module" : "ITKMathematicalMorphology",
   "itk_group" : "MathematicalMorphology",
   "in_place" : false

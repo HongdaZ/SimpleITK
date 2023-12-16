@@ -8,7 +8,8 @@ export OUT_DIR="/work/io"
 
 SIMPLEITK_GIT_TAG=${SIMPLEITK_GIT_TAG:-v1.1rc1}
 
-PYTHON_VERSIONS=${PYTHON_VERSIONS:-$(ls /opt/python | sed -e 's/cp2[0-6][^ ]\+ \?//g')}
+# Remove Python 2 and pure Python builds
+PYTHON_VERSIONS=${PYTHON_VERSIONS:-$(ls /opt/python | sed -e 's/cp2[^ ]\+ \?//g' -e 's/pp3[^ ]\+ \?//g')}
 
 NPROC=$(grep -c processor /proc/cpuinfo)
 export MAKEFLAGS="-j ${NPROC}"
@@ -22,6 +23,7 @@ mkdir -p ${ExternalData_OBJECT_STORES}
 
 export PYTHONUSERBASE=${PYTHONUSERBASE:-/tmp/.pylocal}
 mkdir -p ${PYTHONUSERBASE}
+export PATH=${PATH}:/tmp/.pylocal/bin
 
 function build_simpleitk {
 
@@ -61,10 +63,7 @@ function build_simpleitk_python {
 
     echo ""
     echo "PYTHON_EXECUTABLE:${PYTHON_EXECUTABLE}"
-    echo "PYTHON_INCLUDE_DIR:${PYTHON_INCLUDE_DIR}"
-    echo "PYTHON_LIBRARY:${PYTHON_LIBRARY}"
 
-    ${PYTHON_EXECUTABLE} -m pip install --no-cache-dir --user numpy --progress-bar off
     rm -rf ${BLD_DIR}-${PYTHON} &&
     mkdir -p ${BLD_DIR}-${PYTHON} &&
     cd ${BLD_DIR}-${PYTHON} &&
@@ -80,9 +79,8 @@ function build_simpleitk_python {
         -DSimpleITK_BUILD_STRIP:BOOL=ON \
         -DSimpleITK_PYTHON_WHEEL:BOOL=ON \
         -DSimpleITK_PYTHON_EGG:BOOL=OFF \
-        -DPYTHON_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE} \
-        -DPYTHON_INCLUDE_DIR:PATH=${PYTHON_INCLUDE_DIR} \
-        -DPYTHON_VIRTUALENV_SCRIPT:FILEPATH=${BLD_DIR}/virtualenv/virtualenv.py \
+        -DPython_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE} \
+        -DPython_INCLUDE_DIR:PATH=${PYTHON_INCLUDE_DIR} \
         ${SRC_DIR}/Wrapping/Python &&
     make &&
     make dist
@@ -90,6 +88,25 @@ function build_simpleitk_python {
 }
 
 build_simpleitk || exit 1
+
+
+if [[ ! -z ${BUILD_CSHARP:+x} && "${BUILD_CSHARP}" -ne 0 ]]; then
+    mkdir ${BLD_DIR}-csharp &&
+        cd ${BLD_DIR}-csharp &&
+        cmake  \
+            -D "CMAKE_CXX_FLAGS:STRING=-fvisibility=hidden -fvisibility-inlines-hidden ${CFLAGS}" \
+            -D "CMAKE_C_FLAGS:STRING=-fvisibility=hidden ${CXXFLAGS}" \
+            -DCMAKE_MODULE_PATH:PATH=${SRC_DIR} \
+            -DCMAKE_PREFIX_PATH:PATH=${BLD_DIR} \
+            -DCMAKE_BUILD_TYPE:STRING=Release \
+            -DSWIG_EXECUTABLE:FILEPATH=${BLD_DIR}/Swig/bin/swig \
+            -DSWIG_DIR:PATH=${BLD_DIR}/Swig/ \
+            -DSimpleITK_CSHARP_ARCH:STRING=linux \
+            -DSimpleITK_BUILD_STRIP:BOOL=ON \
+            ${SRC_DIR}/Wrapping/CSharp &&
+        cmake --build "${BLD_DIR}-csharp" --target dist &&
+        find "${BLD_DIR}-csharp/dist" -name "SimpleITK*.zip" -exec cp -v {} "${OUT_DIR}" \;
+fi
 
 
 

@@ -16,7 +16,6 @@
 #
 #==========================================================================*/
 
-from __future__ import print_function
 import unittest
 
 import SimpleITK as sitk
@@ -79,6 +78,83 @@ class BasicFiltersTests(unittest.TestCase):
                                      sitk.Resample(img, referenceImage=img, transform=tx, defaultPixelValue=255.0, outputPixelType=sitk.sitkFloat64) )
         self.assertImageAlmostEqual( baseline_image,
                                      sitk.Resample(img, size=(64, 64), transform=tx, defaultPixelValue=255.0, outputPixelType=sitk.sitkFloat64 ) )
+
+        with self.assertRaises(TypeError) as cm:
+             sitk.Resample(img, img, wrong_keyword1=img)
+        self.assertTrue("unexpected keyword argument" in str(cm.exception))
+
+        with self.assertRaises(TypeError) as cm:
+            sitk.Resample(img, [64,64], wrong_keyword2=img)
+        self.assertTrue("unexpected keyword argument" in str(cm.exception))
+
+        with self.assertRaises(TypeError) as cm:
+            sitk.Resample(img, referenceImage=img, wrong_keyword3=img)
+        self.assertTrue("unexpected keyword argument" in str(cm.exception))
+
+        with self.assertRaises(TypeError) as cm:
+            sitk.Resample(img, size=[64,64], wrong_keyword4=img)
+        self.assertTrue("unexpected keyword argument" in str(cm.exception))
+
+        with self.assertRaises(TypeError) as cm:
+            sitk.Resample(img, tx, wrong_keyword5=img)
+        self.assertTrue("unexpected keyword argument" in str(cm.exception))
+
+
+    def test_paste_filter(self):
+
+        img1 = sitk.GaborSource(sitk.sitkFloat32, [64, 64, 64], frequency=.05)
+        img2 = sitk.Image([32,32,32], sitk.sitkFloat32)
+
+        sitk.Paste(img1, img2)
+
+    def test_landmark_based_transform_initializer(self):
+        """
+        Test downcast of LandmarkBasedTransformInitializer return Transform
+        :return:
+        """
+
+        point_set = [i for i in range(12)]
+
+        tx_initializer = sitk.LandmarkBasedTransformInitializerFilter()
+        tx_initializer.SetFixedLandmarks(point_set)
+        tx_initializer.SetMovingLandmarks(point_set)
+
+        self.assertEqual(tx_initializer.Execute(sitk.Euler2DTransform()).__class__,
+                         sitk.Euler2DTransform)
+        self.assertEqual(tx_initializer.Execute(sitk.Similarity2DTransform()).__class__,
+                         sitk.Similarity2DTransform)
+        self.assertEqual(tx_initializer.Execute(sitk.AffineTransform(2)).__class__,
+                         sitk.AffineTransform)
+
+        self.assertEqual(tx_initializer.Execute(sitk.VersorRigid3DTransform()).__class__,
+                         sitk.VersorRigid3DTransform)
+        self.assertEqual(tx_initializer.Execute(sitk.Similarity3DTransform()).__class__,
+                         sitk.Similarity3DTransform)
+        self.assertEqual(tx_initializer.Execute(sitk.ScaleVersor3DTransform()).__class__,
+                        sitk.ScaleVersor3DTransform)
+        self.assertEqual(tx_initializer.Execute(sitk.AffineTransform(3)).__class__,
+                        sitk.AffineTransform)
+
+    def test_minimum_maximum(self):
+        """
+        Test the manual written MinimumMaximum procedural method
+        :return:
+        """
+
+        img = sitk.Image([32, 32], sitk.sitkFloat32)
+
+        self.assertEqual(sitk.MinimumMaximum(img), (0.0, 0.0))
+
+        img[0, 0] = -1.0
+        img[10, 10] = 2.0
+        self.assertEqual(sitk.MinimumMaximum(img), (-1.0, 2.0))
+
+        img = sitk.Image([32, 32], sitk.sitkUInt8)
+        self.assertEqual(sitk.MinimumMaximum(img), (0.0, 0.0))
+
+        img += 1
+        img[10, 10] = 255
+        self.assertEqual(sitk.MinimumMaximum(img), (1.0, 255.0))
 
 
 if __name__ == '__main__':

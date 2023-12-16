@@ -17,7 +17,6 @@
 #
 # =========================================================================
 
-from __future__ import print_function
 
 import SimpleITK as sitk
 import sys
@@ -42,5 +41,5 @@ print("Writing image:", sys.argv[2])
 
 sitk.WriteImage(image, sys.argv[2])
 
-if ("SITK_NOSHOW" not in os.environ):
+if "SITK_NOSHOW" not in os.environ:
     sitk.Show(image, "Dicom Series")

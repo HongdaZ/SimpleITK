@@ -29,7 +29,8 @@ if (length(args) < 2) {
          "[maskImage], [numberOfIterations], [numberOfFittingLevels]")
 }
 
-inputImage <- ReadImage(args[[1]])
+inputImage <- ReadImage(args[[1]], 'sitkFloat32')
+image <- inputImage
 
 if (length( args ) > 4) {
     maskImage <- ReadImage( args[[4]], 'sitkUint8' )
@@ -37,9 +38,11 @@ if (length( args ) > 4) {
     maskImage <- OtsuThreshold( inputImage, 0, 1, 200 )
 }
 
+shrinkFactor = 1
 if (length( args ) > 3) {
-    inputImage <- Shrink( inputImage, rep(strtoi(args[3]), inputImage$GetDimension()) )
-    maskImage <- Shrink( maskImage, rep(strtoi(args[3]), inputImage$GetDimension()) )
+    shrinkFactor = strtoi(args[3])
+    image <- Shrink( inputImage, rep(shrinkFactor, inputImage$GetDimension()) )
+    maskImage <- Shrink( maskImage, rep(shrinkFactor, inputImage$GetDimension()) )
 }
 
 inputImage <- Cast( inputImage, 'sitkFloat32' )
@@ -56,6 +59,18 @@ if (length ( args ) > 5) {
     corrector$SetMaximumNumberOfIterations( rep(strtoi( args[[5]], numberFittingLevels)) )
 }
 
-output <- corrector$Execute( inputImage, maskImage )
+correctedImage <- corrector$Execute( image, maskImage )
 
-WriteImage(output, args[[2]])
+logBiasField <- corrector$GetLogBiasFieldAsImage(inputImage)
+
+correctedImageFullResolution <- inputImage / Exp( logBiasField )
+
+WriteImage(correctedImageFullResolution, args[[2]])
+
+if (shrinkFactor > 1) {
+    WriteImage(correctedImage, "R-Example-N4BiasFieldCorrection-shrunk.nrrd")
+}
+
+if(Sys.getenv("SITK_NOSHOW") == "") {
+    Show(correctedImage, "N4 Corrected")
+}

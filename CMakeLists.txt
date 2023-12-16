@@ -1,4 +1,6 @@
-cmake_minimum_required ( VERSION 3.10 FATAL_ERROR )
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/CMake/sitkCMakeInit.cmake")
+cmake_minimum_required(VERSION ${SITK_CMAKE_MINIMUM_REQUIRED_VERSION})
 
 # Explicitly add INCREMENTAL linking option to command lines.
 # http://www.cmake.org/pipermail/cmake/2010-February/035174.html
@@ -6,7 +8,7 @@ SET(MSVC_INCREMENTAL_DEFAULT ON)
 
 project ( SimpleITK )
 
-cmake_policy( VERSION 3.10 )
+cmake_policy( VERSION ${SITK_CMAKE_POLICY_VERSION} )
 
 foreach(p
     )
@@ -102,21 +104,14 @@ if ( MSVC AND SITK_BUILD_SHARED_LIBS )
   set( SITK_SimpleITKExplit_STATIC 1 )
 endif()
 
-set( SimpleITK_INT64_PIXELIDS_DEFAULT ON )
-if( MSVC )
-  # See http://www.cmake.org/cmake/help/v2.8.10/cmake.html#variable:MSVC_VERSION
-  # and https://en.wikipedia.org/wiki/Microsoft_Visual_Studio#Version_history
-  #   1500 = VS  9.0 (Visual Studio 2008)
-  #   1600 = VS 10.0 (Visual Studio 2010)
-  #   1700 = VS 11.0 (Visual Studio 2012)
-  if(MSVC_VERSION VERSION_LESS 1600)
-    # with this option on the linker runs out of memory
-    set( SimpleITK_INT64_PIXELIDS_DEFAULT OFF )
-  endif()
-endif()
-option( SimpleITK_INT64_PIXELIDS "Instantiate 64-bit integer pixels, including unsigned, vector and label maps."
-  ${SimpleITK_INT64_PIXELIDS_DEFAULT} )
+
+option( SimpleITK_INT64_PIXELIDS
+  "Instantiate 64-bit integer pixels, including unsigned, vector and label maps (required for 64-bit compilation and deprecated)."
+  ON )
 sitk_legacy_naming(SimpleITK_INT64_PIXELIDS)
+if (NOT SimpleITK_INT64_PIXELIDS AND CMAKE_SIZEOF_VOID_P GREATER_EQUAL 8)
+  message(FATAL_ERROR "SimpleITK_INT64_PIXELIDS is required to be enabled for 64-bit compilation.")
+endif()
 
 include(sitkMaxDimensionOption)
 
@@ -140,7 +135,12 @@ set ( SimpleITK_INCLUDE_DIRS
       ${CMAKE_BINARY_DIR}/Code/Common/include
       )
 
-set ( SimpleITK_LIBRARIES SimpleITKCommon SimpleITKIO SimpleITKRegistration )
+set ( SimpleITK_LIBRARIES SimpleITKCommon SimpleITKIO SimpleITKRegistration CACHE INTERNAL "")
+
+if (SimpleITK_USE_ELASTIX)
+  list (APPEND SimpleITK_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/Code/ElastixTransformixWrappers/include)
+  cache_list_append ( SimpleITK_LIBRARIES ElastixImageFilter TransformixImageFilter)
+endif()
 
 if (SimpleITK_EXPLICIT_INSTANTIATION)
   list ( APPEND SimpleITK_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/Code/Explicit/include )
@@ -149,19 +149,17 @@ if (SimpleITK_EXPLICIT_INSTANTIATION)
   #list ( APPEND SimpleITK_LIBRARIES  SimpleITKExplicit )
 endif()
 
-set( SimpleITK_LIBRARIES ${SimpleITK_LIBRARIES}  CACHE INTERNAL "" )
-
 # Be sure to clear these each time
 set ( GENERATED_TEST_LIST "" CACHE INTERNAL "" )
 set ( GENERATED_FILTER_LIST "" CACHE INTERNAL "" )
 set ( GENERATED_TEST_SOURCE_LIST "" CACHE INTERNAL "" )
 
 # Create cached list of all template components
-file( GLOB template_components
+file( GLOB _template_components
       ${SimpleITK_SOURCE_DIR}/ExpandTemplateGenerator/Components/[^.]*.h.in
       ${SimpleITK_SOURCE_DIR}/ExpandTemplateGenerator/Components/[^.]*.cxx.in
     )
-set ( template_components ${template_components} CACHE INTERNAL "" )
+set ( template_components ${_template_components} CACHE INTERNAL "" )
 
 
 #------------------------------------------------------------------------------
@@ -312,17 +310,16 @@ foreach(_f IN LISTS ITK_DOC_FILES)
   list( APPEND SimpleITK_DOC_FILES "${_o}" )
 endforeach()
 
-
-#------------------------------------------------------------------------------
-# Set up Documentation
-include(${SimpleITK_SOURCE_DIR}/Utilities/Doxygen/Doxygen.cmake)
-
 #------------------------------------------------------------------------------
 # Set up wrapping.
 #
 # Use CMake file which present options for wrapped languages, and finds languages as needed
 #
 include(sitkLanguageOptions)
+
+#------------------------------------------------------------------------------
+# Set up Documentation
+include(${SimpleITK_SOURCE_DIR}/Utilities/Doxygen/Doxygen.cmake)
 
 #------------------------------------------------------------------------------
 # Ensure that development strips have been setup
@@ -437,6 +434,11 @@ file( GLOB __files
   ${CMAKE_SOURCE_DIR}/Code/Registration/include/[^.]*.h
   ${CMAKE_SOURCE_DIR}/Code/Registration/include/[^.]*.hxx
   )
+
+if (SimpleITK_USE_ELASTIX)
+  file( GLOB elastixTransformixWrapperFiles ${CMAKE_SOURCE_DIR}/Code/ElastixTransformixWrappers/include/[^.]*.h)
+  list (APPEND __files ${elastixTransformixWrapperFiles})
+endif()
 
 install(FILES ${__files}
   DESTINATION ${SimpleITK_INSTALL_INCLUDE_DIR}

@@ -66,9 +66,9 @@ CompositeTransform &CompositeTransform::operator=( const CompositeTransform &arg
   return *this;
 }
 
-void CompositeTransform::SetPimpleTransform( PimpleTransformBase *pimpleTransform )
+void CompositeTransform::SetPimpleTransform(std::unique_ptr<PimpleTransformBase> && pimpleTransform )
 {
-  Superclass::SetPimpleTransform(pimpleTransform);
+  Superclass::SetPimpleTransform(std::move(pimpleTransform));
   Self::InternalInitialization(this->GetITKBase());
 }
 
@@ -82,13 +82,12 @@ void CompositeTransform::InternalInitialization(itk::TransformBase *transform)
   // The list is traversed from the end to the beginning. The transform is first tested
   // to see if it is an itk::CompositeTransform, then if it is a regular transform
   // a CompositeTransform will be constructed and the transform added to it.
-  typedef typelist::MakeTypeList<
-      itk::CompositeTransform<double, 3>,
-      itk::CompositeTransform<double, 2>,
-      itk::Transform<double, 2, 2>,
-      itk::Transform<double, 3, 3> >::Type TransformTypeList;
+  using TransformTypeList = typelist2::typelist<itk::CompositeTransform<double, 3>,
+                                                itk::CompositeTransform<double, 2>,
+                                                itk::Transform<double, 2, 2>,
+                                                itk::Transform<double, 3, 3>>;
 
-  typelist::Visit<TransformTypeList> callInternalInitialization;
+  typelist2::visit<TransformTypeList> callInternalInitialization;
 
   // explicitly remove all function pointer with reference to prior transform
   this->m_pfFlattenTransform = nullptr;
@@ -215,7 +214,7 @@ void CompositeTransform::InternalInitialization(itk::Transform<double, NDimensio
   ctx->AddTransform(tx);
 
   // Call InternalInitialization again with a CompositeTransform the second time.
-  Self::SetPimpleTransform(new PimpleTransform<CompositeTransformType >(ctx));
+  Self::SetPimpleTransform(std::make_unique<PimpleTransform<CompositeTransformType >>(ctx));
 }
 
 

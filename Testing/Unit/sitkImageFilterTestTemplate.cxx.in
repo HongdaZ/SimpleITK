@@ -95,14 +95,14 @@ $(if number_of_inputs == 2 then
     // Try executing with different size images.
     // This will either work or throw an exception, either is OK. So
     // this is here just to make sure that the behavior does not cause
-    // undefined behavior such as segfault, or other errouneos behavior.
+    // undefined behavior such as segfault, or other erroneous behavior.
     filter.Execute ( largeImage, smallImage );
     } catch (... )
     { }
 ]]
   if template_code_filename and template_code_filename == "DualImageFilter" then
     OUT = OUT .. [=[
-        // todo add intelligence to determin some image types to test
+        // todo add intelligence to determine some image types to test
         //ASSERT_NO_THROW ( filter.Execute ( smallImage, smallShortImage ) ) << " Image types are different";
 ]=]
   else
@@ -114,7 +114,7 @@ $(if number_of_inputs == 2 then
   }]]
    end)
   // This block is to verify that the input images for named inputs are
-  // check if the sizes match for computation.
+  // checked if the sizes match for computation.
 $(if inputs then
 OUT = OUT .. [[
   itk::simple::Image smallImage( 1,1,1,itk::simple::sitkUInt8 );
@@ -228,13 +228,12 @@ $(foreach settings
      end
   elseif dim_vec and dim_vec == 1 then
   OUT='{\
-  ${type} arr[] = {'
+  std::vector< ${type} > vec{'
   for i=1,#value-1 do
     OUT=OUT..value[i]..", "
   end
   OUT=OUT..value[#value]
   OUT=OUT..'};\
-  std::vector< ${type} > vec(arr, arr + sizeof(arr)/sizeof(${type}));\
   filter.Set${parameter} ( vec );\
   for(unsigned int i = 0; i < filter.Get${parameter}().size(); ++i)\
     {\
@@ -275,7 +274,7 @@ end)
       // This will fail if the filter is being run in-place
       EXPECT_EQ ( inputSHA1hash,  itk::simple::Hash( inputs[0] ) ) << "Input was modified by filter.";
 
-      // Check that the input buffer is different that the output
+      // Check that the input buffer is different than the output
       // buffer, this does not check complex or label map pixel types.
       if(!isLabelType(output) && !isLabelType(inputs[0]))
         {
@@ -285,7 +284,7 @@ end)
 
 $(if in_place then
     OUT=OUT..[=[
-  ASSERT_LE(1, inputs.size());
+  ASSERT_LE(1u, inputs.size());
   itk::simple::Image inPlaceOutput;
   itk::simple::Image temp = inputs[0];
   temp.MakeUnique();

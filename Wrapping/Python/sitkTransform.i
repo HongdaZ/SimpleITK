@@ -15,6 +15,39 @@
 *  limitations under the License.
 *
 *=========================================================================*/
+
+
+%pythonappend itk::simple::Transform::GetInverse() const
+{
+ val = val.Downcast()
+};
+
+%pythonappend itk::simple::CompositeTransform::GetBackTransform()
+{
+ val = val.Downcast()
+};
+
+%pythonappend itk::simple::CompositeTransform::GetNthTransform(unsigned int)
+{
+ val = val.Downcast()
+};
+
+%pythonprepend itk::simple::ReadTransform
+{
+  filename=str(filename)
+};
+%pythonappend itk::simple::ReadTransform
+{
+ val = val.Downcast()
+};
+%pythonprepend itk::simple::WriteTransform %{
+  filename = str(filename)
+%}
+
+%pythonprepend itk::simple::Transform::WriteTransform %{
+  filename = str(filename)
+%}
+
 %extend itk::simple::Transform {
    %pythoncode
 %{

@@ -1,5 +1,13 @@
-# remove me
-set ( ITK_NO_IO_FACTORY_REGISTER_MANAGER 1 )
+# The ITK factories are already compiled into the SimpleITK
+# libraries. So they are not needed again, additionally using ITK this
+# way will not cause the headers to be generated, so the managers
+# should not be used.
+
+# set ( ITK_NO_IO_FACTORY_REGISTER_MANAGER 1 )
+foreach(_f ${ITK_FACTORY_LIST})
+  string(TOUPPER ${_f} _f)
+  set ( ITK_NO_${_f}_FACTORY_REGISTER_MANAGER 1 )
+endforeach()
 include(${ITK_USE_FILE})
 
 
@@ -23,6 +31,7 @@ set ( SimpleITKUnitTestSource
   sitkBasicFiltersTests.cxx
   sitkLabelStatisticsTest.cxx
   sitkTransformToDisplacementFieldFilterTest.cxx
+  sitkTransformGeometryImageFilterTest.cxx
   sitkOperatorTests.cxx
   sitkExceptionsTests.cxx
   sitkTransformTests.cxx
@@ -30,10 +39,17 @@ set ( SimpleITKUnitTestSource
   itkHashImageFilterTest.cxx
   itkSliceImageFilterTest.cxx
   sitkImageViewerTest.cxx
-  )
+  sitkDemonsRegistrationTests.cxx)
 
 if ( SimpleITK_MAX_DIMENSION GREATER_EQUAL 4 )
   list(APPEND SimpleITKUnitTestSource sitkImage4DTests.cxx )
+endif()
+
+if ( SimpleITK_USE_ELASTIX )
+  list(APPEND SimpleITKUnitTestSource
+    sitkParameterMapTests.cxx
+    sitkElastixImageFilterTests.cxx
+    sitkTransformixImageFilterTests.cxx )
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/sitkImageViewerTest.h.in
@@ -243,7 +259,7 @@ if(MSVC_VERSION EQUAL 1700)
   # Tuples are limited by _VARIADIC_MAX in VS11. The variadic
   # templates are not deep enough by default. We are not currently
   # using the GTest features which require tuple, so just disable them
-  # and hope that upstream premanetly addresses the problem, with out
+  # and hope that upstream permanently addresses the problem, without
   # required more CMake core for compiler issues.
   add_definitions(-DGTEST_HAS_TR1_TUPLE=0 )
 endif()
@@ -261,6 +277,9 @@ add_test( NAME sitkSystemInformationTest COMMAND sitkSystemInformationTest ${CMA
 target_compile_options( sitkSystemInformationTest
   PRIVATE
     ${SimpleITK_PRIVATE_COMPILE_OPTIONS} )
+
+add_test( NAME sitkCMakeCacheTest COMMAND ${CMAKE_COMMAND} -E echo  "Attaching file: \"${SimpleITK_BINARY_DIR}/CMakeCache.txt\"" )
+set_tests_properties( sitkCMakeCacheTest PROPERTIES ATTACHED_FILES "${SimpleITK_BINARY_DIR}/CMakeCache.txt" )
 
 
  # CMake 3.10 added this method, to avoid configure time introspection
@@ -284,6 +303,7 @@ ExternalData_Expand_Arguments(  SimpleITKData
   DATA{${SimpleITK_DATA_ROOT}/Input/xforms/versor_i_3.txt}
   DATA{${SimpleITK_DATA_ROOT}/Baseline/BasicFilters_TransformToDisplacementFieldFilter_defaults.nrrd}
   DATA{${SimpleITK_DATA_ROOT}/Baseline/BasicFilters_TransformToDisplacementFieldFilter_32.nrrd}
+  DATA{${SimpleITK_DATA_ROOT}/Baseline/BasicFilters_TransformGeometryImageFilter_defaults.nrrd}
   )
 
 ExternalData_Expand_Arguments(  SimpleITKData
@@ -302,6 +322,7 @@ ExternalData_Expand_Arguments(  SimpleITKData
   DATA{${SimpleITK_DATA_ROOT}/Input/RA-Slice-Short.png}
   DATA{${SimpleITK_DATA_ROOT}/Input/VM1111Shrink-RGB.png}
   DATA{${SimpleITK_DATA_ROOT}/Input/WhiteDots.png}
+  DATA{${SimpleITK_DATA_ROOT}/Input/DicomSeries/,REGEX:Image[0-9]+.dcm}
   )
 
 add_subdirectory(Python)

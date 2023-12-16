@@ -28,6 +28,8 @@
 #include "sitkExceptionObject.h"
 #include "sitkPimpleImageBase.hxx"
 #include "sitkPixelIDTypeLists.h"
+#include "sitkImageConvert.hxx"
+
 
 
 namespace itk
@@ -35,42 +37,16 @@ namespace itk
   namespace simple
   {
 
-  // this is a little specialization just to get the
-  // InternalInitialization method's PixelIDTpImageType lookup to get
-  // a valid void type, so it'll dispatch to the a specialized
-  // method. All this is just to instantiate something that will never
-  // be actually used.
-  template <unsigned int VImageDimension>
-  struct PixelIDToImageType< typelist::NullType , VImageDimension >
-  {
-    using ImageType = void;
-  };
 
-  // This method is explicitly instantiated, and in-turn implicitly
-  // instantates the PipleImage for all used image types. This method
-  // just dispatces to nother method, to aid in instantiating only the
-  // images requested.
-  template <int VPixelIDValue, unsigned int VImageDimension>
-  void Image::InternalInitialization( typename PixelIDToImageType<typename typelist::TypeAt<InstantiatedPixelIDTypeList,
-                                                                                            VPixelIDValue>::Result,
-                                                                  VImageDimension>::ImageType *i )
+  template <typename TImageType>
+  PimpleImageBase *
+  Image::DispatchedInternalInitialization(itk::DataObject * image)
   {
-    this->ConditionalInternalInitialization<VPixelIDValue>( i );
-  }
-
-  template<int VPixelIDValue, typename TImageType>
-  typename std::enable_if<!std::is_same<TImageType, void>::value>::type
-  Image::ConditionalInternalInitialization( TImageType *image )
-  {
-    // no need to check if null
-    delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
-
-    this->m_PimpleImage = new PimpleImage<TImageType>( image );
+    return new PimpleImage<TImageType>(dynamic_cast<TImageType *>(image));
   }
 
 
-  template<class TImageType>
+  template <class TImageType>
   typename std::enable_if<IsBasic<TImageType>::Value>::type
   Image::AllocateInternal ( const std::vector<unsigned int > &_size, unsigned int numberOfComponents )
   {
@@ -91,10 +67,7 @@ namespace itk
     image->SetRegions ( region );
     image->Allocate();
     image->FillBuffer ( itk::NumericTraits<typename TImageType::PixelType>::ZeroValue() );
-
-    delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
-    m_PimpleImage =  new PimpleImage<TImageType>( image );
+    m_PimpleImage.reset(  new PimpleImage<TImageType>( image ) );
   }
 
   template<class TImageType>
@@ -123,10 +96,7 @@ namespace itk
     image->Allocate();
     image->FillBuffer ( zero );
 
-    delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
-
-    m_PimpleImage = new PimpleImage<TImageType>( image );
+    m_PimpleImage.reset( new PimpleImage<TImageType>( image ) );
   }
 
   template<class TImageType>
@@ -151,13 +121,122 @@ namespace itk
     image->Allocate();
     image->SetBackgroundValue( 0 );
 
-    delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
-
-    m_PimpleImage = new PimpleImage<TImageType>( image );
+    m_PimpleImage.reset( new PimpleImage<TImageType>( image ) );
   }
 
+  template <typename TImageType>
+  std::enable_if_t<IsVector<TImageType>::Value, Image>
+  Image::ToVectorInternal(bool)
+  {
+    return *this;
   }
-}
+
+  template <typename TImageType>
+  std::enable_if_t<IsBasic<TImageType>::Value, Image>
+  Image::ToVectorInternal(bool inPlace)
+  {
+    static_assert(TImageType::ImageDimension > 2, "Image dimension must be greater than 2");
+
+    typename TImageType::Pointer itkImage;
+
+    if (inPlace)
+    {
+      this->MakeUnique();
+      itkImage = dynamic_cast<TImageType *>(this->m_PimpleImage->GetDataBase());
+    }
+    else
+    {
+      auto copy = this->m_PimpleImage->DeepCopy();
+      itkImage = dynamic_cast<TImageType *>(copy->GetDataBase());
+    }
+
+    if (itkImage.GetPointer() == nullptr)
+    {
+      sitkExceptionMacro(<< "Unexpected template dispatch error");
+    }
+
+
+    auto direction = itkImage->GetDirection();
+    for (unsigned int i = 1; i < TImageType::ImageDimension; ++i)
+    {
+      if (direction[i][0] != 0.0 || direction[0][i] != 0.0)
+      {
+        sitkExceptionMacro(<< "Cannot convert image with non-identity direction in first dimension to a vector image");
+      }
+    }
+    if (direction[0][0] != 1.0)
+    {
+      sitkExceptionMacro(<< "Cannot convert image with non-identity direction in first dimension to a vector image");
+    }
+
+    auto itkVectorImage = GetVectorImageFromScalarImage(itkImage.GetPointer());
+
+    itkImage = nullptr;
+    using VectorImageType = typename decltype(itkVectorImage)::ObjectType;
+
+    if (inPlace)
+    {
+      // The pimpleImage does not allow construction when the Image's PixelContainer has more than one reference. So
+      // The pre-existing image must be destroyed before the new one is created.
+      this->m_PimpleImage.reset();
+      this->m_PimpleImage = std::make_unique<PimpleImage<VectorImageType>>(itkVectorImage);
+      return *this;
+    }
+    else
+    {
+      return Image(std::make_unique<PimpleImage<VectorImageType>>(itkVectorImage));
+    }
+  }
+
+
+  template <typename TImageType>
+  std::enable_if_t<IsBasic<TImageType>::Value, Image>
+  Image::ToScalarInternal(bool)
+  {
+    return *this;
+  }
+
+  template <typename TImageType>
+  std::enable_if_t<IsVector<TImageType>::Value, Image>
+  Image::ToScalarInternal(bool inPlace)
+  {
+
+    typename TImageType::Pointer itkImage;
+
+    if (inPlace)
+    {
+      this->MakeUnique();
+      itkImage = dynamic_cast<TImageType *>(this->m_PimpleImage->GetDataBase());
+    }
+    else
+    {
+      auto copy = this->m_PimpleImage->DeepCopy();
+      itkImage = dynamic_cast<TImageType *>(copy->GetDataBase());
+    }
+
+    if (itkImage.GetPointer() == nullptr)
+    {
+      sitkExceptionMacro(<< "Unexpected template dispatch error");
+    }
+
+    auto itkScalarImage = GetScalarImageFromVectorImage(itkImage.GetPointer());
+    itkImage = nullptr;
+    using ScalarImageType = typename decltype(itkScalarImage)::ObjectType;
+
+    if (inPlace)
+    {
+      this->m_PimpleImage.reset();
+      this->m_PimpleImage = std::make_unique<PimpleImage<ScalarImageType>>(itkScalarImage);
+      return *this;
+    }
+    else
+    {
+      return Image(std::make_unique<PimpleImage<ScalarImageType>>(itkScalarImage));
+    }
+  }
+
+
+  } // namespace simple
+} // namespace itk
 
 #endif // sitkImage_h

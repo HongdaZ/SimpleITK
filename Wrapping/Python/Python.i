@@ -26,12 +26,17 @@
 %}
 
 %include "PythonDocstrings.i"
+ //%feature("autodoc", "1");
 
 // ignore overload methods of int type when there is an enum
 %ignore itk::simple::CastImageFilter::SetOutputPixelType( PixelIDValueType pixelID );
 %ignore itk::simple::GetPixelIDValueAsString( PixelIDValueType type );
 
 %ignore itk::simple::Resample;
+%ignore itk::simple::ReadImage;
+%ignore itk::simple::WriteImage;
+%ignore itk::simple::SmoothinRecursiveGaussian;
+%ignore itk::simple::DiscreteGaussian;
 
 
 // Make __str__ transparent by renaming ToString to __str__
@@ -66,7 +71,7 @@
        cmd = new itk::simple::PyCommand();
        cmd->SetCallbackPyCallable(obj);
        int ret = self->AddCommand(e,*cmd);
-       cmd->OwnedByProcessObjectsOn();
+       cmd->OwnedByObjectsOn();
        return ret;
      }
    catch(...)
@@ -75,6 +80,25 @@
        throw;
      }
  }
+};
+
+%feature("director") itk::simple::LoggerBase;
+
+
+
+%pythonappend itk::simple::ImageRegistrationMethod::Execute(const Image &, const Image &)
+{
+  val = val.Downcast()
+};
+
+%pythonappend itk::simple::LandmarkBasedTransformInitializerFilter::Execute(const Transform &)
+{
+  val = val.Downcast()
+};
+
+%pythonappend itk::simple::LandmarkBasedTransformInitializer
+{
+  val = val.Downcast()
 };
 
 #endif

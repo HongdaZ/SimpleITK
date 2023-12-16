@@ -11,6 +11,7 @@ set ( SimpleITKCommonSource
   sitkEuler3DTransform.cxx
   sitkScaleTransform.cxx
   sitkScaleSkewVersor3DTransform.cxx
+  sitkComposeScaleSkewVersor3DTransform.cxx
   sitkScaleVersor3DTransform.cxx
   sitkSimilarity2DTransform.cxx
   sitkSimilarity3DTransform.cxx
@@ -23,14 +24,19 @@ set ( SimpleITKCommonSource
   sitkExceptionObject.cxx
   sitkKernel.cxx
   sitkEvent.cxx
+  sitkLogger.cxx
   sitkInterpolator.cxx
   sitkVersion.cxx
+  sitkObjectOwnedBase.cxx
   ../include/Ancillary/hl_sha1.cxx
   )
 
 set(use_itk_modules ITKCommon ITKImageCompose ITKImageIntensity
   ITKLabelMap ITKTransform ITKIOTransformBase ITKDisplacementField )
-find_package(ITK COMPONENTS ${use_itk_modules}  REQUIRED)
+if (GenericLabelInterpolator IN_LIST ITK_MODULES_ENABLED)
+  list(APPEND use_itk_modules GenericLabelInterpolator)
+endif()
+find_package(ITK COMPONENTS  REQUIRED ${use_itk_modules} )
 
 add_library ( SimpleITKCommon ${SimpleITKCommonSource} ${SimpleITKAncillarySource} )
 sitk_target_use_itk (SimpleITKCommon PRIVATE ${use_itk_modules} )
@@ -47,8 +53,7 @@ target_compile_options( SimpleITKCommon
     ${SimpleITK_PUBLIC_COMPILE_OPTIONS}
   PRIVATE
     ${SimpleITK_PRIVATE_COMPILE_OPTIONS} )
-target_compile_features( SimpleITKCommon PUBLIC cxx_std_11 )
-
+target_compile_features( SimpleITKCommon PUBLIC cxx_std_17 )
 
 sitk_install_exported_target( SimpleITKCommon )
 

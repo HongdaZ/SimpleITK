@@ -139,9 +139,9 @@ AffineTransform::Self &AffineTransform::Rotate(int axis1, int axis2, double angl
   return *this;
 }
 
-void AffineTransform::SetPimpleTransform( PimpleTransformBase *pimpleTransform )
+void AffineTransform::SetPimpleTransform(std::unique_ptr<PimpleTransformBase> && pimpleTransform )
 {
-  Superclass::SetPimpleTransform(pimpleTransform);
+  Superclass::SetPimpleTransform(std::move(pimpleTransform));
   Self::InternalInitialization(this->GetITKBase());
 }
 
@@ -151,10 +151,10 @@ void AffineTransform::InternalInitialization(itk::TransformBase *transform)
   visitor.transform = transform;
   visitor.that = this;
 
-  typedef typelist::MakeTypeList<itk::AffineTransform<double, 3>,
-                                 itk::AffineTransform<double, 2> >::Type TransformTypeList;
+  using TransformTypeList = typelist2::typelist<itk::AffineTransform<double, 3>,
+                                 itk::AffineTransform<double, 2> >;
 
-  typelist::Visit<TransformTypeList> callInternalInitialization;
+  typelist2::visit<TransformTypeList> callInternalInitialization;
 
   // explicitly remove all function pointer with reference to prior transform
   this->m_pfSetCenter = nullptr;

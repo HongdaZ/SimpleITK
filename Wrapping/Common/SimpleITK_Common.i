@@ -58,18 +58,35 @@
 %ignore itk::simple::Image::GetITKBase( void );
 %ignore itk::simple::Image::GetITKBase( void ) const;
 
-#ifndef SWIGCSHARP
-%ignore itk::simple::Image::GetBufferAsInt8;
-%ignore itk::simple::Image::GetBufferAsUInt8;
-%ignore itk::simple::Image::GetBufferAsInt16;
-%ignore itk::simple::Image::GetBufferAsUInt16;
-%ignore itk::simple::Image::GetBufferAsInt32;
-%ignore itk::simple::Image::GetBufferAsUInt32;
-%ignore itk::simple::Image::GetBufferAsInt64;
-%ignore itk::simple::Image::GetBufferAsUInt64;
-%ignore itk::simple::Image::GetBufferAsFloat;
-%ignore itk::simple::Image::GetBufferAsDouble;
-%ignore itk::simple::Image::GetBufferAsVoid;
+#if !defined(SWIGCSHARP)
+%ignore itk::simple::Image::GetBufferAsInt8();
+%ignore itk::simple::Image::GetBufferAsUInt8();
+%ignore itk::simple::Image::GetBufferAsInt16();
+%ignore itk::simple::Image::GetBufferAsUInt16();
+%ignore itk::simple::Image::GetBufferAsInt32();
+%ignore itk::simple::Image::GetBufferAsUInt32();
+%ignore itk::simple::Image::GetBufferAsInt64();
+%ignore itk::simple::Image::GetBufferAsUInt64();
+%ignore itk::simple::Image::GetBufferAsFloat();
+%ignore itk::simple::Image::GetBufferAsDouble();
+
+%ignore itk::simple::Image::GetBufferAsInt8( ) const;
+%ignore itk::simple::Image::GetBufferAsUInt8( ) const;
+%ignore itk::simple::Image::GetBufferAsInt16( ) const;
+%ignore itk::simple::Image::GetBufferAsUInt16( ) const;
+%ignore itk::simple::Image::GetBufferAsInt32( ) const;
+%ignore itk::simple::Image::GetBufferAsUInt32( ) const;
+%ignore itk::simple::Image::GetBufferAsInt64( ) const;
+%ignore itk::simple::Image::GetBufferAsUInt64( ) const;
+%ignore itk::simple::Image::GetBufferAsFloat( ) const;
+%ignore itk::simple::Image::GetBufferAsDouble( ) const;
+
+#endif
+
+
+#if !(defined(SWIGCSHARP) || defined(SWIGJAVA))
+%ignore itk::simple::Image::GetBufferAsVoid();
+%ignore itk::simple::Image::GetBufferAsVoid() const;
 #endif
 
 
@@ -144,6 +161,9 @@ namespace std
 #define SITKRegistration_EXPORT
 #define SITKRegistration_HIDDEN
 
+#define SITKElastix_EXPORT
+#define SITKElastix_HIDDEN
+
 
 // Any new classes need to have an "%include" statement to be wrapped.
 
@@ -151,9 +171,11 @@ namespace std
 %include "sitkConfigure.h"
 %include "sitkVersion.h"
 %include "sitkPixelIDValues.h"
-%include "sitkImage.h"
-%include "sitkCommand.h"
 %include "sitkInterpolator.h"
+%include "sitkImage.h"
+%include "sitkObjectOwnedBase.h"
+%include "sitkCommand.h"
+%include "sitkLogger.h"
 %include "sitkKernel.h"
 %include "sitkEvent.h"
 %include "sitkRandomSeed.h"
@@ -167,6 +189,7 @@ namespace std
 %include "sitkEuler2DTransform.h"
 %include "sitkScaleTransform.h"
 %include "sitkScaleSkewVersor3DTransform.h"
+%include "sitkComposeScaleSkewVersor3DTransform.h"
 %include "sitkScaleVersor3DTransform.h"
 %include "sitkSimilarity2DTransform.h"
 %include "sitkSimilarity3DTransform.h"
@@ -197,7 +220,21 @@ namespace std
 %include "sitkLandmarkBasedTransformInitializerFilter.h"
 %include "sitkCastImageFilter.h"
 %include "sitkExtractImageFilter.h"
+%include "sitkPasteImageFilter.h"
 %include "sitkAdditionalProcedures.h"
+
+#ifdef SITK_USE_ELASTIX
+%{
+#include <sitkElastixImageFilter.h>
+#include <sitkTransformixImageFilter.h>
+%}
+
+// Elastix and Transformix
+%template( ParameterMap ) std::map< std::string, std::vector< std::string > >;
+%template( VectorOfParameterMap ) std::vector< std::map< std::string, std::vector< std::string > > >;
+%include "sitkElastixImageFilter.h"
+%include "sitkTransformixImageFilter.h"
+#endif
 
 // Registration
 %include "sitkImageRegistrationMethod.h"

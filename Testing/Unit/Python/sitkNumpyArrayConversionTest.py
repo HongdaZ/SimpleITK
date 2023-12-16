@@ -15,7 +15,6 @@
 #   limitations under the License.
 #
 #==========================================================================*/
-from __future__ import print_function
 import sys
 import unittest
 
@@ -249,6 +248,29 @@ class TestNumpySimpleITKInterface(unittest.TestCase):
         self.assertEqual(img2.GetNumberOfComponentsPerPixel(), img.GetNumberOfComponentsPerPixel())
         self.assertEqual(h, sitk.Hash(img2))
 
+    def test_non_contiguous(self):
+        """Test converting non-contiguous numpy arrays to SimpleITK Image"""
+
+
+        arr = np.arange(5*7*11, dtype=np.int32)
+        arr.shape = (5,7,11)
+
+        img = sitk.GetImageFromArray(arr[::2,...])
+        self.assertEqual(img.GetSize(), (11, 7, 3))
+
+        farr = np.asarray(arr, order='F')
+        img = sitk.GetImageFromArray(farr)
+        self.assertEqual(img.GetSize(), (11, 7, 5))
+
+        img = sitk.GetImageFromArray(arr[2:,:,::3])
+        self.assertEqual(img.GetSize(), (4, 7, 3))
+
+    def test_image_from_native_type(self):
+        """Test converting from native numpy scalar types to SimpleITK """
+        for ntype in ('byte','ubyte','short','ushort','intc', 'uintc', 'uint', 'longlong', 'ulonglong'):
+            arr = np.zeros([ 4, 5], dtype=np.dtype(ntype))
+            img = sitk.GetImageFromArray(arr)
+            self.assertEqual(img.GetSize(), (5, 4))
 
     def test_legacy(self):
       """Test SimpleITK Image to numpy array."""

@@ -7,7 +7,7 @@ if ( NOT SimpleITK_LUA_EXECUTABLE )
   get_property( SAVE_LUA_EXECUTABLE_DOCSTRING CACHE LUA_EXECUTABLE PROPERTY HELPSTRING )
   unset(LUA_EXECUTABLE CACHE)
 
-  find_package( LuaInterp 5.3  REQUIRED )
+  find_package( LuaInterp 5.3...5.4  REQUIRED )
   set( SimpleITK_LUA_EXECUTABLE ${LUA_EXECUTABLE} CACHE PATH "Lua executable used for code generation." )
 
   if (DEFINED SAVE_LUA_EXECUTABLE)
@@ -48,8 +48,8 @@ if( SITK_LUA_VERSION_RESULT_VARIABLE
       OR
     NOT ${SimpleITK_LUA_EXECUTABLE_VERSION} VERSION_GREATER "5.2"
       OR
-    NOT ${SimpleITK_LUA_EXECUTABLE_VERSION} VERSION_LESS "5.4" )
-  message(SEND_ERROR "Lua version 5.3 is required for SimpleITK_LUA_EXECUTABLE_VERSION.")
+    NOT ${SimpleITK_LUA_EXECUTABLE_VERSION} VERSION_LESS "5.5" )
+  message(SEND_ERROR "Lua version between 5.3 and 5.4 is required for SimpleITK_LUA_EXECUTABLE_VERSION.")
 endif()
 
 # Sets "out_var" variable name to the value in the json path specified
@@ -167,8 +167,8 @@ function( expand_template FILENAME input_dir output_dir library_name )
   set ( IMAGE_FILTER_LIST ${IMAGE_FILTER_LIST} ${FILENAME} CACHE INTERNAL "" )
 
   # validate json files if python is available
-  if ( PYTHON_EXECUTABLE AND NOT PYTHON_VERSION_STRING VERSION_LESS 2.6 )
-    set ( JSON_VALIDATE_COMMAND COMMAND "${PYTHON_EXECUTABLE}" "${SimpleITK_SOURCE_DIR}/Utilities/JSON/JSONValidate.py" "${input_json_file}" )
+  if ( Python_EXECUTABLE AND NOT Python_VERSION_STRING VERSION_LESS 2.6 )
+    set ( JSON_VALIDATE_COMMAND COMMAND "${Python_EXECUTABLE}" "${SimpleITK_SOURCE_DIR}/Utilities/JSON/JSONValidate.py" "${input_json_file}" )
   endif ()
 
   # header
@@ -194,8 +194,7 @@ function( expand_template FILENAME input_dir output_dir library_name )
     "${output_cxx}" CACHE INTERNAL "" )
 
   if (NOT "${itk_module}" STREQUAL "")
-    list(APPEND ${library_name}GeneratedSource_${itk_module}  ${output_cxx} )
-    set(${library_name}GeneratedSource_${itk_module} ${${library_name}GeneratedSource_${itk_module}} CACHE INTERNAL "")
+    cache_list_append(${library_name}GeneratedSource_${itk_module}  ${output_cxx} )
   endif()
 
 

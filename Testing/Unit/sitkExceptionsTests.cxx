@@ -77,7 +77,7 @@ TEST_F(sitkExceptionsTest, Test3) {
   itk::simple::GenericException e3( e2 );
 
 
-  // asignment
+  // assignment
   e0 = e2;
   e0 = e1;
   e0 = empty;
@@ -108,4 +108,22 @@ TEST_F(sitkExceptionsTest, Test3) {
   EXPECT_NO_THROW( empty.GetLine() );
   EXPECT_NO_THROW( empty.what() );
 
+}
+
+
+TEST_F(sitkExceptionsTest, TestDestructionAfterAssignment) {
+
+    // Test that the program does not crash when two GenericException
+    // variables get destructed (automatically, by getting out of scope),
+    // when one of them is assigned to the other. (Such a crash might occur
+    // with previous versions of SimpleITK, version <= v2.2rc3.)
+
+    const itk::simple::GenericException source(__FILE__, __LINE__);
+    itk::simple::GenericException target;
+
+    target = source;
+
+    // After assignment, the variables should compare equal, but moreover,
+    // when they get out of scope, their destructors should not crash.
+    EXPECT_EQ(target, source);
 }

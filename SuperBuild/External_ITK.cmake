@@ -23,7 +23,17 @@ if(NOT DEFINED Module_SimpleITKFilters)
   set(Module_SimpleITKFilters ON)
 endif()
 
-# set(Module_SimpleITKFilters_GIT_TAG c8c42430626f0123e7ec401c17c72c7d5ce82669 )
+if (NOT DEFINED Module_ITKIOTransformMINC)
+  set(Module_ITKIOTransformMINC ON)
+endif()
+
+if (NOT DEFINED Module_GenericLabelInterpolator)
+  set(Module_GenericLabelInterpolator ON)
+endif()
+
+if (NOT DEFINED ITK_DEFAULT_THREADER)
+  set( ITK_DEFAULT_THREADER "Platform")
+endif()
 
 get_cmake_property( _varNames VARIABLES )
 
@@ -33,6 +43,7 @@ foreach (_varName ${_varNames})
       OR _varName MATCHES "^ITKV4"
       OR _varName MATCHES "FFTW"
       OR _varName MATCHES "^GDCM_"
+      OR _varName MATCHES "^NIFTI_"
       OR _varName MATCHES "^Module_"
       OR _varName STREQUAL "TBB_DIR")
     message( STATUS "Passing variable \"${_varName}=${${_varName}}\" to ITK external project.")
@@ -41,7 +52,7 @@ foreach (_varName ${_varNames})
 endforeach()
 
 list(APPEND ITK_VARS
-  PYTHON_EXECUTABLE
+  Python_EXECUTABLE
   )
 
 VariableListToCache( ITK_VARS  ep_itk_cache )
@@ -51,11 +62,12 @@ VariableListToArgs( ITK_VARS  ep_itk_args )
 set(proj ITK)  ## Use ITK convention of calling it ITK
 
 
-set(ITK_GIT_REPOSITORY "${git_protocol}://github.com/HongdaZ/ITK.git" CACHE STRING "URL of ITK Git repository")
+set(ITK_GIT_REPOSITORY "${git_protocol}://github.com/InsightSoftwareConsortium/ITK.git" CACHE STRING "URL of ITK Git repository")
 mark_as_advanced(ITK_GIT_REPOSITORY)
 sitk_legacy_naming(ITK_GIT_REPOSITORY ITK_REPOSITORY)
 
-set(_DEFAULT_ITK_GIT_TAG "f5d004fa3607b8e11edc30f1ba299df35af8aff8")
+# Along 5.3.0 release branch
+set(_DEFAULT_ITK_GIT_TAG "fc8ee74bde4669d5688dc5114b99790bd711c814")
 set(ITK_GIT_TAG "${_DEFAULT_ITK_GIT_TAG}" CACHE STRING "Tag in ITK git repo")
 mark_as_advanced(ITK_GIT_TAG)
 set(ITK_TAG_COMMAND GIT_TAG "${ITK_GIT_TAG}")
@@ -76,11 +88,11 @@ else()
     "-DITK_TEMPLATE_VISIBILITY_DEFAULT:BOOL=OFF" )
 endif()
 
-
-if( ITK_GIT_TAG STREQUAL _DEFAULT_ITK_GIT_TAG )
-  # Unable to use ITK_LEGACY_REMOVE due to change in the enum types.
-  # list( APPEND ep_itk_args "-DITK_LEGACY_REMOVE:BOOL=ON" )
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+  list( APPEND ep_itk_args "-DCMAKE_CXX_STANDARD:STRING=17")
 endif()
+
+list( APPEND ep_itk_args "-DITK_LEGACY_REMOVE:BOOL=ON" )
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${proj}-build/CMakeCacheInit.txt" "${ep_itk_cache}\n${ep_common_cache}" )
 
@@ -108,7 +120,7 @@ ExternalProject_Add(${proj}
   -DITK_INSTALL_PACKAGE_DIR=lib/cmake/ITK
   BUILD_COMMAND ${BUILD_COMMAND_STRING}
   DEPENDS
-    ${ITK_DEPENDENCIES}
+    ${${proj}_DEPENDENCIES}
   ${External_Project_USES_TERMINAL}
   )
 

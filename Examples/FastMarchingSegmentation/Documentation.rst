@@ -39,6 +39,55 @@ segmented object. A graphical interface can be constructed to show the
 contour propagation over time, enabling a user to select a the desired
 segmentation.
 
+Example Run
+-----------
+
+Running the Python code with the following inputs:
+
+``main('BrainProtonDensitySlice.png', 'fastMarchingOutput.mha', 81 114 1.0 -0.5 3.0 100 110)``
+
+produces the input & output images below.
+
+.. exec_code::
+    :hide_output:
+
+    # --- hide: start ---
+    from example_utils import run_example, save_image
+    args = ['../images/BrainProtonDensitySlice.png',
+            'fastMarchingOutput.mha',
+            81, 114, 1.0, -0.5, 3.0, 100, 110,
+           ]
+    return_dict = run_example('FastMarchingSegmentation', 'main', args)
+    for key, value in return_dict.items():
+        save_image(value, f"FastMarchingSegmentation_{key}", is_label= "Segmentation"==key)
+
+    # --- hide: stop ---
+
+Input/Output Images
+^^^^^^^^^^^^^^^^^^^
+
+.. figure:: ../images/FastMarchingSegmentation_InputImage.png
+   :scale: 100%
+
+   **Input Image**
+
+
+.. figure:: ../images/FastMarchingSegmentation_SpeedImage.png
+   :scale: 100%
+
+   **Speed Image**
+
+
+.. figure:: ../images/FastMarchingSegmentation_TimeCrossingMap.png
+   :scale: 100%
+
+   **Time Crossing Map**
+
+.. figure:: ../images/FastMarchingSegmentation_Segmentation.png
+   :scale: 100%
+
+   **Final Segmentation**
+
 Code
 ----
 
@@ -54,7 +103,7 @@ Code
 
     .. literalinclude:: ../../Examples/FastMarchingSegmentation/FastMarchingSegmentation.cxx
        :language: C++
-       :lines: 1,19-
+       :lines: 19-
 
   .. tab:: Python
 

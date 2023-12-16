@@ -38,7 +38,7 @@
 %rename( __GetPixelAsVectorFloat32__ ) itk::simple::Image::GetPixelAsVectorFloat32;
 %rename( __GetPixelAsVectorFloat64__ ) itk::simple::Image::GetPixelAsVectorFloat64;
 %rename( __GetPixelAsComplexFloat32__ ) itk::simple::Image::GetPixelAsComplexFloat32;
-%rename( __GetPixelAsComplexFloat64__ ) itk::simple::Image::GetPixelAsComplextFloat64;
+%rename( __GetPixelAsComplexFloat64__ ) itk::simple::Image::GetPixelAsComplexFloat64;
 
 %rename( __SetPixelAsInt8__ ) itk::simple::Image::SetPixelAsInt8;
 %rename( __SetPixelAsUInt8__ ) itk::simple::Image::SetPixelAsUInt8;
@@ -63,6 +63,8 @@
 %rename( __SetPixelAsComplexFloat32__ ) itk::simple::Image::SetPixelAsComplexFloat32;
 %rename( __SetPixelAsComplexFloat64__ ) itk::simple::Image::SetPixelAsComplextFloat64;
 
+%rename( __EvaluateAtContinuousIndex__ ) itk::simple::Image::EvaluateAtContinuousIndex;
+%rename( __EvaluateAtPhysicalPoint__ ) itk::simple::Image::EvaluateAtPhysicalPoint;
 
 %pythoncode %{
    import operator
@@ -74,99 +76,140 @@
 
         Image __iadd__ ( const Image &i )
         {
-          return (*$self) += i;
+          return *$self += i;
         }
         Image __iadd__ ( double c )
         {
-          return (*$self) += c;
+          return *$self += c;
         }
         Image __isub__ ( const Image &i )
         {
-          return (*$self) -= i;
+          return *$self -= i;
         }
         Image __isub__ ( double c )
         {
-          return (*$self) -= c;
+          return *$self -= c;
         }
         Image __imul__ ( const Image &i )
         {
-          return (*$self) *=  i;
+          return *$self *=  i;
         }
         Image __imul__ ( double c )
         {
-          return (*$self) *=  c;
+          return *$self *=  c;
         }
         Image __imod__ ( const Image &i )
         {
-          return (*$self) %=  i;
+          return *$self %=  i;
         }
         Image __imod__ ( int c )
         {
-          return (*$self) %=  c;
+          return *$self %=  c;
         }
 
 
 
         Image __ifloordiv__ ( const Image &i )
         {
-          return ((*$self) = DivideFloor(std::move(*$self), i));
+          DivideFloor($self->ProxyForInPlaceOperation(), i);
+          return *$self;
         }
         Image __ifloordiv__ ( double c )
         {
-          return ((*$self) = DivideFloor(std::move(*$self), c));
+          DivideFloor($self->ProxyForInPlaceOperation(), c);
+          return *$self;
         }
         Image __itruediv__ ( const Image &i )
         {
-          return ((*$self) = DivideReal(std::move(*$self), i));
+          DivideReal($self->ProxyForInPlaceOperation(), i);
+          return *$self;
         }
         Image __itruediv__ ( double c )
         {
-          return ((*$self) = DivideReal(std::move(*$self), c));
+          DivideReal($self->ProxyForInPlaceOperation(), c);
+          return *$self;
         }
 
 
         Image __ipow__ ( const Image &i )
         {
-          return ((*$self) = Pow(std::move(*$self), i));
+          Pow($self->ProxyForInPlaceOperation(), i);
+          return *$self;
         }
         Image __ipow__ ( double c)
         {
-          return ((*$self) = Pow(std::move(*$self), c));
+          Pow($self->ProxyForInPlaceOperation(), c);
+          return *$self;
         }
 
 
         Image __ior__ ( const Image &i )
         {
-          return (*$self) |=  i;
+          return *$self |=  i;
         }
         Image __ior__ ( int c )
         {
-          return (*$self) |=  c;
+          return *$self |=  c;
         }
         Image __ixor__ ( const Image &i )
         {
-          return (*$self) ^=  i;
+          return *$self ^=  i;
         }
         Image __ixor__ ( int c )
         {
-          return (*$self) ^=  c;
+          return *$self ^=  c;
         }
         Image __iand__ ( const Image &i )
         {
-          return (*$self) &=  i;
+          return *$self &=  i;
         }
         Image __iand__ ( int c )
         {
-          return (*$self) &=  c;
+          return *$self &=  c;
         }
         // A wrapper for performing the paste operation in place
         Image __ipaste(const Image & sourceImage,
                    std::vector< unsigned int > sourceSize,
                    std::vector< int > sourceIndex,
-                   std::vector< int > destinationIndex)
+                   std::vector< int > destinationIndex,
+                   std::vector< bool > destinationSkipAxes)
         {
-          return (*$self) = itk::simple::Paste(std::move(*$self), sourceImage, sourceSize, sourceIndex, destinationIndex);
+        itk::simple::PasteImageFilter paster;
+        paster.SetSourceSize(std::move(sourceSize));
+        paster.SetSourceIndex(std::move(sourceIndex));
+        paster.SetDestinationIndex(std::move(destinationIndex));
+        paster.SetDestinationSkipAxes(std::move(destinationSkipAxes));
+        paster.Execute($self->ProxyForInPlaceOperation(), sourceImage);
+        return *$self;
         }
+        Image __ipaste(double constant,
+                   std::vector< unsigned int > sourceSize,
+                   std::vector< int > sourceIndex,
+                   std::vector< int > destinationIndex,
+                   std::vector< bool > destinationSkipAxes)
+        {
+        itk::simple::PasteImageFilter paster;
+        paster.SetSourceSize(std::move(sourceSize));
+        paster.SetSourceIndex(std::move(sourceIndex));
+        paster.SetDestinationIndex(std::move(destinationIndex));
+        paster.SetDestinationSkipAxes(std::move(destinationSkipAxes));
+        paster.Execute($self->ProxyForInPlaceOperation(), constant);
+        return *$self;
+        }
+        Image __imasked_assign(const Image &mask,  const Image &assign)
+        {
+          itk::simple::MaskedAssignImageFilter ma;
+          ma.Execute($self->ProxyForInPlaceOperation(), mask, assign);
+          return *$self;
+        }
+        Image __imasked_assign(const Image &mask,  double constant)
+        {
+          itk::simple::MaskedAssignImageFilter ma;
+          ma.SetAssignConstant(constant);
+          ma.Execute($self->ProxyForInPlaceOperation(), mask);
+          return *$self;
+        }
+
 
 
         %pythoncode %{
@@ -452,8 +495,45 @@
 
         # set/get pixel methods
 
+        def __delitem__( self, key ):
+            """Remove an item from the meta-data dictionary.
+
+            It is an exception to delete the "origin", "spacing" and "direction" reserved keys.
+
+            If the key does not exist in the dictionary no action or exception occours.
+            """
+            if not isinstance(key, str):
+              raise TypeError("MetaData dictionary key must be str")
+            if key in [ 'origin', 'spacing', 'direction' ]:
+              raise KeyError(f"'{key} is read-only")
+            return self.EraseMetaData( key )
+
+
+        def __contains__( self, key ):
+            """Test if key is contained in the meta-data dictionary.
+            """
+            if not isinstance(key, str):
+              raise TypeError("MetaData dictionary key must be str")
+            return key in [ 'origin', 'spacing', 'direction' ] or self.HasMetaDataKey( key )
+
+        def _expand_ellipsis(self, idx):
+            """Expand "..." in idx with slice(None) to fill to dimension."""
+            if Ellipsis in idx:
+              if idx.count(Ellipsis) > 1:
+                raise IndexError("an index can only have one ellipses ('...')")
+              nidx = []
+              for i in range(len(idx)):
+                if idx[i] is Ellipsis:
+                  dim = self.GetDimension()
+                  nidx.extend( [slice(None)]*(dim - len(idx) + 1) )
+                else:
+                  nidx.append(idx[i])
+              return tuple(nidx)
+            return tuple(idx)
+
+
         def __getitem__( self, idx ):
-            """ Get an pixel value or a sliced image.
+            """ Get an pixel value, a sliced image, or a metadata item
 
             This operator implements basic indexing where idx is
             arguments or a squence of integers the same dimension as
@@ -474,7 +554,27 @@
             When an index element is an integer, that dimension is
             collapsed extracting an image with reduced dimensionality.
             The minimum dimension of an image which can be extracted
-            is 2D."""
+            is 2D.
+
+            If indexing with a string, then the metadata dictionary
+            queried with the index as the key. If the metadata dictionary
+            does not contain the key, a KeyError will occour.
+            """
+
+            if isinstance(idx, str):
+              if idx == 'origin':
+                return self.GetOrigin()
+              elif idx == 'spacing':
+                return self.GetSpacing()
+              elif idx == 'direction':
+                return self.GetDirection()
+              else:
+                try:
+                  return self.GetMetaData(idx)
+                except RuntimeError as e:
+                    if not self.HasMetaDataKey( idx ):
+                      raise KeyError(f"\"{idx}\" not in meta-data dictionary")
+                    raise e
 
             if sys.version_info[0] < 3:
               def isint( i ):
@@ -487,16 +587,22 @@
             size = self.GetSize()
 
             try:
-              if (len(idx) < dim):
-                # if the argument tuple has fewer elements then the dimension of the image then extend to match that of the image
-                idx = tuple(idx) + (slice(None),)*(dim-len(idx))
-            except TypeError:
+              len(idx)
+            except TypeError as e:
               # if the len function did not work then, assume is a
-              # non-iterable, and make it a single element in a tuple.
-              idx = (idx,) + (slice(None),)*(dim-1)
+              # non-iterable, and make it a single element then an ...
+              if idx == Ellipsis:
+                idx = (Ellipsis,)
+              else:
+                idx = (idx, Ellipsis)
 
-            if (len(idx) > dim):
-               raise IndexError("too many indices for image")
+            if len(idx) > dim + (Ellipsis in idx):
+              raise IndexError("too many indices for image")
+            if (len(idx) < dim) and Ellipsis not in idx:
+              # if the argument tuple has fewer elements then the dimension of the image then extend to match that of the image
+              idx = tuple(idx) + (Ellipsis,)
+
+            idx = self._expand_ellipsis(idx)
 
             # All the indices are integers just return GetPixel value
             if all( isint(i) for i in idx ):
@@ -566,12 +672,39 @@
             The dimension of idx must match that of the image.
 
             If all indices are integers then rvalue should be a pixel value
-            ( scalar or sequence for vector pixels). Value is assigned pixel.
+            ( scalar or sequence for vector pixels). The value is assigned to
+            the pixel.
 
-            If all indices are slice indices then, rvalue should be an image
-            of matching size, dimension and type as the image and region. This
-            image's pixel are then assigned the rvalue image with the paste filter.
+            If idx is an image, it is considered a binary mask of 0s and non-zeros.
+            The pixels corresponding to the non-zeros of the mask are assigned
+            values. If rvalue is a scalar constant the scalar value is assigned to
+            the pixel. If rvalue is an image then the corresponding pixel is
+            assigned. All images involved in the operation must have congruent
+            geometry.
+
+            If the indices are slices or integers then, the PasteImageFilter is
+            used to assign values to this image. The rvalue can be an image
+            or a scalar constant value. When rvalue is an image it must be of
+            the same pixel type and equal or lesser dimension than self. The
+            region defined by idx and rvalue's size must be compatible. The
+            region defined by idx will collapse one sized idx dimensions when it
+            does not match the rvalue image's size.
             """
+
+            if isinstance(idx, str):
+              if idx == 'origin':
+                return self.SetOrigin(rvalue)
+              elif idx == 'spacing':
+                return self.SetSpacing(rvalue)
+              elif idx == 'direction':
+                return self.SetDirection(rvalue)
+              else:
+                if not isinstance(rvalue, str):
+                  raise TypeError("metadata item must be a string")
+                return self.SetMetaData(idx, rvalue)
+
+            if isinstance(idx, Image):
+               return self.__imasked_assign(idx, rvalue)
 
             if sys.version_info[0] < 3:
               def isint( i ):
@@ -583,14 +716,27 @@
             dim = self.GetDimension()
             size = self.GetSize()
 
-            if (len(idx) > dim):
+            try:
+              len(idx)
+            except TypeError as e:
+              # if the len function did not work then, assume is a
+              # non-iterable, and make it a single element then an ...
+              if idx == Ellipsis:
+                idx = (Ellipsis,)
+              else:
+                idx = (idx, Ellipsis)
+
+            if len(idx) > dim + (Ellipsis in idx):
               raise IndexError("too many indices for image")
-            elif len(idx) != dim:
-              raise IndexError("only {0} indices, not {1} as expected".format(len(idx), dim))
+            if (len(idx) < dim) and Ellipsis not in idx:
+              # if the argument tuple has fewer elements then the dimension of the image then extend to match that of the image
+              idx = tuple(idx) + (Ellipsis,)
+
+            idx = self._expand_ellipsis(idx)
 
             # All the indices are integers use SetPixel
             if all( isint(i) for i in idx ):
-              # if any of the arguments are negative integers subract them for the size
+              # if any of the arguments are negative integers subract them from the size
               idx = [idx[i] if idx[i] >= 0 else (size[i] + idx[i]) for i in range(len(idx))]
 
               for i in range(len(idx)):
@@ -599,21 +745,47 @@
 
               return self.SetPixel(*(tuple(idx)+(rvalue,)))
 
+            for i in range(len(idx)):
+              if type(idx[i]) is slice:
+                continue
+              elif isint(idx[i]):
+                s = idx[i]
+                if s < 0:
+                  s += size[i]
+                if s < 0 or s >= size[i]:
+                  raise IndexError("index {0} is outside the extent for dimension {1} with size {2}".format( idx[i], i, size[i]))
+
+                idx = tuple(idx[:i]) + (slice(s, s+1),)+ tuple(idx[i+1:])
+
             if all( type(i) is slice for i in idx ):
               sidx = [ idx[i].indices(size[i]) for i in range(len(idx ))]
 
               (start, stop, step) = zip(*sidx)
               size = [ e-b for b, e in zip(start, stop) ]
-              sourceSize = rvalue.GetSize()
+              try:
+                sourceSize = rvalue.GetSize()
+              except AttributeError:
+                sourceSize = size
 
               for i in range(dim):
                 if step[i] != 1:
                   raise IndexError("step {0} is not 1 for dimension {1}".format(step[i], i))
 
-              if not all( [ size[i] == sourceSize[i] for i in range(dim)] ):
-                raise IndexError("can not paste source with size {0} into destination with size {1}".format(size, sourceSize))
+              skipAxes = [False] * dim
 
-              return self.__ipaste( rvalue, sourceSize=size, sourceIndex=[0]*dim, destinationIndex=start)
+              s = 0;
+              for i in range(dim):
+
+                if size[i] == 1 and (len(sourceSize) <= s or sourceSize[s] != size[i]):
+                  skipAxes[i] = True
+                  continue
+
+                if len(sourceSize) <= s  or sourceSize[s] != size[i]:
+                  raise IndexError("cannot paste source with size {0} into destination with size {1}".format(size, sourceSize))
+                s += 1
+
+              size = [ sz for sz,skip  in zip(size, skipAxes) if not skip ]
+              return self.__ipaste( rvalue, size, [0]*len(size), start, skipAxes)
 
             # the index parameter was an invalid set of objects
             raise IndexError("invalid index with types: {0}".format([type(i) for i in idx]))
@@ -747,6 +919,76 @@
 
           raise Exception("unknown pixel type")
 
+        @staticmethod
+        def _tuple_to_py_type(v, pixelID):
+          if pixelID in (sitkComplexFloat32, sitkComplexFloat64):
+              return complex(*v)
+          elif pixelID in (sitkVectorUInt8, sitkVectorInt8,
+                           sitkVectorUInt16, sitkVectorInt16,
+                           sitkVectorUInt32, sitkVectorInt32,
+                           sitkVectorUInt64, sitkVectorInt64,
+                           sitkVectorFloat32, sitkVectorFloat64):
+              return v
+          elif pixelID in (sitkUInt8, sitkInt8,
+                           sitkUInt16, sitkInt16,
+                           sitkUInt32, sitkInt32,
+                           sitkUInt64, sitkInt64,
+                           sitkFloat32, sitkFloat64,
+                           sitkLabelUInt8,
+                           sitkLabelUInt16,
+                           sitkLabelUInt32,
+                           sitkLabelUInt64):
+            assert(len(v)==1)
+            return v[0]
+          else:
+            raise ValueError(f"pixelID of {pixelID} is not supported.")
+
+        def EvaluateAtContinuousIndex(self, index, interp = sitkLinear):
+          """Interpolate pixel value at a continuous index.
+
+          This method is not supported for Label pixel types.
+
+          The valid range of continuous index is [-0.5, size-0.5] for each dimension. An exception is thrown if index is out of bounds.
+
+          Parameters
+          ----------
+          index
+            The continuous index must be at least the length of the image dimension.
+          interp
+            The interpolation type to use, only sitkNearest and sitkLinear are supported for Vector and Complex pixel types.
+
+          Returns
+          -------
+            The results will be of type float, complex, or an tuple of float of vectors.
+
+          """
+
+          r = self.__EvaluateAtContinuousIndex__(index, interp)
+
+          return self._tuple_to_py_type(r, self.GetPixelIDValue())
+
+        def EvaluateAtPhysicalPoint(self, point, interp = sitkLinear):
+          """ Interpolate pixel value at a physical point.
+
+          This method is not supported for Label pixel types.
+
+          An exception is thrown if the point is out of the defined region for the image.
+
+          Parameters
+          ----------
+          point
+            The physical point at which the interpolation is computed.
+          interp
+            The interpolation type to use, only sitkNearest and sitkLinear are supported for Vector and Complex pixel types.
+
+          Returns
+          -------
+            The results will be of type float, complex, or an tuple of float of vectors.
+          """
+
+          r = self.__EvaluateAtPhysicalPoint__(point, interp)
+
+          return self._tuple_to_py_type(r, self.GetPixelIDValue())
 
          %}
 

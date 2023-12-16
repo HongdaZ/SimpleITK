@@ -16,12 +16,44 @@
 #
 # ========================================================================
 
-from .SimpleITK import *
-from .SimpleITK import _GetMemoryViewFromImage
-from .SimpleITK import _SetImageFromArray
+from pathlib import Path
+from SimpleITK.SimpleITK import *
+from SimpleITK.SimpleITK import _GetMemoryViewFromImage
+from SimpleITK.SimpleITK import _SetImageFromArray
+
+from typing import Iterable, List, Optional, Type, Union, Tuple
 
 
-def Resample(image1, *args, **kwargs):
+PathType = Union[str, Path, Iterable[str], Iterable[Path]]
+
+
+def MinimumMaximum(
+        image: Image
+) -> Tuple[float, float]:
+    """
+    Computes the minimum and the maximum intensity values of an image.
+
+    This is a custom overloaded python method, which returns the minimum and maximum measurements as a tuple.
+
+    Also See
+    --------
+      itk::simple::MinimumMaximumImageFilter for the object-oriented interface
+
+     :param image:
+     :return:
+     """
+    f = MinimumMaximumImageFilter()
+    f.Execute(image)
+    return f.GetMinimum(), f.GetMaximum()
+
+
+def Resample(
+    image1: Image,
+    *args,
+    referenceImage: Optional[Image] = None,
+    size: Optional[int] = None,
+    **kwargs,
+) -> Image:
     """
      Resample ( Image image1,
                 Transform transform = itk::simple::Transform(),
@@ -99,14 +131,15 @@ def Resample(image1, *args, **kwargs):
         if not isinstance(args[0], Transform):
             try:
                 iter(args[0])
-                return _r(*args, **kwargs)
-            except TypeError as e:
+            except TypeError:
                 pass
+            else:
+                return _r(*args, **kwargs)
 
-    if "referenceImage" in kwargs:
-        return _r_image(*args, **kwargs)
-    if "size" in kwargs:
-        return _r(*args, **kwargs)
+    if referenceImage is not None:
+        return _r_image(referenceImage, *args, **kwargs)
+    if size is not None:
+        return _r(size, *args, **kwargs)
 
     return _r_image(image1, *args, **kwargs)
 
@@ -118,13 +151,15 @@ except ImportError:
     HAVE_NUMPY = False
 
 
-def _get_numpy_dtype(sitkImage):
+def _get_numpy_dtype(sitkImage: Image) -> Type["numpy.number"]:
     """Given a SimpleITK image, returns the numpy.dtype which describes the data"""
 
     if not HAVE_NUMPY:
         raise ImportError('Numpy not available.')
 
-    # this is a mapping from sitk's pixel id to numpy's dtype
+    np = numpy
+
+    # this is a mapping from sitk's pixel id to numpy's scalar types
     _sitk_np = {sitkUInt8: numpy.uint8,
                 sitkUInt16: numpy.uint16,
                 sitkUInt32: numpy.uint32,
@@ -150,76 +185,71 @@ def _get_numpy_dtype(sitkImage):
                 sitkLabelUInt8: numpy.uint8,
                 sitkLabelUInt16: numpy.uint16,
                 sitkLabelUInt32: numpy.uint32,
-                sitkLabelUInt64: numpy.uint64
+                sitkLabelUInt64: numpy.uint64,
                 }
 
     return _sitk_np[sitkImage.GetPixelIDValue()]
 
 
-def _get_sitk_pixelid(numpy_array_type):
+def _get_sitk_pixelid(numpy_array_type: Type["numpy.ndarray"]) -> int:
     """Returns a SimpleITK PixelID given a numpy array."""
 
     if not HAVE_NUMPY:
         raise ImportError('Numpy not available.')
 
-    # This is a Mapping from numpy array types to sitks pixel types.
-    _np_sitk = {numpy.character: sitkUInt8,
-                numpy.uint8: sitkUInt8,
-                numpy.uint16: sitkUInt16,
-                numpy.uint32: sitkUInt32,
-                numpy.uint64: sitkUInt64,
-                numpy.int8: sitkInt8,
-                numpy.int16: sitkInt16,
-                numpy.int32: sitkInt32,
-                numpy.int64: sitkInt64,
-                numpy.float32: sitkFloat32,
-                numpy.float64: sitkFloat64,
-                numpy.complex64: sitkComplexFloat32,
-                numpy.complex128: sitkComplexFloat64
-                }
+    np = numpy
 
+    # This is a Mapping from numpy dtypes to sitk's pixel types.
+    _np_sitk = {np.dtype(np.uint8): sitkUInt8,
+                np.dtype(np.uint16): sitkUInt16,
+                np.dtype(np.uint32): sitkUInt32,
+                np.dtype(np.uint64): sitkUInt64,
+                np.dtype(np.int8): sitkInt8,
+                np.dtype(np.int16): sitkInt16,
+                np.dtype(np.int32): sitkInt32,
+                np.dtype(np.int64): sitkInt64,
+                np.dtype(np.float32): sitkFloat32,
+                np.dtype(np.float64): sitkFloat64,
+                np.dtype(np.complex64): sitkComplexFloat32,
+                np.dtype(np.complex128): sitkComplexFloat64
+                }
     try:
         return _np_sitk[numpy_array_type.dtype]
     except KeyError:
-        for key in _np_sitk:
-            if numpy.issubdtype(numpy_array_type.dtype, key):
-                return _np_sitk[key]
         raise TypeError('dtype: {0} is not supported.'.format(numpy_array_type.dtype))
 
 
-def _get_sitk_vector_pixelid(numpy_array_type):
+def _get_sitk_vector_pixelid(numpy_array_type: Type["numpy.ndarray"]) -> int:
     """Returns a SimpleITK vector PixelID given a numpy array."""
 
     if not HAVE_NUMPY:
         raise ImportError('Numpy not available.')
 
-    # This is a Mapping from numpy array types to sitks pixel types.
-    _np_sitk = {numpy.character: sitkVectorUInt8,
-                numpy.uint8: sitkVectorUInt8,
-                numpy.uint16: sitkVectorUInt16,
-                numpy.uint32: sitkVectorUInt32,
-                numpy.uint64: sitkVectorUInt64,
-                numpy.int8: sitkVectorInt8,
-                numpy.int16: sitkVectorInt16,
-                numpy.int32: sitkVectorInt32,
-                numpy.int64: sitkVectorInt64,
-                numpy.float32: sitkVectorFloat32,
-                numpy.float64: sitkVectorFloat64,
+    np = numpy
+
+    # This is a Mapping from numpy dtypes to sitk's pixel types.
+    _np_sitk = {np.dtype(np.uint8): sitkVectorUInt8,
+                np.dtype(np.uint16): sitkVectorUInt16,
+                np.dtype(np.uint32): sitkVectorUInt32,
+                np.dtype(np.uint64): sitkVectorUInt64,
+                np.dtype(np.int8): sitkVectorInt8,
+                np.dtype(np.int16): sitkVectorInt16,
+                np.dtype(np.int32): sitkVectorInt32,
+                np.dtype(np.int64): sitkVectorInt64,
+                np.dtype(np.float32): sitkVectorFloat32,
+                np.dtype(np.float64): sitkVectorFloat64,
 
                 }
 
     try:
         return _np_sitk[numpy_array_type.dtype]
     except KeyError:
-        for key in _np_sitk:
-            if numpy.issubdtype(numpy_array_type.dtype, key):
-                return _np_sitk[key]
         raise TypeError('dtype: {0} is not supported as an array.'.format(numpy_array_type.dtype))
 
 
 # SimplyITK <-> Numpy Array conversion support.
 
-def GetArrayViewFromImage(image):
+def GetArrayViewFromImage(image: Image) -> "numpy.ndarray":
     """Get a NumPy ndarray view of a SimpleITK Image.
 
     Returns a Numpy ndarray object as a "view" of the SimpleITK's Image buffer. This reduces pixel buffer copies, but
@@ -241,13 +271,13 @@ def GetArrayViewFromImage(image):
     image.MakeUnique()
 
     image_memory_view = _GetMemoryViewFromImage(image)
-    array_view = numpy.asarray(image_memory_view).view(dtype = dtype)
+    array_view = numpy.asarray(image_memory_view).view(dtype=dtype)
     array_view.shape = shape[::-1]
 
     return array_view
 
 
-def GetArrayFromImage(image):
+def GetArrayFromImage(image: Image) -> "numpy.ndarray":
     """Get a NumPy ndarray from a SimpleITK Image.
 
     This is a deep copy of the image buffer and is completely safe and without potential side effects.
@@ -260,7 +290,7 @@ def GetArrayFromImage(image):
     return numpy.array(array_view, copy=True)
 
 
-def GetImageFromArray(arr, isVector=None):
+def GetImageFromArray(arr: "numpy.ndarray", isVector: Optional[bool] = None) -> Image:
     """ Get a SimpleITK Image from a numpy array.
 
      If isVector is True, then the Image will have a Vector pixel type, and the last dimension of the array will be
@@ -274,8 +304,8 @@ def GetImageFromArray(arr, isVector=None):
     z = numpy.asarray(arr)
 
     if isVector is None:
-      if z.ndim == 4 and z.dtype != numpy.complex64 and z.dtype != numpy.complex128:
-          isVector = True
+        if z.ndim == 4 and z.dtype != numpy.complex64 and z.dtype != numpy.complex128:
+            isVector = True
 
     if isVector:
         id = _get_sitk_vector_pixelid(z)
@@ -293,9 +323,163 @@ def GetImageFromArray(arr, isVector=None):
     # SimpleITK throws an exception if the image dimension is not supported
     img = Image(shape, id, number_of_components)
 
-    _SetImageFromArray(z.tostring(), img)
+    _SetImageFromArray(z, img)
 
     return img
 
 
-__all__ = ["Resample", "GetArrayViewFromImage", "GetArrayFromImage", "GetImageFromArray"]
+def ReadImage(
+    fileName: PathType,
+    outputPixelType: int = sitkUnknown,
+    imageIO: str = "",
+) -> Image:
+    r"""ReadImage is a procedural interface to the ImageFileReader class which is convenient for most image reading
+     tasks.
+
+    This method can read a single image or a list of images into a volume.
+
+    Parameters
+    ----------
+    fileName
+     A single or a list of file names. the filename of an Image e.g. "cthead.mha"
+    outputPixelType
+     The pixel type of the returned Image. By default the value is sitkUnknown, which enable the output pixel type to
+     be same as the file. If the pixel type is specified then the itk::ConvertPixelBuffer will be used to convert the
+     pixels.
+    imageIO
+     The name of the ITK ImageIO to use to read the file. An option to override the automatically detected ImageIO used
+     to read the image. The available ImageIOs are listed by the GetRegisteredImageIOs method. If the ImageIO can not
+     be constructed an exception will be generated. If the ImageIO can not read the file an exception will be
+     generated.
+
+    Returns
+    -------
+     The provided image file name(s) read into an Image.
+
+    Also See
+    --------
+     itk::simple::ImageFileReader for reading a single file.
+     itk::simple::ImageSeriesReader for reading a series and meta-data dictionaries.
+
+    """
+
+    if isinstance(fileName, (str, Path)):
+        reader = ImageFileReader()
+        reader.SetFileName(str(fileName))
+    else:
+        reader = ImageSeriesReader()
+        reader.SetFileNames([str(name) for name in fileName])
+
+    reader.SetImageIO(imageIO)
+    reader.SetOutputPixelType(outputPixelType)
+    return reader.Execute()
+
+
+def WriteImage(
+    image: Image,
+    fileName: PathType,
+    useCompression: bool = False,
+    compressionLevel: int = -1,
+    *,
+    imageIO: str = "",
+    compressor: str = "",
+) -> None:
+    r"""
+    WriteImage is a procedural interface to the ImageFileWriter and ImageSeriesWriter classes which is convenient for
+    many image writing tasks.
+
+    For an input image of N dimensions, a series of N-1 dimensional (slices) images can be written by providing a list
+    if file names equal to the number of slices in the input image.
+
+    Parameters
+    ----------
+    image
+     the input image to be written
+    fileName
+     a single or a list of file names to be written
+    useCompression
+     request to compress the written file
+    compressionLevel
+     a hint for the amount of compression to be applied during writing
+    imageIO
+     the name of the ImageIO to perform the writing
+    compressor
+     a hint for the compression algorithm to use
+
+    Also See
+    --------
+     itk::simple::ImageFileWriter for writing a single file.
+     itk::simple::ImageSeriesWriter for writing a series of files
+    """
+    if isinstance(fileName, (str, Path)):
+        writer = ImageFileWriter()
+        writer.SetFileName(str(fileName))
+    else:
+        writer = ImageSeriesWriter()
+        writer.SetFileNames([str(name) for name in fileName])
+
+    writer.SetUseCompression(useCompression)
+    writer.SetCompressionLevel(compressionLevel)
+    writer.SetImageIO(imageIO)
+    writer.SetCompressor(compressor)
+    return writer.Execute(image)
+
+
+def SmoothingRecursiveGaussian(
+    image1: Image,
+    sigma: List[float] = [1]*3,
+    normalizeAcrossScale: bool = False,
+) -> Image:
+    """Computes the smoothing of an image by convolution with
+    the Gaussian kernels implemented as IIR filters.
+
+    This function directly calls the execute method of SmoothingRecursiveGaussianImageFilter
+    in order to support a procedural API.
+
+    Also See
+    --------
+      itk::simple::SmoothingRecursiveGaussianImageFilter for the object oriented interface
+    """
+
+    f = SmoothingRecursiveGaussianImageFilter()
+    f.SetSigma(sigma)
+    f.SetNormalizeAcrossScale(normalizeAcrossScale)
+    return f.Execute(image1)
+
+
+def DiscreteGaussian(
+    image1: Image,
+    variance: List[float] = [1] * 3,
+    maximumKernelWidth: int = 32,
+    maximumError: float = 0.01,
+    useImageSpacing: bool = True,
+) -> Image:
+    """Blurs an image by separable convolution with discrete
+     gaussian kernels. This filter performs Gaussian blurring by
+     separable convolution of an image and a discrete Gaussian
+     operator (kernel).
+
+     This function directly calls the execute method of DiscreteGaussianImageFilter
+     in order to support a procedural API.
+
+    Also See
+    --------
+      \sa itk::simple::DiscreteGaussianImageFilter for the object oriented interface
+    """
+    f = DiscreteGaussianImageFilter()
+    f.SetVariance(variance)
+    f.SetMaximumKernelWidth(maximumKernelWidth)
+    f.SetMaximumError(maximumError)
+    f.SetUseImageSpacing(useImageSpacing)
+    return f.Execute(image1)
+
+
+__all__ = ["MinimumMaximum",
+           "Resample",
+           "GetArrayViewFromImage",
+           "GetArrayFromImage",
+           "GetImageFromArray",
+           "ReadImage",
+           "WriteImage",
+           "SmoothingRecursiveGaussian",
+           "DiscreteGaussian"]

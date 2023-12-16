@@ -30,15 +30,15 @@ writeSlices <- function(series_tag_values, new_img, out_dir, i) {
       function(tag_index){image_slice$SetMetaData(series_tag_values[tag_index, 1], series_tag_values[tag_index, 2])})
 
     # Slice specific tags.
-    image_slice$SetMetaData("0008|0012", format(Sys.time(), "%H%M%S")) # Instance Creation Date
-    image_slice$SetMetaData("0008|0013", format(Sys.time(), "%Y%m%d")) # Instance Creation Time
+    image_slice$SetMetaData("0008|0012", format(Sys.time(), "%Y%m%d")) # Instance Creation Date
+    image_slice$SetMetaData("0008|0013", format(Sys.time(), "%H%M%S")) # Instance Creation Time
 
     # Setting the type to CT preserves the slice location.
     image_slice$SetMetaData("0008|0060", "CT")  # set the type to CT so the thickness is carried over
 
     # (0020, 0032) image position patient determines the 3D spacing between slices.
     image_slice$SetMetaData("0020|0032", paste(new_img$TransformIndexToPhysicalPoint(c(0,0,i)), collapse='\\')) # Image Position (Patient)
-    image_slice$SetMetaData("0020,0013", i-1) # Instance Number
+    image_slice$SetMetaData("0020|0013", i-1) # Instance Number
 
     # Write to the output directory and add the extension dcm, to force writing in DICOM format.
     writer$SetFileName(file.path(out_dir, paste(i-1, '.dcm', sep="")))
@@ -67,7 +67,7 @@ new_img$SetSpacing(c(2.5,3.5,4.5))
 
 # Write the 3D image as a series
 # IMPORTANT: There are many DICOM tags that need to be updated when you modify an
-#            original image. This is a delicate opration and requires knowlege of
+#            original image. This is a delicate operation and requires knowlege of
 #            the DICOM standard. This example only modifies some. For a more complete
 #            list of tags that need to be modified see:
 #                           http://gdcm.sourceforge.net/wiki/index.php/Writing_DICOM

@@ -40,6 +40,17 @@ namespace itk {
      * Once the image series is read the meta-data is directly
      * accessible from the reader.
      *
+     * \note If the pixel type for the returned image is not specified
+     * it is deduced from the first image in the series. This approach
+     * is computationally efficient and assumes that all images in a
+     * series have the same pixel type. In rare situations this is not
+     * the case, not all images have the same pixel type.
+     * If this leads to a narrowing conversion (e.g. first image pixel
+     * type is unsigned int and others are float) the returned
+     * image does not represent the data correctly. To resolve such
+     * situations, explicitly specify the expected pixel type via the
+     * SetOutputPixelType method before reading the series.
+     *
      * \sa itk::simple::ReadImage for the procedural interface
      **/
     class SITKIO_EXPORT ImageSeriesReader
@@ -88,7 +99,10 @@ namespace itk {
        * \param seriesID          Set the name that identifies a
        * particular series. Default value is an empty string which
        * will return the file names associated with the first series
-       * found in the directory.
+       * found in the directory. If the parameter value was obtained
+       * from a call to GDCMSeriesIDs, the value of the
+       * useSeriesDetails parameter must be the same here and in the
+       * call to GDCMSeriesIDs.
        * \param useSeriesDetails  Use additional series information
        * such as ProtocolName and SeriesName to identify when a single
        * SeriesUID contains multiple 3D volumes - as can occur with
@@ -106,9 +120,15 @@ namespace itk {
       /** \brief Get all the seriesIDs from a DICOM data set
        *
        * \param directory  The directory that contains the DICOM data set
+       * \param useSeriesDetails  Use additional series information
+       * such as ProtocolName and SeriesName to identify when a single
+       * SeriesUID contains multiple 3D volumes - as can occur with
+       * perfusion and DTI imaging. The parameter value must match the
+       * value used in the call to GDCMSeriesFileNames.
        * \sa itk::GDCMSeriesFileNames
        **/
-      static std::vector<std::string> GetGDCMSeriesIDs( const std::string &directory );
+      static std::vector<std::string> GetGDCMSeriesIDs( const std::string &directory,
+                                                        bool useSeriesDetails = false );
 
       SITK_RETURN_SELF_TYPE_HEADER SetFileNames ( const std::vector<std::string> &fileNames );
       const std::vector<std::string> &GetFileNames() const;
@@ -180,12 +200,19 @@ namespace itk {
    *  \param fileNames a vector of file names
    *  \param outputPixelType see ImageReaderBase::SetOutputPixelType
    *  \param imageIO see ImageReaderBase::SetImageIO
-
-   *     Note that when reading a series of images that have meta-data
-   *     associated with them (e.g. a DICOM series) the resulting
-   *     image will have an empty meta-data dictionary.
-   *     If you need the meta-data dictionaries associated with each
-   *     slice then you should use the ImageSeriesReader class.
+   *
+   *  \note When reading a series of images that have meta-data
+   *  associated with them (e.g. a DICOM series) the resulting
+   *  image will have an empty meta-data dictionary.
+   *  If you need the meta-data dictionaries associated with each
+   *  slice then you should use the ImageSeriesReader class.
+   *
+   *  \note If the pixel type for the returned image is not specified
+   *  it is deduced from the first image in the series. This approach
+   *  is computationally efficient and assumes that all images in a
+   *  series have the same pixel type. If this is not the case,
+   *  explicitly specify the widest pixel type in the series as the
+   *  outputPixelType.
    *
    * \sa itk::simple::ImageFileReader for reading a single file.
    * \sa itk::simple::ImageSeriesReader for reading a series and meta-data dictionaries.

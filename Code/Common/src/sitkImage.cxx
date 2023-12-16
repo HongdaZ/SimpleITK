@@ -23,6 +23,7 @@
 #include "sitkExceptionObject.h"
 #include "sitkPimpleImageBase.h"
 #include "sitkPixelIDTypeLists.h"
+#include "sitkConditional.h"
 
 #include <utility>
 
@@ -32,16 +33,20 @@ namespace itk
   namespace simple
   {
 
-  Image::~Image( )
-  {
-    delete this->m_PimpleImage;
-    this->m_PimpleImage = nullptr;
-  }
+  Image::~Image( ) = default;
 
   Image::Image( )
-    : m_PimpleImage( nullptr )
   {
     Allocate ( {0, 0}, sitkUInt8, 1 );
+  }
+
+  Image::Image( std::unique_ptr<PimpleImageBase> pimpleImage )
+  : m_PimpleImage( std::move(pimpleImage) )
+  {
+      if (!this->m_PimpleImage)
+      {
+          sitkExceptionMacro("Invalid nullptr pimpleImage.");
+      }
   }
 
   Image::Image( const Image &img )
@@ -50,9 +55,10 @@ namespace itk
   }
 
   Image::Image( Image && img ) noexcept
-  : m_PimpleImage( img.m_PimpleImage )
+    : m_PimpleImage( std::move(img.m_PimpleImage) )
   {
-    img.m_PimpleImage = nullptr;
+      img.m_PimpleImage = nullptr;
+      img.Allocate({0, 0}, this->GetPixelID(), this->GetNumberOfComponentsPerPixel());
   }
 
   Image& Image::operator=( const Image &img )
@@ -68,21 +74,30 @@ namespace itk
   }
 
     Image::Image( unsigned int Width, unsigned int Height, PixelIDValueEnum ValueEnum )
-      : m_PimpleImage( nullptr )
     {
       Allocate ( {Width, Height}, ValueEnum, 0 );
     }
 
     Image::Image( unsigned int Width, unsigned int Height, unsigned int Depth, PixelIDValueEnum ValueEnum )
-      : m_PimpleImage( nullptr )
     {
       Allocate ( {Width, Height, Depth}, ValueEnum, 0 );
     }
 
     Image::Image( const std::vector< unsigned int > &size, PixelIDValueEnum ValueEnum, unsigned int numberOfComponents )
-      : m_PimpleImage( nullptr )
     {
       Allocate( size, ValueEnum, numberOfComponents );
+    }
+
+
+    Image Image::ProxyForInPlaceOperation()
+    {
+        if ( m_PimpleImage ) {
+            this->MakeUnique();
+            auto proxy =m_PimpleImage->ProxyCopy();
+            assert(proxy);
+            return Image(std::move(proxy));
+        }
+        return Image();
     }
 
     itk::DataObject* Image::GetITKBase( )
@@ -139,6 +154,63 @@ namespace itk
       return this->m_PimpleImage->GetNumberOfPixels();
     }
 
+  unsigned int Image::GetSizeOfPixelComponent( ) const
+    {
+    switch( this->GetPixelIDValue() )
+      {
+      case ConditionalValue< sitkVectorUInt8 != sitkUnknown, sitkVectorUInt8, -14 >::Value:
+      case ConditionalValue< sitkUInt8 != sitkUnknown, sitkUInt8, -2 >::Value:
+        return sizeof( uint8_t );
+        break;
+      case ConditionalValue< sitkVectorInt8 != sitkUnknown, sitkVectorInt8, -15 >::Value:
+      case ConditionalValue< sitkInt8 != sitkUnknown, sitkInt8, -3 >::Value:
+        return sizeof( int8_t );
+        break;
+      case ConditionalValue< sitkVectorUInt16 != sitkUnknown, sitkVectorUInt16, -16 >::Value:
+      case ConditionalValue< sitkUInt16 != sitkUnknown, sitkUInt16, -4 >::Value:
+        return sizeof( uint16_t );
+        break;
+      case ConditionalValue< sitkVectorInt16 != sitkUnknown, sitkVectorInt16, -17 >::Value:
+      case ConditionalValue< sitkInt16 != sitkUnknown, sitkInt16, -5 >::Value:
+        return sizeof( int16_t );
+        break;
+      case ConditionalValue< sitkVectorUInt32 != sitkUnknown, sitkVectorUInt32, -18 >::Value:
+      case ConditionalValue< sitkUInt32 != sitkUnknown, sitkUInt32, -6 >::Value:
+        return sizeof( uint32_t );
+        break;
+      case ConditionalValue< sitkVectorInt32 != sitkUnknown, sitkVectorInt32, -19 >::Value:
+      case ConditionalValue< sitkInt32 != sitkUnknown, sitkInt32, -7 >::Value:
+        return sizeof( int32_t );
+        break;
+      case ConditionalValue< sitkVectorUInt64 != sitkUnknown, sitkVectorUInt64, -20 >::Value:
+      case ConditionalValue< sitkUInt64 != sitkUnknown, sitkUInt64, -8 >::Value:
+        return sizeof( uint64_t );
+        break;
+      case ConditionalValue< sitkVectorInt64 != sitkUnknown, sitkVectorInt64, -21 >::Value:
+      case ConditionalValue< sitkInt64 != sitkUnknown, sitkInt64, -9 >::Value:
+        return sizeof( int64_t );
+        break;
+      case ConditionalValue< sitkVectorFloat32 != sitkUnknown, sitkVectorFloat32, -22 >::Value:
+      case ConditionalValue< sitkFloat32 != sitkUnknown, sitkFloat32, -10 >::Value:
+        return sizeof( float );
+        break;
+      case ConditionalValue< sitkVectorFloat64 != sitkUnknown, sitkVectorFloat64, -23 >::Value:
+      case ConditionalValue< sitkFloat64 != sitkUnknown, sitkFloat64, -11 >::Value:
+        return sizeof( double );
+        break;
+      case ConditionalValue< sitkComplexFloat32 != sitkUnknown, sitkComplexFloat32, -12 >::Value:
+        return 2*sizeof( float );
+        break;
+      case ConditionalValue< sitkComplexFloat64 != sitkUnknown, sitkComplexFloat64, -13 >::Value:
+        return 2*sizeof( double );
+        break;
+      case sitkUnknown:
+      default:
+        return 0;
+      }
+    }
+
+
     std::string Image::GetPixelIDTypeAsString( ) const
     {
       return std::string( GetPixelIDValueAsString( this->GetPixelIDValue() ) );
@@ -149,6 +221,7 @@ namespace itk
       assert( m_PimpleImage );
       return this->m_PimpleImage->ToString();
     }
+
 
     std::vector< unsigned int > Image::GetSize( ) const
     {
@@ -310,6 +383,18 @@ namespace itk
     {
       assert( m_PimpleImage );
       return this->m_PimpleImage->TransformContinuousIndexToPhysicalPoint( idx );
+    }
+
+    std::vector<double> Image::EvaluateAtContinuousIndex( const std::vector<double> &index, InterpolatorEnum interp) const
+    {
+      assert( m_PimpleImage );
+      return this->m_PimpleImage->EvaluateAtContinuousIndex(index, interp);
+    }
+    std::vector<double> Image::EvaluateAtPhysicalPoint( const std::vector<double> &point, InterpolatorEnum interp) const
+    {
+      assert( m_PimpleImage );
+      const std::vector<double> index = this->TransformPhysicalPointToContinuousIndex(point);
+      return this->EvaluateAtContinuousIndex(index, interp);
     }
 
     int8_t Image::GetPixelAsInt8( const std::vector<uint32_t> &idx) const
@@ -747,10 +832,7 @@ namespace itk
       assert( m_PimpleImage );
       if ( this->m_PimpleImage->GetReferenceCountOfImage() > 1 )
         {
-        // note: care is take here to be exception safe with memory allocation
-        std::unique_ptr<PimpleImageBase> temp( this->m_PimpleImage->DeepCopy() );
-        delete this->m_PimpleImage;
-        this->m_PimpleImage = temp.release();
+        this->m_PimpleImage = this->m_PimpleImage->DeepCopy();
         }
 
     }

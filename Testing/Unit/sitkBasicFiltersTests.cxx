@@ -53,7 +53,12 @@
 #include <sitkCommand.h>
 #include <sitkResampleImageFilter.h>
 #include <sitkSignedMaurerDistanceMapImageFilter.h>
+#include <sitkSignedDanielssonDistanceMapImageFilter.h>
 #include <sitkDICOMOrientImageFilter.h>
+#include <sitkPasteImageFilter.h>
+#include <sitkN4BiasFieldCorrectionImageFilter.h>
+#include <sitkMaskImageFilter.h>
+#include <sitkLogger.h>
 
 #include "itkVectorImage.h"
 #include "itkVector.h"
@@ -87,7 +92,7 @@
 TEST(BasicFilter,FastSymmetricForcesDemonsRegistrationFilter_ENUMCHECK) {
   using ImageType = itk::Image<float,3>;
   using DisplacementType = itk::Image<itk::Vector<float,3>,3>;
-  using ITKType = itk::FastSymmetricForcesDemonsRegistrationFilter<ImageType,ImageType,DisplacementType>::DemonsRegistrationFunctionType;
+  using ITKType = itk::FastSymmetricForcesDemonsRegistrationFilter<ImageType,ImageType,DisplacementType>::GradientType;
 
   EXPECT_EQ( (int)ITKType::Symmetric, (int)itk::simple::FastSymmetricForcesDemonsRegistrationFilter::Symmetric);
   EXPECT_EQ( (int)ITKType::Fixed, (int)itk::simple::FastSymmetricForcesDemonsRegistrationFilter::Fixed);
@@ -99,7 +104,7 @@ TEST(BasicFilter,FastSymmetricForcesDemonsRegistrationFilter_ENUMCHECK) {
 TEST(BasicFilter,DiffeomorphicDemonsRegistrationFilter_ENUMCHECK) {
   using ImageType = itk::Image<float,3>;
   using DisplacementType = itk::Image<itk::Vector<float,3>,3>;
-  using ITKType = itk::DiffeomorphicDemonsRegistrationFilter<ImageType,ImageType,DisplacementType>::DemonsRegistrationFunctionType;
+  using ITKType = itk::DiffeomorphicDemonsRegistrationFilter<ImageType,ImageType,DisplacementType>::GradientType;
 
   EXPECT_EQ( (int)ITKType::Symmetric, (int)itk::simple::DiffeomorphicDemonsRegistrationFilter::Symmetric);
   EXPECT_EQ( (int)ITKType::Fixed, (int)itk::simple::DiffeomorphicDemonsRegistrationFilter::Fixed);
@@ -108,36 +113,34 @@ TEST(BasicFilter,DiffeomorphicDemonsRegistrationFilter_ENUMCHECK) {
 }
 
 TEST(BasicFilters,MergeLabelMap_ENUMCHECK) {
-  using ITKType = itk::MergeLabelMapFilter< itk::LabelMap< itk::LabelObject<int, 3> > >;
-  EXPECT_EQ( (int)ITKType::MethodChoice::KEEP, (int)itk::simple::MergeLabelMapFilter::Keep);
-  EXPECT_EQ( (int)ITKType::MethodChoice::AGGREGATE, (int)itk::simple::MergeLabelMapFilter::Aggregate);
-  EXPECT_EQ( (int)ITKType::MethodChoice::PACK, (int)itk::simple::MergeLabelMapFilter::Pack);
-  EXPECT_EQ( (int)ITKType::MethodChoice::STRICT, (int)itk::simple::MergeLabelMapFilter::Strict);
+  EXPECT_EQ( (int)itk::ChoiceMethodEnum::KEEP, (int)itk::simple::MergeLabelMapFilter::Keep);
+  EXPECT_EQ( (int)itk::ChoiceMethodEnum::AGGREGATE, (int)itk::simple::MergeLabelMapFilter::Aggregate);
+  EXPECT_EQ( (int)itk::ChoiceMethodEnum::PACK, (int)itk::simple::MergeLabelMapFilter::Pack);
+  EXPECT_EQ( (int)itk::ChoiceMethodEnum::STRICT, (int)itk::simple::MergeLabelMapFilter::Strict);
 }
 
 TEST(BasicFilters,ScalarToRGBColormap_ENUMCHECK) {
   using ITKType = itk::ScalarToRGBColormapImageFilter< itk::Image<float,3>, itk::Image< itk::RGBPixel<float>,3> >;
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Red, (int)itk::simple::ScalarToRGBColormapImageFilter::Red);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Green, (int)itk::simple::ScalarToRGBColormapImageFilter::Green);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Blue, (int)itk::simple::ScalarToRGBColormapImageFilter::Blue);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Grey, (int)itk::simple::ScalarToRGBColormapImageFilter::Grey);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Hot, (int)itk::simple::ScalarToRGBColormapImageFilter::Hot);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Cool, (int)itk::simple::ScalarToRGBColormapImageFilter::Cool);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Spring, (int)itk::simple::ScalarToRGBColormapImageFilter::Spring);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Summer, (int)itk::simple::ScalarToRGBColormapImageFilter::Summer);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Autumn, (int)itk::simple::ScalarToRGBColormapImageFilter::Autumn);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Winter, (int)itk::simple::ScalarToRGBColormapImageFilter::Winter);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Copper, (int)itk::simple::ScalarToRGBColormapImageFilter::Copper);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::Jet, (int)itk::simple::ScalarToRGBColormapImageFilter::Jet);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::HSV, (int)itk::simple::ScalarToRGBColormapImageFilter::HSV);
-  EXPECT_EQ( (int)ITKType::ColormapEnumType::OverUnder, (int)itk::simple::ScalarToRGBColormapImageFilter::OverUnder);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum ::Red, (int)itk::simple::ScalarToRGBColormapImageFilter::Red);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Green, (int)itk::simple::ScalarToRGBColormapImageFilter::Green);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Blue, (int)itk::simple::ScalarToRGBColormapImageFilter::Blue);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Grey, (int)itk::simple::ScalarToRGBColormapImageFilter::Grey);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Hot, (int)itk::simple::ScalarToRGBColormapImageFilter::Hot);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Cool, (int)itk::simple::ScalarToRGBColormapImageFilter::Cool);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Spring, (int)itk::simple::ScalarToRGBColormapImageFilter::Spring);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Summer, (int)itk::simple::ScalarToRGBColormapImageFilter::Summer);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Autumn, (int)itk::simple::ScalarToRGBColormapImageFilter::Autumn);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Winter, (int)itk::simple::ScalarToRGBColormapImageFilter::Winter);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Copper, (int)itk::simple::ScalarToRGBColormapImageFilter::Copper);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::Jet, (int)itk::simple::ScalarToRGBColormapImageFilter::Jet);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::HSV, (int)itk::simple::ScalarToRGBColormapImageFilter::HSV);
+  EXPECT_EQ( (int)ITKType::RGBColormapFilterEnum::OverUnder, (int)itk::simple::ScalarToRGBColormapImageFilter::OverUnder);
 }
 
 TEST(BasicFilters,RecursiveGaussian_ENUMCHECK) {
-  using ITKRecursiveGausianType = itk::RecursiveGaussianImageFilter< itk::Image<float,3> >;
-  EXPECT_EQ( (int)ITKRecursiveGausianType::OrderEnumType::ZeroOrder, (int)itk::simple::RecursiveGaussianImageFilter::ZeroOrder );
-  EXPECT_EQ( (int)ITKRecursiveGausianType::OrderEnumType::FirstOrder, (int)itk::simple::RecursiveGaussianImageFilter::FirstOrder );
-  EXPECT_EQ( (int)ITKRecursiveGausianType::OrderEnumType::SecondOrder, (int)itk::simple::RecursiveGaussianImageFilter::SecondOrder );
+  EXPECT_EQ( (int)itk::GaussianOrderEnum::ZeroOrder, (int)itk::simple::RecursiveGaussianImageFilter::ZeroOrder );
+  EXPECT_EQ( (int)itk::GaussianOrderEnum::FirstOrder, (int)itk::simple::RecursiveGaussianImageFilter::FirstOrder );
+  EXPECT_EQ( (int)itk::GaussianOrderEnum::SecondOrder, (int)itk::simple::RecursiveGaussianImageFilter::SecondOrder );
 }
 
 TEST(BasicFilters,Extract_ENUMCHECK) {
@@ -150,9 +153,9 @@ TEST(BasicFilters,Extract_ENUMCHECK) {
 
 TEST(BasicFilters,FastMarching_ENUMCHECK) {
   using ITKType = itk::FastMarchingImageFilterBase< itk::Image<float,3>, itk::Image<float,3> >;
-  EXPECT_EQ( (int) ITKType::Nothing, (int) itk::simple::FastMarchingBaseImageFilter::Nothing );
-  EXPECT_EQ( (int) ITKType::NoHandles, (int) itk::simple::FastMarchingBaseImageFilter::NoHandles );
-  EXPECT_EQ( (int) ITKType::Strict, (int) itk::simple::FastMarchingBaseImageFilter::Strict );
+  EXPECT_EQ( (int) ITKType::TopologyCheckEnum::Nothing, (int) itk::simple::FastMarchingBaseImageFilter::Nothing );
+  EXPECT_EQ( (int) ITKType::TopologyCheckEnum::NoHandles, (int) itk::simple::FastMarchingBaseImageFilter::NoHandles );
+  EXPECT_EQ( (int) ITKType::TopologyCheckEnum::Strict, (int) itk::simple::FastMarchingBaseImageFilter::Strict );
 }
 
 TEST(BasicFilters,InverseDeconvolution_ENUMCHECK) {
@@ -205,18 +208,59 @@ TEST(BasicFilters,LabelMapContourOverlay_ENUMCHECK) {
 
 TEST(BasicFilters,PatchBasedBaseDenoising_ENUMCHECK) {
   using ITKType = itk::PatchBasedDenoisingImageFilter< itk::Image<float,3>, itk::Image<float,3> >;
-  EXPECT_EQ( (int) ITKType::NOMODEL, (int) itk::simple::PatchBasedDenoisingImageFilter::NOMODEL );
-  EXPECT_EQ( (int) ITKType::GAUSSIAN, (int) itk::simple::PatchBasedDenoisingImageFilter::GAUSSIAN );
-  EXPECT_EQ( (int) ITKType::RICIAN, (int) itk::simple::PatchBasedDenoisingImageFilter::RICIAN );
-  EXPECT_EQ( (int) ITKType::POISSON, (int) itk::simple::PatchBasedDenoisingImageFilter::POISSON );
+  EXPECT_EQ( (int) ITKType::NoiseModelEnum::NOMODEL, (int) itk::simple::PatchBasedDenoisingImageFilter::NOMODEL );
+  EXPECT_EQ( (int) ITKType::NoiseModelEnum::GAUSSIAN, (int) itk::simple::PatchBasedDenoisingImageFilter::GAUSSIAN );
+  EXPECT_EQ( (int) ITKType::NoiseModelEnum::RICIAN, (int) itk::simple::PatchBasedDenoisingImageFilter::RICIAN );
+  EXPECT_EQ( (int) ITKType::NoiseModelEnum::POISSON, (int) itk::simple::PatchBasedDenoisingImageFilter::POISSON );
 }
 
 
 TEST(BasicFilters,ConnectedThreshold_ENUMCHECK) {
   using ITKType = itk::ConnectedThresholdImageFilter< itk::Image<float,3>, itk::Image<float,3> >;
-  EXPECT_EQ( (int) ITKType::FaceConnectivity, (int) itk::simple::ConnectedThresholdImageFilter::FaceConnectivity );
-  EXPECT_EQ( (int) ITKType::FullConnectivity, (int) itk::simple::ConnectedThresholdImageFilter::FullConnectivity );
+  EXPECT_EQ( (int) ITKType::ConnectivityEnum::FaceConnectivity, (int) itk::simple::ConnectedThresholdImageFilter::FaceConnectivity );
+  EXPECT_EQ( (int) ITKType::ConnectivityEnum::FullConnectivity, (int) itk::simple::ConnectedThresholdImageFilter::FullConnectivity );
 }
+
+TEST(BasicFilters,MaskImageFilter_deprecated_1)
+{
+  // test deprecated support for pixel types in the mask image filter
+
+  namespace sitk = itk::simple;
+
+  MockLogger logger;
+  logger.SetAsGlobalITKLogger();
+
+  EXPECT_TRUE(sitk::TypeListHasPixelIDValue<sitk::IntegerPixelIDTypeList>(sitk::sitkUInt32));
+
+  sitk::Image img({ 100, 100 }, sitk::sitkFloat32);
+  img.SetPixelAsFloat({ 0, 0 }, 99);
+  img.SetPixelAsFloat({ 1, 1 }, 99);
+  sitk::Image mask({ 100, 100 }, sitk::sitkUInt32);
+  mask.SetPixelAsUInt32({ 1, 1 }, 1);
+
+  auto out = sitk::Mask(img, mask);
+  EXPECT_EQ(out.GetPixelID(), sitk::sitkFloat32);
+  EXPECT_EQ(out.GetPixelAsFloat({ 0, 0 }), 0);
+  EXPECT_EQ(out.GetPixelAsFloat({ 0, 1 }), 0);
+  EXPECT_EQ(out.GetPixelAsFloat({ 1, 1 }), 99);
+
+  EXPECT_TRUE(logger.m_DisplayWarningText.str().find("has been deprecated") != std::string::npos );
+
+  logger.Clear();
+
+
+  mask.SetPixelAsUInt32({ 1, 1 }, 255);
+  out = sitk::Mask(img, mask);
+  EXPECT_EQ(out.GetPixelID(), sitk::sitkFloat32);
+  EXPECT_EQ(out.GetPixelAsFloat({ 0, 0 }), 0);
+  EXPECT_EQ(out.GetPixelAsFloat({ 0, 1 }), 0);
+  EXPECT_EQ(out.GetPixelAsFloat({ 1, 1 }), 99);
+
+    EXPECT_TRUE(logger.m_DisplayWarningText.str().find("has been deprecated") != std::string::npos );
+
+}
+
+
 
 TEST(BasicFilter,GradientAnisotropicDiffusion_EstimateOptimalTimeStep) {
   // This test is to check the correctness of the
@@ -343,7 +387,9 @@ TEST(BasicFilters,ProcessObject_NumberOfThreads) {
   sitk::CastImageFilter caster;
   sitk::ProcessObject &filter = caster;
 
-  unsigned int gNum = filter.GetGlobalDefaultNumberOfThreads();
+  const unsigned int gNum = filter.GetGlobalDefaultNumberOfThreads();
+  const unsigned int targetNum = gNum == 13 ? 11 : 13;
+
   EXPECT_NE(filter.GetGlobalDefaultNumberOfThreads(), 0u);
   EXPECT_NE(filter.GetNumberOfThreads(), 0u);
   EXPECT_EQ(filter.GetNumberOfThreads(), filter.GetGlobalDefaultNumberOfThreads());
@@ -352,16 +398,16 @@ TEST(BasicFilters,ProcessObject_NumberOfThreads) {
   EXPECT_EQ(3u, filter.GetNumberOfThreads());
   EXPECT_EQ(gNum, filter.GetGlobalDefaultNumberOfThreads());
 
-  filter.SetGlobalDefaultNumberOfThreads(gNum+1);
-  EXPECT_EQ(gNum+1, filter.GetGlobalDefaultNumberOfThreads());
+  filter.SetGlobalDefaultNumberOfThreads(targetNum);
+  EXPECT_EQ(targetNum, filter.GetGlobalDefaultNumberOfThreads());
   EXPECT_EQ(3u, filter.GetNumberOfThreads());
 
   sitk::CastImageFilter caster2;
-  EXPECT_EQ(gNum+1, caster2.GetNumberOfThreads());
-  EXPECT_EQ(gNum+1, caster2.GetGlobalDefaultNumberOfThreads());
+  EXPECT_EQ(targetNum, caster2.GetNumberOfThreads());
+  EXPECT_EQ(targetNum, caster2.GetGlobalDefaultNumberOfThreads());
 }
 
-TEST(BasicFilters,Cast) {
+TEST(BasicFilters,Cast_Float32) {
   itk::simple::HashImageFilter hasher;
   itk::simple::ImageFileReader reader;
 
@@ -373,36 +419,26 @@ TEST(BasicFilters,Cast) {
 
   EXPECT_EQ ( image.GetPixelIDValue(), itk::simple::sitkFloat32 );
   EXPECT_EQ ( image.GetPixelID(), itk::simple::sitkFloat32 );
-  EXPECT_EQ ( image.GetPixelIDTypeAsString(), "32-bit float" );
+  EXPECT_EQ ( image.GetPixelIDTypeAsString(), itk::simple::GetPixelIDValueAsString (itk::simple::sitkFloat32) );
 
   using MapType = std::map<std::string,itk::simple::PixelIDValueEnum>;
-  MapType mapping;
-  mapping["2f27e9260baeba84fb83dd35de23fa2d"] = itk::simple::sitkUInt8;
-  mapping["2f27e9260baeba84fb83dd35de23fa2d"] = itk::simple::sitkInt8;
-  mapping["a963bd6a755b853103a2d195e01a50d3"] = itk::simple::sitkUInt16;
-  mapping["a963bd6a755b853103a2d195e01a50d3"] = itk::simple::sitkInt16;
-  mapping["6ceea0011178a955b5be2d545d107199"] = itk::simple::sitkUInt32;
-  mapping["6ceea0011178a955b5be2d545d107199"] = itk::simple::sitkInt32;
-  mapping["efa4c3b27349b97b02a64f3d2b5ca9ed"] = itk::simple::sitkUInt64;
-  mapping["efa4c3b27349b97b02a64f3d2b5ca9ed"] = itk::simple::sitkInt64;
-  mapping["3ccccde44efaa3d688a86e94335c1f16"] = itk::simple::sitkFloat32;
-  mapping["ac0228acc17038fd1f1ed28eb2841c73"] = itk::simple::sitkFloat64;
-  mapping["226dabda8fc07f20e2b9e44ca1c83955"] = itk::simple::sitkComplexFloat32;
-  mapping["e92cbb187a92610068d7de0cb23364db"] = itk::simple::sitkComplexFloat64;
-  mapping["2f27e9260baeba84fb83dd35de23fa2d"] = itk::simple::sitkVectorUInt8;
-  mapping["2f27e9260baeba84fb83dd35de23fa2d"] = itk::simple::sitkVectorInt8;
-  mapping["a963bd6a755b853103a2d195e01a50d3"] = itk::simple::sitkVectorUInt16;
-  mapping["a963bd6a755b853103a2d195e01a50d3"] = itk::simple::sitkVectorInt16;
-  mapping["6ceea0011178a955b5be2d545d107199"] = itk::simple::sitkVectorUInt32;
-  mapping["6ceea0011178a955b5be2d545d107199"] = itk::simple::sitkVectorInt32;
-  mapping["efa4c3b27349b97b02a64f3d2b5ca9ed"] = itk::simple::sitkVectorUInt64;
-  mapping["efa4c3b27349b97b02a64f3d2b5ca9ed"] = itk::simple::sitkVectorInt64;
-  mapping["3ccccde44efaa3d688a86e94335c1f16"] = itk::simple::sitkVectorFloat32;
-  mapping["ac0228acc17038fd1f1ed28eb2841c73"] = itk::simple::sitkVectorFloat64;
-  mapping["sitkLabelUInt8"] = itk::simple::sitkLabelUInt8;
-  mapping["sitkLabelUInt16"] = itk::simple::sitkLabelUInt16;
-  mapping["sitkLabelUInt32"] = itk::simple::sitkLabelUInt32;
-  mapping["sitkLabelUInt64"] = itk::simple::sitkLabelUInt64;
+    MapType mapping = {
+            {"a963bd6a755b853103a2d195e01a50d3", itk::simple::sitkInt16},
+            {"6ceea0011178a955b5be2d545d107199", itk::simple::sitkInt32},
+            {"efa4c3b27349b97b02a64f3d2b5ca9ed", itk::simple::sitkInt64},
+            {"3ccccde44efaa3d688a86e94335c1f16", itk::simple::sitkFloat32},
+            {"ac0228acc17038fd1f1ed28eb2841c73", itk::simple::sitkFloat64},
+            {"226dabda8fc07f20e2b9e44ca1c83955", itk::simple::sitkComplexFloat32},
+            {"e92cbb187a92610068d7de0cb23364db", itk::simple::sitkComplexFloat64},
+            {"a963bd6a755b853103a2d195e01a50d3", itk::simple::sitkVectorInt16},
+            {"6ceea0011178a955b5be2d545d107199", itk::simple::sitkVectorInt32},
+            {"efa4c3b27349b97b02a64f3d2b5ca9ed", itk::simple::sitkVectorInt64},
+            {"3ccccde44efaa3d688a86e94335c1f16", itk::simple::sitkVectorFloat32},
+            {"ac0228acc17038fd1f1ed28eb2841c73", itk::simple::sitkVectorFloat64},
+            {"sitkLabelUInt8",                   itk::simple::sitkLabelUInt8},
+            {"sitkLabelUInt16",                  itk::simple::sitkLabelUInt16},
+            {"sitkLabelUInt32",                  itk::simple::sitkLabelUInt32},
+            {"sitkLabelUInt64",                  itk::simple::sitkLabelUInt64}};
 
   bool failed = false;
 
@@ -412,15 +448,11 @@ TEST(BasicFilters,Cast) {
     itk::simple::PixelIDValueEnum pixelID = it->second;
     std::string hash = it->first;
 
-    std::cerr << std::flush;
-    std::cerr << std::flush;
     if ( pixelID == itk::simple::sitkUnknown )
       {
       std::cerr << "Enum value: " << pixelID << " (" << hash << ") is unknown and not instantiated" << std::endl;
       continue;
       }
-
-    std::cerr << "Testing casting to pixelID: " << pixelID << " is " << itk::simple::GetPixelIDValueAsString ( pixelID ) << std::endl;
 
     try
       {
@@ -450,6 +482,93 @@ TEST(BasicFilters,Cast) {
 
   }
   EXPECT_FALSE ( failed ) << "Cast failed, or could not take the hash of the imoge";
+
+}
+
+
+TEST(BasicFilters,Cast_UInt8) {
+    namespace sitk = itk::simple;
+
+    const unsigned int sz = 32;
+    sitk::Image image = sitk::Image( { sz, sz }, sitk::sitkUInt8);
+    for (int i = 0; i < 256; ++i)
+    {
+        image.SetPixelAsUInt8( { i%sz, i/ sz}, i );
+    }
+    ASSERT_NE ( image.GetITKBase(), nullptr );
+
+    sitk::HashImageFilter hasher;
+    hasher.SetHashFunction ( itk::simple::HashImageFilter::MD5 );
+    EXPECT_EQ ( "7307320299fe31c5acc68bbd96853b90", hasher.Execute ( image ) );
+
+    EXPECT_EQ ( image.GetPixelID(), itk::simple::sitkUInt8 );
+    EXPECT_EQ ( image.GetPixelIDTypeAsString(), itk::simple::GetPixelIDValueAsString (itk::simple::sitkUInt8) );
+
+    using MapType = std::map<std::string,itk::simple::PixelIDValueEnum>;
+    MapType mapping = {
+            {"7307320299fe31c5acc68bbd96853b90", itk::simple::sitkUInt8},
+            {"0440cef5008ffc46b069407c32ede2b9", itk::simple::sitkInt16},
+            {"0440cef5008ffc46b069407c32ede2b9", itk::simple::sitkUInt16},
+            {"67fee9288469e62211a32df4c0678475", itk::simple::sitkInt32},
+            {"67fee9288469e62211a32df4c0678475", itk::simple::sitkUInt32},
+            {"e9af40a4213b0f3602b53f1c4c9e4509", itk::simple::sitkInt64},
+            {"e9af40a4213b0f3602b53f1c4c9e4509", itk::simple::sitkUInt64},
+            {"e01ed55964104b42972053f7d24af9b6", itk::simple::sitkFloat32},
+            {"e9af40a4213b0f3602b53f1c4c9e4509", itk::simple::sitkFloat64},
+            {"942a24b7048d8f41c8f7b9309758afdf", itk::simple::sitkComplexFloat32},
+            {"45f73c2c141598301ae9b73231102146", itk::simple::sitkComplexFloat64},
+            {"7307320299fe31c5acc68bbd96853b90", itk::simple::sitkVectorInt8},
+            {"0440cef5008ffc46b069407c32ede2b9", itk::simple::sitkVectorInt16},
+            {"0440cef5008ffc46b069407c32ede2b9", itk::simple::sitkVectorUInt16},
+            {"67fee9288469e62211a32df4c0678475", itk::simple::sitkVectorInt32},
+            {"67fee9288469e62211a32df4c0678475", itk::simple::sitkVectorUInt32},
+            {"e9af40a4213b0f3602b53f1c4c9e4509", itk::simple::sitkVectorInt64},
+            {"e9af40a4213b0f3602b53f1c4c9e4509", itk::simple::sitkVectorUInt64},
+            {"e01ed55964104b42972053f7d24af9b6", itk::simple::sitkVectorFloat32},
+            {"a5aa5992cec72b6a3c15f655f5681a15", itk::simple::sitkVectorFloat64}};
+
+    bool failed = false;
+
+    // Loop over the map, load each file, and compare the hash value
+    for ( auto it = mapping.begin(); it != mapping.end(); ++it )
+    {
+        itk::simple::PixelIDValueEnum pixelID = it->second;
+        std::string hash = it->first;
+
+        if ( pixelID == itk::simple::sitkUnknown )
+        {
+            std::cerr << "Enum value: " << pixelID << " (" << hash << ") is unknown and not instantiated" << std::endl;
+            continue;
+        }
+
+        try
+        {
+            itk::simple::CastImageFilter caster;
+            itk::simple::Image test = caster.SetOutputPixelType ( pixelID ).Execute ( image );
+
+            hasher.SetHashFunction ( itk::simple::HashImageFilter::MD5 );
+            EXPECT_EQ ( hash, hasher.Execute ( test ) ) << "Cast to " << itk::simple::GetPixelIDValueAsString ( pixelID );
+
+        }
+        catch ( ::itk::simple::GenericException &e )
+        {
+
+            // hashing currently doesn't work for label images
+            if ( hash.find( "sitkLabel" ) == 0 )
+            {
+                std::cerr << "Hashing currently is not implemented for Label Images" << std::endl;
+            }
+            else
+            {
+                failed = true;
+                std::cerr << "Failed to hash: " << e.what() << std::endl;
+            }
+
+            continue;
+        }
+
+    }
+    EXPECT_FALSE ( failed ) << "Cast failed, or could not take the hash of the imoge";
 
 }
 
@@ -697,6 +816,10 @@ TEST(BasicFilters,LandmarkBasedTransformInitializer) {
   out = filter.Execute( sitk::VersorRigid3DTransform() );
   EXPECT_VECTOR_DOUBLE_NEAR(v6(0.0, 0.0, 0.0, 0.0, 0.0, 0.0), out.GetParameters(), 1e-15);
 
+
+  out = filter.Execute( sitk::Similarity3DTransform() );
+  EXPECT_VECTOR_DOUBLE_NEAR(v7(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0), out.GetParameters(), 1e-15);
+
   out = filter.Execute( sitk::ScaleVersor3DTransform() );
   EXPECT_VECTOR_DOUBLE_NEAR(v9(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0), out.GetParameters(), 1e-15);
 
@@ -874,6 +997,26 @@ TEST(BasicFilters,SignedMaurerDistanceMap_Abort) {
 
 }
 
+TEST(BasicFilters, SignedDanielssonDistanceMap_Measurements)
+{
+  namespace sitk = itk::simple;
+
+  sitk::Image img;
+  ASSERT_NO_THROW( img = sitk::ReadImage( dataFinder.GetFile ( "Input/2th_cthead1.png" ) ) ) << "Reading input Image.";
+
+  sitk::Image voronoiMap;
+  sitk::Image vectorDistanceMap;
+  {
+  sitk::SignedDanielssonDistanceMapImageFilter filter;
+
+  sitk::Image result = filter.Execute(img);
+
+  voronoiMap = filter.GetVoronoiMap();
+  vectorDistanceMap = filter.GetVectorDistanceMap();
+  EXPECT_EQ(img.GetDimension(), vectorDistanceMap.GetNumberOfComponentsPerPixel());
+  }
+}
+
 TEST(BasicFilters,ResampleImageFilter_AdditionalProcedures)
 {
   namespace sitk = itk::simple;
@@ -917,8 +1060,8 @@ TEST(BasicFilters,ResampleImageFilter_DefaultParameters)
   sitk::Image result = filter.Execute(img);
 
   // Resample with default parameters returns a 0x0 image
-  EXPECT_EQ ( 0, result.GetWidth() );
-  EXPECT_EQ ( 0, result.GetHeight() );
+  EXPECT_EQ ( 0u, result.GetWidth() );
+  EXPECT_EQ ( 0u, result.GetHeight() );
 }
 
 
@@ -1210,3 +1353,112 @@ TEST(BasicFilters, ExtractImageFilter_5D)
 
 }
 #endif
+
+
+TEST(BasicFilters, PasteImageFilter_2D)
+{
+  constexpr uint16_t value = 17;
+
+  namespace sitk = itk::simple;
+  sitk::Image img = sitk::Image({32,32}, sitk::sitkUInt16);
+  sitk::Image simg = sitk::Image({5,5}, sitk::sitkUInt16);
+  simg.SetPixelAsUInt16({1,2}, value);
+
+  sitk::Image output;
+
+  sitk::PasteImageFilter paster;
+
+  paster.SetDestinationIndex({11,13});
+  paster.SetSourceSize(simg.GetSize());
+  output = paster.Execute(img, simg);
+  EXPECT_EQ(value, output.GetPixelAsUInt16({12, 15}));
+  EXPECT_EQ(0, output.GetPixelAsUInt16({1, 2}));
+
+}
+
+TEST(BasicFilters, PasteImageFilter_Constant)
+{
+  constexpr int32_t c = 4321;
+
+  namespace sitk = itk::simple;
+  sitk::Image img = sitk::Image({32,32}, sitk::sitkInt32);
+
+  sitk::PasteImageFilter paster;
+
+  paster.SetDestinationIndex({11,13});
+  paster.SetSourceSize( {5,7});
+  sitk::Image  output = paster.Execute(img, c);
+  EXPECT_EQ(0, output.GetPixelAsInt32({10, 13}));
+  EXPECT_EQ(0, output.GetPixelAsInt32({11, 12}));
+
+  EXPECT_EQ(c, output.GetPixelAsInt32({11, 13}));
+  EXPECT_EQ(c, output.GetPixelAsInt32({15, 13}));
+  EXPECT_EQ(c, output.GetPixelAsInt32({11, 19}));
+
+  EXPECT_EQ(c, output.GetPixelAsInt32({15, 19}));
+
+}
+
+
+TEST(BasicFilters, PasteImageFilter_3D_2D)
+{
+  constexpr uint16_t value = 17;
+
+  namespace sitk = itk::simple;
+  sitk::Image img = sitk::Image({32,32,32}, sitk::sitkUInt16);
+  sitk::Image simg = sitk::Image({5,5}, sitk::sitkUInt16);
+  simg.SetPixelAsUInt16({1,2}, value);
+
+  sitk::Image output;
+
+  sitk::PasteImageFilter paster;
+
+  paster.SetDestinationIndex({11,13, 15});
+  paster.SetSourceSize(simg.GetSize());
+  output = paster.Execute(img, simg);
+  EXPECT_EQ(value, output.GetPixelAsUInt16({12, 15, 15}));
+  EXPECT_EQ(0, output.GetPixelAsUInt16({1, 2, 15}));
+
+  paster.SetDestinationIndex({11,13,15});
+  paster.SetDestinationSkipAxes({true, false, false});
+  paster.SetSourceSize(simg.GetSize());
+  output = paster.Execute(img, simg);
+  EXPECT_EQ(0, output.GetPixelAsUInt16({12, 15, 15}));
+  EXPECT_EQ(value, output.GetPixelAsUInt16({11, 14, 17}));
+
+  paster.SetDestinationIndex({11,13,15});
+  paster.SetDestinationSkipAxes({false, true, false});
+  paster.SetSourceSize(simg.GetSize());
+  output = paster.Execute(img, simg);
+  EXPECT_EQ(0, output.GetPixelAsUInt16({12, 15, 15}));
+  EXPECT_EQ(value, output.GetPixelAsUInt16({12, 13, 17}));
+
+}
+
+TEST(BasicFilters, N4BiasFieldCorrectionImageFilter_GetLogBiasField)
+{
+  namespace sitk = itk::simple;
+  sitk::Image img(100,100, sitk::sitkFloat32);
+
+  sitk::N4BiasFieldCorrectionImageFilter n4;
+
+  // test before execution
+  EXPECT_ANY_THROW(n4.GetLogBiasFieldAsImage(img));
+
+  n4.Execute(img);
+
+  n4.GetLogBiasFieldAsImage(img);
+
+  n4.GetLogBiasFieldAsImage(sitk::Image(15,15, sitk::sitkUInt8));
+  sitk::Image reference(200, 200, sitk::sitkLabelUInt8);
+  reference.SetOrigin( { 1.1, 2.2 } );
+  reference.SetSpacing( { 0.5, 0.4 } );
+  sitk::Image logBiasField = n4.GetLogBiasFieldAsImage(reference);
+
+
+  EXPECT_EQ( reference.GetSize(), logBiasField.GetSize() );
+  EXPECT_VECTOR_DOUBLE_NEAR( reference.GetOrigin(), logBiasField.GetOrigin(), 1e-8 );
+  EXPECT_VECTOR_DOUBLE_NEAR( reference.GetSpacing(), logBiasField.GetSpacing(), 1e-8 );
+  EXPECT_VECTOR_DOUBLE_NEAR( reference.GetDirection(), logBiasField.GetDirection(), 1e-8 );
+
+}

@@ -17,7 +17,6 @@
 #
 # =========================================================================
 
-from __future__ import print_function
 
 import os
 import sys
@@ -36,5 +35,5 @@ image = sitk.SmoothingRecursiveGaussian(image, float(sys.argv[2]))
 
 sitk.WriteImage(sitk.Cast(image, pixelID), sys.argv[3])
 
-if ("SITK_NOSHOW" not in os.environ):
+if "SITK_NOSHOW" not in os.environ:
     sitk.Show(sitk.Cast(image, pixelID), "Simple Gaussian Procedural")

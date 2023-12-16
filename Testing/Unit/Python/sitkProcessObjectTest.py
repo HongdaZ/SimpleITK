@@ -15,7 +15,6 @@
 #   limitations under the License.
 #
 #==========================================================================*/
-from __future__ import print_function
 import sys
 import unittest
 
@@ -44,6 +43,11 @@ class ProcessObjectTest(unittest.TestCase):
         self.assertTrue(issubclass(sitk.BinaryDilateImageFilter,sitk.ProcessObject))
         self.assertTrue(issubclass(sitk.GaussianImageSource,sitk.ProcessObject))
         self.assertTrue(issubclass(sitk.JoinSeriesImageFilter,sitk.ProcessObject))
+
+    def test_ProcessObject_static(self):
+        """Test wrapping of static methods"""
+
+        sitk.ProcessObject.SetGlobalDefaultThreader("PLATFORM")
 
 
     def test_ProcessObject_lambda_Command(self):

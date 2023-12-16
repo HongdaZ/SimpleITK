@@ -24,8 +24,8 @@ if (BUILD_DOXYGEN)
       add_custom_command( OUTPUT "${ITK_DOXYGEN_TAGFILE}"
         COMMAND ${CMAKE_COMMAND} -D "PROJECT_SOURCE_DIR:PATH=${PROJECT_SOURCE_DIR}"
         -D "OUTPUT_PATH:PATH=${PROJECT_BINARY_DIR}/Documentation/Doxygen"
-        -P "${PROJECT_SOURCE_DIR}/Utilities/Doxygen/ITKDoxygenTags.cmake"
-        DEPENDS "${PROJECT_SOURCE_DIR}/Utilities/Doxygen/ITKDoxygenTags.cmake"
+        -P "${CMAKE_CURRENT_LIST_DIR}/ITKDoxygenTags.cmake"
+        DEPENDS "${CMAKE_CURRENT_LIST_DIR}/ITKDoxygenTags.cmake"
         )
     endif()
 
@@ -33,6 +33,10 @@ if (BUILD_DOXYGEN)
     set(DOXYGEN_TAGFILES_PARAMETER "${ITK_DOXYGEN_TAGFILE}=${ITK_DOXYGEN_ROOT_URL}")
 
   endif()
+
+  set(DOXYGEN_MATHJAX_RELPATH
+    "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/"
+    CACHE STRING "The destination or URL to contain the MathJax.js script")
 
   set(SIMPLEITK_DOXYGEN_TAGFILE "${PROJECT_BINARY_DIR}/Utilities/Doxygen/SimpleITKDoxygen.tag")
 
@@ -51,7 +55,7 @@ if (BUILD_DOXYGEN)
     )
 
   add_custom_command( OUTPUT "${PROJECT_BINARY_DIR}/Documentation/Doxygen/FilterCoverage.dox"
-    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Utilities/CSVtoTable.py -d ${PROJECT_SOURCE_DIR}/Utilities/filters.csv ${PROJECT_BINARY_DIR}/Documentation/Doxygen/FilterCoverage.dox
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/Utilities/CSVtoTable.py -d ${PROJECT_SOURCE_DIR}/Utilities/filters.csv ${PROJECT_BINARY_DIR}/Documentation/Doxygen/FilterCoverage.dox
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/Utilities"
     DEPENDS "${PROJECT_SOURCE_DIR}/Utilities/filters.csv" "${PROJECT_SOURCE_DIR}/Utilities/CSVtoTable.py"
     )
@@ -68,6 +72,18 @@ if (BUILD_DOXYGEN)
     ${TAGS_DEPENDS}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/Utilities/Doxygen
     )
+
+  execute_process(COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_LIST_DIR}/datetime.py"
+    RESULT_VARIABLE CMD_RESULT
+    OUTPUT_VARIABLE _DATETIME)
+
+  if (CMD_RESULT)
+    message(FATAL_ERROR "Datetime failed!")
+  endif()
+
+
+  configure_file(${PROJECT_SOURCE_DIR}/Utilities/Doxygen/build_text.js.in
+    "${PROJECT_BINARY_DIR}/Documentation/html/build_text.js")
 
 
 

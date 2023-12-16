@@ -604,6 +604,16 @@ std::string ImageRegistrationMethod::GetOptimizerStopConditionDescription() cons
   return this->m_StopConditionDescription;
 }
 
+bool ImageRegistrationMethod::StopRegistration()
+{
+  if (bool(this->m_pfOptimizerStopRegistration))
+  {
+    this->m_pfOptimizerStopRegistration();
+    return true;
+  }
+  return false;
+}
+
 unsigned int ImageRegistrationMethod::GetOptimizerIteration() const
 {
   if (bool(this->m_pfGetOptimizerIteration))
@@ -764,7 +774,7 @@ Transform ImageRegistrationMethod::Execute ( const Image &fixed, const Image & m
   if ( fixed.GetPixelIDValue() != moving.GetPixelIDValue() )
     {
     sitkExceptionMacro ( << "Fixed and moving images must be the same datatype! Got "
-                         << fixed.GetPixelIDValue() << " and " << moving.GetPixelIDValue() );
+                         << fixed.GetPixelIDTypeAsString() << " and " << moving.GetPixelIDTypeAsString() );
     }
 
   if ( fixed.GetDimension() != moving.GetDimension() )
@@ -868,7 +878,7 @@ Transform ImageRegistrationMethod::ExecuteInternal ( const Image &inFixed, const
   // set sampling
 
   // todo test enum match
-  typename RegistrationType::MetricSamplingStrategyType itkSamplingStrategy = static_cast<typename RegistrationType::MetricSamplingStrategyType>(int(m_MetricSamplingStrategy));
+  typename RegistrationType::MetricSamplingStrategyEnum itkSamplingStrategy = static_cast<typename RegistrationType::MetricSamplingStrategyEnum>(int(m_MetricSamplingStrategy));
   registration->SetMetricSamplingStrategy(itkSamplingStrategy);
 
   if (m_MetricSamplingPercentage.size()==1)
@@ -1209,6 +1219,7 @@ void ImageRegistrationMethod::OnActiveProcessDelete( ) noexcept
   this->m_pfGetMetricNumberOfValidPoints = nullptr;
   this->m_pfGetOptimizerScales = nullptr;
   this->m_pfGetOptimizerStopConditionDescription = nullptr;
+  this->m_pfOptimizerStopRegistration = nullptr;
 
   this->m_pfUpdateWithBestValue = nullptr;
 

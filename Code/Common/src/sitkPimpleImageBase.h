@@ -30,12 +30,12 @@ namespace itk
   /** \class PimpleImageBase
    * \brief Private implementation idiom image base class
    *
-   * We utilize the private implementation ( or PImple)
+   * We utilize the private implementation ( or PImpl)
    * programming idiom to modify the behavior of the simple image
    * class based on the different image types.
    *
    * This class is designed to utilize the trivial copy,
-   * and assgnement operators
+   * and assignment operators
    */
   class SITKCommon_HIDDEN PimpleImageBase
   {
@@ -43,13 +43,15 @@ namespace itk
 
     virtual ~PimpleImageBase( ) = default;
 
+    virtual std::unique_ptr<PimpleImageBase> ProxyCopy() = 0;
+
     virtual PixelIDValueEnum GetPixelID() const = 0;
     virtual unsigned int GetDimension( ) const  = 0;
     virtual uint64_t GetNumberOfPixels( ) const = 0;
     virtual unsigned int GetNumberOfComponentsPerPixel( ) const = 0;
 
-    virtual PimpleImageBase *ShallowCopy() const = 0;
-    virtual PimpleImageBase *DeepCopy() const = 0;
+    virtual std::unique_ptr<PimpleImageBase> ShallowCopy() const = 0;
+    virtual std::unique_ptr<PimpleImageBase> DeepCopy() const = 0;
     virtual itk::DataObject* GetDataBase( ) = 0;
     virtual const itk::DataObject* GetDataBase( ) const = 0;
 
@@ -74,8 +76,9 @@ namespace itk
     virtual std::vector<double> TransformPhysicalPointToContinuousIndex( const std::vector<double> &pt) const = 0;
     virtual std::vector<double> TransformContinuousIndexToPhysicalPoint( const std::vector<double> &idx) const = 0;
 
-    virtual std::string ToString() const = 0;
+    virtual std::vector<double> EvaluateAtContinuousIndex( const std::vector<double> &index, InterpolatorEnum interp) const = 0;
 
+    virtual std::string ToString() const = 0;
 
     virtual int GetReferenceCountOfImage() const = 0;
 

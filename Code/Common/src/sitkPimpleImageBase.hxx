@@ -21,6 +21,8 @@
 #include "sitkPimpleImageBase.h"
 #include "sitkMemberFunctionFactory.h"
 #include "sitkConditional.h"
+#include "sitkCreateInterpolator.hxx"
+#include "sitkImageConvert.hxx"
 
 #include "itkImage.h"
 #include "itkVectorImage.h"
@@ -91,11 +93,40 @@ namespace itk
           }
       }
 
-    PimpleImageBase *ShallowCopy( ) const override { return new Self(this->m_Image.GetPointer()); }
-    PimpleImageBase *DeepCopy( ) const override { return this->DeepCopy<TImageType>(); }
+    std::unique_ptr<PimpleImageBase> ShallowCopy( ) const override
+    {
+      return std::make_unique<Self>(this->m_Image.GetPointer());
+    }
+    std::unique_ptr<PimpleImageBase> DeepCopy( ) const override
+    {
+      return this->DeepCopy<TImageType>();
+    }
+
+    std::unique_ptr<PimpleImageBase> ProxyCopy( ) override { return this->ProxyCopy<TImageType>(); }
+    template <typename UImageType>
+    typename std::enable_if<!IsLabel<UImageType>::Value, std::unique_ptr<PimpleImageBase>>::type
+    ProxyCopy() {
+        auto oldBuffer = this->m_Image->GetPixelContainer();
+
+        auto itkImage = TImageType::New();
+        itkImage->CopyInformation(this->m_Image);
+        itkImage->SetBufferedRegion(this->m_Image->GetBufferedRegion());
+        itkImage->SetLargestPossibleRegion(this->m_Image->GetLargestPossibleRegion());
+        {
+            auto buffer = TImageType::PixelContainer::New();
+            buffer->SetImportPointer(oldBuffer->GetImportPointer(), oldBuffer->Capacity(), false);
+            itkImage->SetPixelContainer(buffer);
+        }
+        return std::make_unique<Self>( itkImage.GetPointer() );
+    }
+    template <typename UImageType>
+    typename std::enable_if<IsLabel<UImageType>::Value, std::unique_ptr<PimpleImageBase>>::type
+    ProxyCopy() {
+       sitkExceptionMacro("ProxyCopy for inplace operations is not supported for label pixel types.");
+    }
 
     template <typename UImageType>
-    typename std::enable_if<!IsLabel<UImageType>::Value, PimpleImageBase*>::type
+    typename std::enable_if<!IsLabel<UImageType>::Value, std::unique_ptr<PimpleImageBase>>::type
     DeepCopy( void ) const
       {
         using ImageDuplicatorType = itk::ImageDuplicator< ImageType >;
@@ -105,10 +136,10 @@ namespace itk
         dup->Update();
         ImagePointer output = dup->GetOutput();
 
-        return new Self( output.GetPointer() );
+        return std::make_unique<Self>( output.GetPointer() );
       }
     template <typename UImageType>
-    typename std::enable_if<IsLabel<UImageType>::Value, PimpleImageBase*>::type
+    typename std::enable_if<IsLabel<UImageType>::Value, std::unique_ptr<PimpleImageBase>>::type
     DeepCopy( void ) const
       {
         using FilterType = itk::ConvertLabelMapFilter<UImageType, UImageType>;
@@ -117,12 +148,11 @@ namespace itk
         filter->UpdateLargestPossibleRegion();
         ImagePointer output = filter->GetOutput();
 
-        return new Self( output.GetPointer() );
+        return std::make_unique<Self>( output.GetPointer() );
       }
 
     itk::DataObject* GetDataBase( ) override { return this->m_Image.GetPointer(); }
     const itk::DataObject* GetDataBase( ) const override { return this->m_Image.GetPointer(); }
-
 
     PixelIDValueEnum GetPixelID() const noexcept override
       {
@@ -202,8 +232,7 @@ namespace itk
         }
 
 
-        typename ImageType::IndexType index;
-        this->m_Image->TransformPhysicalPointToIndex( sitkSTLVectorToITK< typename ImageType::PointType> ( pt ), index);
+        typename ImageType::IndexType index = this->m_Image->TransformPhysicalPointToIndex( sitkSTLVectorToITK< typename ImageType::PointType> ( pt ) );
 
         return sitkITKVectorToSTL<int64_t>( index );
       }
@@ -224,8 +253,7 @@ namespace itk
           }
 
 
-        typename ImageType::PointType point;
-        this->m_Image->TransformIndexToPhysicalPoint( index, point );
+        typename ImageType::PointType point = this->m_Image->template TransformIndexToPhysicalPoint<double>( index );
         return sitkITKVectorToSTL<double>( point );
       }
 
@@ -237,8 +265,7 @@ namespace itk
         sitkExceptionMacro("vector dimension mismatch");
         }
 
-        typename itk::ContinuousIndex<double, ImageType::ImageDimension> index;
-        this->m_Image->TransformPhysicalPointToContinuousIndex(sitkSTLVectorToITK< typename ImageType::PointType> ( pt ), index);
+        auto index = this->m_Image->template TransformPhysicalPointToContinuousIndex<double>(sitkSTLVectorToITK< typename ImageType::PointType> ( pt ));
 
         return sitkITKVectorToSTL<double>( index );
       }
@@ -258,13 +285,17 @@ namespace itk
           index[i] = idx[i];
           }
 
-      typename ImageType::PointType point;
-      this->m_Image->TransformContinuousIndexToPhysicalPoint(index, point);
+      typename ImageType::PointType point = this->m_Image->template TransformContinuousIndexToPhysicalPoint<double>(index);
 
       return sitkITKVectorToSTL<double>( point );
       }
 
-    unsigned int GetSize( unsigned int dimension ) const override
+      std::vector<double> EvaluateAtContinuousIndex( const std::vector<double> &index, InterpolatorEnum interp) const override
+          {
+          return InternalEvaluateAtContinuousIndex<typename ImageTypeToPixelID<ImageType>::PixelIDType> (index, interp);
+          }
+
+      unsigned int GetSize( unsigned int dimension ) const override
       {
         if ( dimension > ImageType::ImageDimension - 1 )
           {
@@ -295,7 +326,8 @@ namespace itk
         return out.str();
       }
 
-    int GetReferenceCountOfImage() const override
+      int
+      GetReferenceCountOfImage() const override
       {
         return this->m_Image->GetReferenceCount();
       }
@@ -663,6 +695,77 @@ namespace itk
 
 
   protected:
+
+    template <typename TPixelIDType>
+    typename std::enable_if<!IsLabel<TPixelIDType>::Value
+                                && !typelist2::has_type<ComplexPixelIDTypeList, TPixelIDType>::value
+                            && !IsVector<TPixelIDType>::Value,
+                            std::vector<double> >::type
+        InternalEvaluateAtContinuousIndex( const std::vector<double> &index, InterpolatorEnum interp ) const
+    {
+      auto cidx = sitkSTLVectorToITK<itk::ContinuousIndex<double, ImageType::ImageDimension>>(index);
+      if ( ! this->m_Image->GetLargestPossibleRegion().IsInside( cidx ) ) {
+        sitkExceptionMacro("index out of bounds");
+      }
+      auto itkInterpolator = CreateInterpolator(this->m_Image.GetPointer(), interp);
+      assert(itkInterpolator != nullptr);
+      if (itkInterpolator == nullptr)
+      {
+        sitkExceptionMacro("Interpolator type \"" << interp << "\" does not support basic pixel types.")
+      }
+      itkInterpolator->SetInputImage(this->m_Image.GetPointer());
+      auto result = itkInterpolator->EvaluateAtContinuousIndex(cidx);
+      return {{double(result)}};
+    }
+
+    template <typename TPixelIDType>
+    typename std::enable_if<typelist2::has_type<ComplexPixelIDTypeList, TPixelIDType>::value,
+                            std::vector<double> >::type
+    InternalEvaluateAtContinuousIndex( const std::vector<double> &index, InterpolatorEnum interp ) const
+    {
+      auto cidx = sitkSTLVectorToITK<itk::ContinuousIndex<double, ImageType::ImageDimension>>(index);
+      if ( ! this->m_Image->GetLargestPossibleRegion().IsInside( cidx ) ) {
+        sitkExceptionMacro("index out of bounds");
+      }
+      auto itkInterpolator = CreateInterpolator(this->m_Image.GetPointer(), interp);
+      if (itkInterpolator == nullptr)
+      {
+        sitkExceptionMacro("Interpolator type \"" << interp << "\" does not support complex pixel types.")
+      }
+      itkInterpolator->SetInputImage(this->m_Image.GetPointer());
+      auto result = itkInterpolator->EvaluateAtContinuousIndex(cidx);
+      return {{double(result.real()),double(result.imag())}};
+    }
+
+    template <typename TPixelIDType>
+    typename std::enable_if< IsVector<TPixelIDType>::Value,
+                            std::vector<double> >::type
+    InternalEvaluateAtContinuousIndex( const std::vector<double> &index, InterpolatorEnum interp ) const
+    {
+      auto cidx = sitkSTLVectorToITK<itk::ContinuousIndex<double, ImageType::ImageDimension>>(index);
+      if ( ! this->m_Image->GetLargestPossibleRegion().IsInside( cidx ) ) {
+        sitkExceptionMacro("index out of bounds");
+      }
+      auto itkInterpolator = CreateInterpolator(this->m_Image.GetPointer(), interp);
+      if (itkInterpolator == nullptr)
+      {
+        sitkExceptionMacro("Interpolator type \"" << interp << "\" does not support vector pixel types.")
+      }
+      itkInterpolator->SetInputImage(this->m_Image.GetPointer());
+      auto result = itkInterpolator->EvaluateAtContinuousIndex(cidx);
+      return std::vector<double>{result.GetDataPointer(), result.GetDataPointer()+result.Size()};
+    }
+
+    template <typename TPixelIDType>
+    typename std::enable_if<IsLabel<TPixelIDType>::Value,
+                            std::vector<double> >::type
+    InternalEvaluateAtContinuousIndex( const std::vector<double> &index, InterpolatorEnum interp, ...) const
+    {
+      Unused(index);
+      Unused(interp);
+      sitkExceptionMacro("Interpolation is not supported for label pixel types.")
+    }
+
 
     template < typename TPixelIDType >
     typename std::enable_if<std::is_same<TPixelIDType, typename ImageTypeToPixelID<ImageType>::PixelIDType>::value

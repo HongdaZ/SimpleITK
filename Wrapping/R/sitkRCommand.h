@@ -36,7 +36,7 @@ namespace simple
  * With this class, arbitrary R functions
  * can be associated with an instance to be used in AddObserver calls.
  *
- * Written by Richard Beare <richard.beare |AT| ieee.org, based on
+ * Written by Richard Beare <Richard.Beare |AT| ieee.org, based on
  * sitkPyCommand,
  * which was based on the WrapITK itkPyCommand class originally contributed by
  * Charl P. Botha <cpbotha |AT| ieee.org>.
@@ -73,10 +73,10 @@ public:
 
   #ifndef SWIG
   // export for access in the custom ProcessObject method for callables
-  using Super::SetOwnedByProcessObjects;
-  using Super::GetOwnedByProcessObjects;
-  using Super::OwnedByProcessObjectsOn;
-  using Super::OwnedByProcessObjectsOff;
+  using Super::SetOwnedByObjects;
+  using Super::GetOwnedByObjects;
+  using Super::OwnedByObjectsOn;
+  using Super::OwnedByObjectsOff;
   #endif
 
 

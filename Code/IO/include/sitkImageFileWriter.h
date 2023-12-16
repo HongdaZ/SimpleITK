@@ -72,7 +72,7 @@ class SmartPointer;
       /** \brief Enable compression if available for file type.
        *
        * These methods Set/Get/Toggle the UseCompression flag which
-       * get's passed to image file's itk::ImageIO object. This is
+       * gets passed to image file's itk::ImageIO object. This is
        * only a request as not all file formats support compression.
        * @{ */
       SITK_RETURN_SELF_TYPE_HEADER SetUseCompression( bool UseCompression );
@@ -123,7 +123,7 @@ class SmartPointer;
       /** \brief Use the original study/series/frame of reference.
        *
        * These methods Set/Get/Toggle the KeepOriginalImageUID flag which
-       * get's passed to image file's itk::ImageIO object. This is
+       * gets passed to image file's itk::ImageIO object. This is
        * relevant only for the DICOM file format, configuring the writer
        * to use the information in the image's meta-data dictionary or
        * to create new study/series/frame of reference values.
@@ -165,10 +165,22 @@ class SmartPointer;
 
     };
 
-  SITKIO_EXPORT void WriteImage ( const Image& image,
-    const std::string &fileName,
-    bool useCompression=false,
-    int compressionLevel=-1);
+  /**
+   * \brief WriteImage is a procedural interface to the ImageFileWriter.
+   *     class which is convenient for many image writing tasks.
+   *
+   *  \param image the input image to be written
+   *  \param fileName the filename of an Image e.g. "cthead.mha"
+   *  \param useCompression request to compress the written file
+   *  \param compressionLevel a hint for the amount of compression to
+   *    be applied during writing
+   *
+   * \sa itk::simple::ImageFileWriter for writing a single file.
+   */
+  SITKIO_EXPORT void WriteImage (const Image& image,
+                                 const std::string &fileName,
+                                 bool useCompression=false,
+                                 int compressionLevel=-1);
   }
 }
 

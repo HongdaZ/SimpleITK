@@ -21,14 +21,28 @@
 #include "sitkPermuteAxesImageFilter.h"
 
 // This file is intended to contain the definition of static
-// membervariables needed by JSON Expand templated image filters.
+// member variables needed by JSON Expand templated image filters.
 // It may also contain other member declarations, or other useful
 // items that could be specified here, as opposed to the JSON.
 
 namespace itk {
   namespace simple {
+  namespace
+  {
+  // Return a vector containing 0 to len.
+  std::vector<unsigned int> init(size_t len)
+  {
+    std::vector<unsigned int> v(len);
+    unsigned int c = 0;
+    for (auto &&i : v)
+    {
+      i = c++;
+    }
+    return v;
+  }
+  }
 
-  const unsigned int PermuteAxesImageFilter::DefaultOrder[3] = {0,1,2};
+  const std::vector<unsigned int> PermuteAxesImageFilter::DefaultOrder = init(SITK_MAX_DIMENSION);
 
   }
 }

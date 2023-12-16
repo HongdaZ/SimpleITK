@@ -28,6 +28,7 @@
 #include "itkScaleTransform.h"
 #include "itkScaleLogarithmicTransform.h"
 #include "itkScaleSkewVersor3DTransform.h"
+#include "itkComposeScaleSkewVersor3DTransform.h"
 #include "itkScaleVersor3DTransform.h"
 #include "itkSimilarity2DTransform.h"
 #include "itkSimilarity3DTransform.h"
@@ -51,10 +52,10 @@ namespace itk
 namespace simple
 {
 
-// This is a base class of the private implementatino of the transform
+// This is a base class of the private implementation of the transform
 // class.
 //
-// The interface provide virutal method and other generic methods to
+// The interface provide virtual method and other generic methods to
 // the concrete ITK transform type, there by provide encapsulation and
 // a uniform interface
 class SITKCommon_HIDDEN PimpleTransformBase
@@ -135,8 +136,8 @@ public:
     }
 
 
-  virtual PimpleTransformBase *ShallowCopy( ) const = 0;
-  virtual PimpleTransformBase *DeepCopy( ) const = 0;
+  virtual std::unique_ptr<PimpleTransformBase> ShallowCopy( ) const = 0;
+  virtual std::unique_ptr<PimpleTransformBase> DeepCopy( ) const = 0;
 
   virtual int GetReferenceCount( ) const = 0;
 
@@ -145,7 +146,7 @@ public:
   // Tries to construct an inverse of the transform, if true is returned
   // the inverse was successful, and outputTransform is modified to
   // the new class and ownership it passed to the caller.  Otherwise
-  // outputTranform is not changed.
+  // outputTransform is not changed.
   virtual bool GetInverse( PimpleTransformBase * &outputTransform ) const = 0;
 
   virtual bool IsLinear() const
@@ -220,15 +221,14 @@ public:
   unsigned int GetOutputDimension( ) const override { return OutputDimension; }
 
 
-  PimpleTransformBase *ShallowCopy( ) const override
+  std::unique_ptr<PimpleTransformBase> ShallowCopy( ) const override
     {
-      return new Self( this->m_Transform.GetPointer() );
+      return std::make_unique<Self>( this->m_Transform.GetPointer() );
     }
 
-  PimpleTransformBase *DeepCopy( ) const override
+  std::unique_ptr<PimpleTransformBase> DeepCopy( ) const override
     {
-      PimpleTransformBase *copy( new Self( this->m_Transform->Clone() ) );
-      return copy;
+      return std::make_unique<Self>( this->m_Transform->Clone() );
     }
 
   int GetReferenceCount( ) const override
@@ -343,9 +343,18 @@ public:
   template <typename VScalar, unsigned int VDimension>
     TransformEnum GetTransformEnum( const itk::DisplacementFieldTransform< VScalar, VDimension > *) const {return sitkDisplacementField;}
 
+  template <typename VScalar, unsigned int VDimension>
+    TransformEnum GetTransformEnum( const itk::BSplineSmoothingOnUpdateDisplacementFieldTransform< VScalar, VDimension > *) const {return sitkDisplacementField;}
+
+  template <typename VScalar, unsigned int VDimension>
+    TransformEnum GetTransformEnum( const itk::GaussianSmoothingOnUpdateDisplacementFieldTransform< VScalar, VDimension > *) const {return sitkDisplacementField;}
+
 
   template <typename VScalar>
     TransformEnum GetTransformEnum( const itk::ScaleSkewVersor3DTransform< VScalar > *) const {return sitkScaleSkewVersor;}
+
+  template <typename VScalar>
+    TransformEnum GetTransformEnum( const itk::ComposeScaleSkewVersor3DTransform< VScalar > *) const {return sitkComposeScaleSkewVersor;}
 
   template <typename VScalar>
     TransformEnum GetTransformEnum( const itk::ScaleVersor3DTransform< VScalar > *) const {return sitkScaleVersor;}

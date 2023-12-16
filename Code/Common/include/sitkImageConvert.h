@@ -25,19 +25,33 @@ namespace itk
 
 template< typename T, unsigned int NVectorDimension > class Vector;
 template< typename T, unsigned int NVectorDimension > class CovariantVector;
+template< unsigned int VDimension> struct Offset;
 
 namespace simple
 {
 
 
-/** \brief A utility method to help convert between itk image types efficiently.
+/** \brief Utility methods to  convert between itk image types efficiently by
+ * sharing the buffer between the input and output.
  *
+ * @{
  */
 template< typename TPixelType, unsigned int ImageDimension >
 SITKCommon_HIDDEN
 typename itk::Image< itk::Vector< TPixelType, ImageDimension >, ImageDimension>::Pointer
 GetImageFromVectorImage( itk::VectorImage< TPixelType, ImageDimension > *img, bool transferOwnership = false );
 
+
+template< typename TPixelType, unsigned int ImageDimension >
+SITKCommon_HIDDEN
+typename itk::Image< TPixelType, ImageDimension+1>::Pointer
+GetScalarImageFromVectorImage( itk::VectorImage< TPixelType, ImageDimension > *img);
+
+// method to convert a scalar image to a VectorImage changing the first dimension to the vector components
+template< typename TPixelType, unsigned int ImageDimension >
+SITKCommon_HIDDEN
+typename itk::VectorImage< TPixelType, ImageDimension-1>::Pointer
+GetVectorImageFromScalarImage( itk::Image< TPixelType, ImageDimension > *img);
 
 template< class TPixelType, unsigned int NImageDimension, unsigned int NLength >
 SITKCommon_HIDDEN
@@ -49,6 +63,15 @@ SITKCommon_HIDDEN
 typename itk::VectorImage< TPixelType, NImageDimension >::Pointer
 GetVectorImageFromImage( itk::Image< itk::CovariantVector< TPixelType, NLength >, NImageDimension> *img, bool transferOwnership = false );
 
+
+template< unsigned int NImageDimension, unsigned int NLength >
+SITKCommon_HIDDEN
+typename itk::VectorImage<
+  typename std::conditional<sizeof(typename itk::Offset< NLength >::OffsetValueType) == sizeof(int64_t),
+    int64_t,
+    int32_t>::type, NImageDimension >::Pointer
+GetVectorImageFromImage( itk::Image< itk::Offset< NLength >, NImageDimension> *img, bool transferOwnership = false );
+/**@}*/
 
 }
 }

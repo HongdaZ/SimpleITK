@@ -249,7 +249,7 @@ TEST_F(sitkRegistrationMethodTest, Metric_Evaluate)
 
 TEST_F(sitkRegistrationMethodTest, Transform_InPlaceOn)
 {
-  // This test is to check the inplace operation of the initial
+  // This test is to check the in-place operation of the initial
   // transform
   sitk::ImageRegistrationMethod R;
   EXPECT_TRUE(R.GetInitialTransformInPlace());
@@ -295,7 +295,7 @@ TEST_F(sitkRegistrationMethodTest, Transform_InPlaceOn)
   EXPECT_VECTOR_DOUBLE_NEAR(v2(0.0,0.0), tx.GetParameters(), 1e-4);
 
 
-  // set with const method, with inplace constant
+  // set with const method, with in-place constant
   const sitk::Transform &ctx =  sitk::TranslationTransform(fixed.GetDimension(),v2(0.1,-0.2));
   R.SetInitialTransform(ctx);
   EXPECT_TRUE(R.GetInitialTransformInPlace());
@@ -385,7 +385,7 @@ TEST_F(sitkRegistrationMethodTest, Transform_Initial)
 
 TEST_F(sitkRegistrationMethodTest, Mask_Test0)
 {
-  // This test is to check some excpetional cases for using masks
+  // This test is to check some exceptional cases for using masks
   sitk::ImageRegistrationMethod R;
 
   R.SetOptimizerAsGradientDescent(1.0, 100);
@@ -1023,7 +1023,7 @@ TEST_F(sitkRegistrationMethodTest, Optimizer_LBFGS2)
   R.SetOptimizerAsLBFGS2(1e-20, 2);
 
   outTx = R.Execute(image, image);
-  EXPECT_EQ(2u, R.GetOptimizerIteration()) << "Checking iteration.";
+  EXPECT_EQ(1u, R.GetOptimizerIteration()) << "Checking iteration.";
 
 }
 
@@ -1175,6 +1175,62 @@ TEST_F(sitkRegistrationMethodTest, Optimizer_Sampling)
 }
 
 
+TEST_F(sitkRegistrationMethodTest, StopRegistration)
+{
+  sitk::Image fixedImage = MakeDualGaussianBlobs({ 64, 64}, {54, 74}, {256, 256,});
+  sitk::Image movingImage = MakeDualGaussianBlobs({61, 65}, {51.2, 75.5}, {256,256});
+
+
+  //fixedImage = sitk::AdditiveGaussianNoise(fixedImage,  0.1, 0, 1u);
+
+  sitk::ImageRegistrationMethod R;
+  R.SetInterpolator(sitk::sitkLinear);
+
+  sitk::TranslationTransform tx(2u);
+  R.SetInitialTransform(tx, false);
+  R.SetMetricAsMeanSquares();
+
+  constexpr unsigned int stop_iteration = 3;
+  auto stopLambda =  [&R, stop_iteration] ()
+  {
+    (void) stop_iteration;
+    std::cout << R.GetOptimizerIteration() << " " << R.GetOptimizerPosition() << std::endl;
+    if ( R.GetOptimizerIteration() >= stop_iteration )
+    {
+      std::cout << "STOP" << std::endl;
+      R.StopRegistration();
+    }
+  };
+
+
+  std::function< void(void) > set_optimizer_funcs[] = {
+    [&R] () {R.SetOptimizerAsConjugateGradientLineSearch(1.0, 100);},
+    [&R] () {R.SetOptimizerAsGradientDescent(1.0, 100);},
+    [&R] () {R.SetOptimizerAsGradientDescentLineSearch(1.0, 100);},
+    [&R] () {R.SetOptimizerAsRegularStepGradientDescent(1.0, 0.001, 100, 0.5, 1e-6);},
+    [&R] () {R.SetOptimizerAsExhaustive({5, 5}, 0.5);},
+    [&R] () {R.SetOptimizerAsPowell(100, 100, 1,1e-6, 1e-8);},
+    [&R] () {R.SetOptimizerAsOnePlusOneEvolutionary(100);}
+  };
+
+
+  R.AddCommand(sitk::sitkIterationEvent, stopLambda);
+
+  for (const auto &setOptimizer : set_optimizer_funcs)
+  {
+    setOptimizer();
+
+    sitk::Transform outTx1 = R.Execute(fixedImage, movingImage);
+
+    std::cout << "GetOptimizerPosition(): " << R.GetOptimizerPosition() << std::endl;
+    std::cout << "outTx1.GetParameters(): " << outTx1.GetParameters() << std::endl;
+    std::cout << "GetOptimizerIteration(): " << R.GetOptimizerIteration() << std::endl;
+    std::cout << "Stop Condition: " << R.GetOptimizerStopConditionDescription() << std::endl;
+    EXPECT_EQ(stop_iteration+1, R.GetOptimizerIteration());
+  }
+
+}
+
 
 TEST_F(sitkRegistrationMethodTest, BSpline_adaptor)
 {
@@ -1217,7 +1273,7 @@ TEST_F(sitkRegistrationMethodTest, BSpline_adaptor)
   EXPECT_EQ( outTx.GetNumberOfParameters(), 72u);
   EXPECT_EQ( outTx.GetFixedParameters(), tx.GetFixedParameters() );
 
-  // Check defaul AsBSpline does not change resolution
+  // Check default AsBSpline does not change resolution
 
   R.SetInitialTransformAsBSpline(tx, false);
 
@@ -1341,7 +1397,7 @@ TEST_F(sitkRegistrationMethodTest, BSpline_adaptor_inplace)
   unsigned int numberOfIterations=10;
   R.SetOptimizerAsGradientDescent(1.0,
                                   numberOfIterations);
-  // Check [1,2,4] inplace
+  // Check [1,2,4] in-place
   std::vector<unsigned int> bsplineScaleFactors(3);
   bsplineScaleFactors[0] = 1;
   bsplineScaleFactors[1] = 2;
@@ -1368,7 +1424,7 @@ TEST_F(sitkRegistrationMethodTest, BSpline_adaptor_inplace)
   EXPECT_EQ( outTx.GetNumberOfParameters(), 450u);
   EXPECT_EQ( outTx.GetFixedParameters(), tx.GetFixedParameters() );
   EXPECT_EQ( outTx.GetParameters(), tx.GetParameters() );
-  ASSERT_EQ( cmd1.m_NumberOfParametersPerLevel.size(), 3);
+  ASSERT_EQ( cmd1.m_NumberOfParametersPerLevel.size(), 3u);
   EXPECT_EQ( cmd1.m_NumberOfParametersPerLevel[0], 72u);
   EXPECT_EQ( cmd1.m_NumberOfParametersPerLevel[1], 162u);
   EXPECT_EQ( cmd1.m_NumberOfParametersPerLevel[2], 450u);
@@ -1398,7 +1454,7 @@ TEST_F(sitkRegistrationMethodTest, BSpline_adaptor_non_inplace2)
   unsigned int numberOfIterations=10;
   R.SetOptimizerAsGradientDescent(1.0,
                                   numberOfIterations);
-  // Check [1,2,4] inplace
+  // Check [1,2,4] in-place
   std::vector<unsigned int> bsplineScaleFactors(3);
   bsplineScaleFactors[0] = 1;
   bsplineScaleFactors[1] = 2;

@@ -465,6 +465,20 @@ TEST(IO, DicomSeriesReader) {
   fileNames = reader.GetGDCMSeriesFileNames( dicomDir, "1.2.840.113619.2.133.1762890640.1886.1055165015.999" );
   EXPECT_EQ( 3u, fileNames.size() );
 
+  // Use the original seriesIDs, first series, and attempt to list the
+  // series files using the "decorated" series information
+  // (useSeriesDetails). They should not match and will result in an
+  // empty vector.
+  bool useSeriesDetails = true;
+  fileNames = reader.GetGDCMSeriesFileNames( dicomDir, seriesIDs[0], useSeriesDetails );
+  EXPECT_EQ( 0u, fileNames.size() );
+
+  //Now, get the "decorated" series information and it will match what
+  //is used in the GetGDCMSeriesFileNames method.
+  seriesIDs = reader.GetGDCMSeriesIDs( dicomDir, useSeriesDetails );
+  fileNames = reader.GetGDCMSeriesFileNames( dicomDir, seriesIDs[0], useSeriesDetails );
+  EXPECT_EQ( 3u, fileNames.size() );
+
   // When reading a series each slice has its own meta-data dictionary
   // so the user has to decide on how to combine them, our image will
   // return an empty dictionary.
@@ -709,6 +723,23 @@ TEST(IO, ImageFileReader_SetImageIO )
 }
 
 
+TEST(IO, ImageFileReader_GetImageIOFromFileName )
+{
+  namespace sitk = itk::simple;
+
+  std::string imageio;
+
+  const std::string filename1 = dataFinder.GetFile ( "Input/RA-Slice-Short.png" );
+  EXPECT_EQ( "PNGImageIO" , sitk::ImageFileReader::GetImageIOFromFileName( filename1 ) );
+
+  const std::string filename2 =  dataFinder.GetFile( "Input/cthead1-Float.mha" );
+  EXPECT_EQ( "MetaImageIO" , sitk::ImageFileReader::GetImageIOFromFileName( filename2 ) );
+
+  EXPECT_NO_THROW( imageio = sitk::ImageFileReader::GetImageIOFromFileName( "file_does_not_exist" ) );
+  EXPECT_EQ( "", imageio);
+}
+
+
 TEST(IO, ImageFileReader_Extract1 )
 {
 
@@ -833,7 +864,7 @@ TEST(IO, ImageFileReader_Extract2 )
   EXPECT_EQ( "my_value", result.GetMetaData("MyKey") );
   EXPECT_EQ( generatedImage.GetSpacing(), result.GetSpacing() );
   EXPECT_EQ( v3(3.0, 8.0, 15.0), result.GetOrigin() );
-  EXPECT_EQ( 3, result.GetDimension() );
+  EXPECT_EQ( 3u, result.GetDimension() );
   EXPECT_EQ( extractSize, result.GetSize() );
 
 

@@ -1,12 +1,20 @@
 
 
+%feature("docstring") itk::FFTImageFilterInitFactoryRegisterManager "
+C++ includes: itkFFTImageFilterInitFactoryRegisterManager.h
+";
+
+%feature("docstring")  itk::FFTImageFilterInitFactoryRegisterManager::FFTImageFilterInitFactoryRegisterManager "
+";
+
+
 %feature("docstring") itk::HashImageFilter "
 
 Generates a hash string from an image.
 
 
 
-This class utlizes low level buffer pointer access, to work with itk::Image and itk::VectorImage. It is modeled after the access an ImageFileWriter provides to an ImageIO.
+This class utilizes low level buffer pointer access, to work with itk::Image and itk::VectorImage. It is modeled after the access an ImageFileWriter provides to an ImageIO.
 Todo
 Update in-place on to default after fixing bug in InPlaceImageFilter
 
@@ -45,6 +53,12 @@ Set/Get hashing function as enumerated type
 
 Runtime information support.
 
+";
+
+%feature("docstring")  itk::HashImageFilter::MakeOutput "
+";
+
+%feature("docstring")  itk::HashImageFilter::MakeOutput "
 ";
 
 %feature("docstring")  itk::HashImageFilter::MakeOutput "
@@ -153,12 +167,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AbsImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::AbsImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::AbsImageFilter::GetName "
@@ -225,12 +239,6 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AbsoluteValueDifferenceImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::AbsoluteValueDifferenceImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::AbsoluteValueDifferenceImageFilter::Execute "
@@ -240,6 +248,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::AbsoluteValueDifferenceImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::AbsoluteValueDifferenceImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::AbsoluteValueDifferenceImageFilter::Execute "
@@ -303,12 +317,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AcosImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::AcosImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::AcosImageFilter::GetName "
@@ -497,12 +511,6 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AddImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::AddImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::AddImageFilter::Execute "
@@ -512,6 +520,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::AddImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::AddImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::AddImageFilter::Execute "
@@ -554,7 +568,7 @@ $ N \\\\sim \\\\mathcal{N}(\\\\mu, \\\\sigma^2) $
 
 Gaetan Lehmann
  This code was contributed in the Insight Journal paper \"Noise
-Simulation\". https://hdl.handle.net/10380/3158
+Simulation\". https://www.insight-journal.org/browse/publication/721
 See:
  itk::simple::AdditiveGaussianNoise for the procedural interface
 
@@ -572,12 +586,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AdditiveGaussianNoiseImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::AdditiveGaussianNoiseImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::AdditiveGaussianNoiseImageFilter::GetMean "
@@ -719,7 +733,7 @@ labels and assigns them to the first label of the label map. At the
 end of the execution of this filter, the map will contain a single
 filter.
 
-This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -744,12 +758,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AggregateLabelMapFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::AggregateLabelMapFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::AggregateLabelMapFilter::GetName "
@@ -802,17 +816,17 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AndImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::AndImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::AndImageFilter::Execute "
 
 Execute the filter with an image and a constant
+
+";
+
+%feature("docstring")  itk::simple::AndImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -921,12 +935,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AntiAliasBinaryImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::AntiAliasBinaryImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::AntiAliasBinaryImageFilter::GetElapsedIterations "
@@ -1003,7 +1017,7 @@ appropriate precision, resulting in completely incorrect (read: zero-
 valued) output.
 
 The distances computed by this filter are Chamfer distances, which are
-only an approximation to Euclidian distances, and are not as exact
+only an approximation to Euclidean distances, and are not as exact
 approximations as those calculated by the DanielssonDistanceMapImageFilter . On the other hand, this filter is faster.
 
 This filter requires that an \"inside value\" and \"outside value\" be
@@ -1068,8 +1082,7 @@ Name of this class
 
 %feature("docstring")  itk::simple::ApproximateSignedDistanceMapImageFilter::GetOutsideValue "
 
-Set/Get intensity value representing the interior of objects in the
-mask.
+Set/Get intensity value representing non-objects in the mask.
 
 ";
 
@@ -1093,6 +1106,214 @@ Print ourselves out
 ";
 
 %feature("docstring")  itk::simple::ApproximateSignedDistanceMapImageFilter::~ApproximateSignedDistanceMapImageFilter "
+
+Destructor
+
+";
+
+
+%feature("docstring") itk::simple::AreaClosingImageFilter "
+
+Morphological closing by attributes.
+
+
+An attribute closing removes blobs according to criteria such as area.
+When applied to grayscale images they have the effect of filling
+valleys (regions darker than their surroundings) based on area while
+leaving the rest of the image unchanged.
+
+This code was contributed in the Insight Journal paper
+
+\"Grayscale morphological attribute operations\" by Beare R. https://hdl.handle.net/1926/1316 https://www.insight-journal.org/browse/publication/203
+
+
+Richard Beare. Department of Medicine, Monash University, Melbourne,
+Australia.
+
+See:
+ itk::simple::AreaClosing for the procedural interface
+
+ itk::AreaClosingImageFilter for the Doxygen on the original ITK class.
+
+
+C++ includes: sitkAreaClosingImageFilter.h
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::AreaClosingImageFilter "
+
+Default Constructor that takes no arguments and initializes default
+parameters
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::Execute "
+
+Execute the filter on the input image
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::FullyConnectedOff "
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::FullyConnectedOn "
+
+Set the value of FullyConnected to true or false respectfully.
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::GetFullyConnected "
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::GetLambda "
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::GetName "
+
+Name of this class
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::GetUseImageSpacing "
+
+Set/Get whether the image spacing is used or not - defaults to true.
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::SetFullyConnected "
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::SetLambda "
+
+The size of the area opening.
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::SetUseImageSpacing "
+
+Set/Get whether the image spacing is used or not - defaults to true.
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::ToString "
+
+Print ourselves out
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::UseImageSpacingOff "
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::UseImageSpacingOn "
+
+Set the value of UseImageSpacing to true or false respectfully.
+
+";
+
+%feature("docstring")  itk::simple::AreaClosingImageFilter::~AreaClosingImageFilter "
+
+Destructor
+
+";
+
+
+%feature("docstring") itk::simple::AreaOpeningImageFilter "
+
+Morphological opening by attributes.
+
+
+An attribute opening removes blobs according to criteria such as area.
+When applied to grayscale images they have the effect of trimming
+peaks (regions brighter than their surroundings) based on area while
+leaving the rest of the image unchanged.
+
+This code was contributed in the Insight Journal paper
+
+\"Grayscale morphological attribute operations\" by Beare R. https://hdl.handle.net/1926/1316 https://www.insight-journal.org/browse/publication/203
+
+
+Richard Beare. Department of Medicine, Monash University, Melbourne,
+Australia.
+
+See:
+ itk::simple::AreaOpening for the procedural interface
+
+ itk::AreaOpeningImageFilter for the Doxygen on the original ITK class.
+
+
+C++ includes: sitkAreaOpeningImageFilter.h
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::AreaOpeningImageFilter "
+
+Default Constructor that takes no arguments and initializes default
+parameters
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::Execute "
+
+Execute the filter on the input image
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::FullyConnectedOff "
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::FullyConnectedOn "
+
+Set the value of FullyConnected to true or false respectfully.
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::GetFullyConnected "
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::GetLambda "
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::GetName "
+
+Name of this class
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::GetUseImageSpacing "
+
+Set/Get whether the image spacing is used or not - defaults to true.
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::SetFullyConnected "
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::SetLambda "
+
+The size of the area opening.
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::SetUseImageSpacing "
+
+Set/Get whether the image spacing is used or not - defaults to true.
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::ToString "
+
+Print ourselves out
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::UseImageSpacingOff "
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::UseImageSpacingOn "
+
+Set the value of UseImageSpacing to true or false respectfully.
+
+";
+
+%feature("docstring")  itk::simple::AreaOpeningImageFilter::~AreaOpeningImageFilter "
 
 Destructor
 
@@ -1138,12 +1359,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AsinImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::AsinImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::AsinImageFilter::GetName "
@@ -1198,12 +1419,6 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::Atan2ImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::Atan2ImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::Atan2ImageFilter::Execute "
@@ -1213,6 +1428,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::Atan2ImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::Atan2ImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::Atan2ImageFilter::Execute "
@@ -1275,12 +1496,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::AtanImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::AtanImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::AtanImageFilter::GetName "
@@ -1529,7 +1750,7 @@ The order of the bspline in the output BSplineTransform. This value effects the 
 
 Allow the user to set the mesh size of the transform via the
 initializer even though the initializer does not do anything with that
-information. Defeault = 1^ImageDimension.
+information. Default = 1^ImageDimension.
 
 ";
 
@@ -1698,7 +1919,7 @@ The change in image geometry from a 5x5 image binned by a factor of
 
 This code was contributed in the Insight Journal paper: \"BinShrink: A
 multi-resolution filter with cache efficient averaging\" by Lowekamp
-B., Chen D. https://hdl.handle.net/10380/3450
+B., Chen D. https://www.insight-journal.org/browse/publication/912
 See:
  itk::simple::BinShrink for the procedural interface
 
@@ -1775,7 +1996,7 @@ The structuring element is assumed to be composed of binary values
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -1905,7 +2126,7 @@ changed to BackgroundValue.
 The connectivity can be changed to minimum or maximum connectivity
 with SetFullyConnected() . Full connectivity produces thicker contours.
 
-https://hdl.handle.net/1926/1352
+https://www.insight-journal.org/browse/publication/217
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -1930,12 +2151,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::BinaryContourImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::BinaryContourImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::BinaryContourImageFilter::FullyConnectedOff "
@@ -2022,7 +2243,7 @@ image. Only the value designated by the intensity value
 \"SetForegroundValue()\" (alias as SetDilateValue() ) is considered as
 foreground, and other intensity values are considered background.
 
-Gray scale images can be processed as binary images by selecting a
+Grayscale images can be processed as binary images by selecting a
 \"ForegroundValue\" (alias \"DilateValue\"). Pixel values matching the
 dilate value are considered the \"foreground\" and all other pixels
 are \"background\". This is useful in processing segmented images
@@ -2156,7 +2377,7 @@ image. Only the value designated by the intensity value
 \"SetForegroundValue()\" (alias as SetErodeValue() ) is considered as
 foreground, and other intensity values are considered background.
 
-Gray scale images can be processed as binary images by selecting a
+Grayscale images can be processed as binary images by selecting a
 \"ForegroundValue\" (alias \"ErodeValue\"). Pixel values matching the
 erode value are considered the \"foreground\" and all other pixels are
 \"background\". This is useful in processing segmented images where
@@ -2289,13 +2510,13 @@ Remove holes not connected to the boundary of the image.
 BinaryFillholeImageFilter fills holes in a binary image.
 
 Geodesic morphology and the Fillhole algorithm is described in Chapter
-6 of Pierre Soille's book \"Morphological Image Analysis:  Principles
+6 of Pierre Soille's book \"Morphological Image Analysis: Principles
 and Applications\", Second Edition, Springer, 2003.
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -2387,7 +2608,7 @@ Destructor
 Remove the objects not connected to the boundary of the image.
 
 
-BinaryGrindPeakImageFilter ginds peaks in a grayscale image.
+BinaryGrindPeakImageFilter grinds peaks in a grayscale image.
 
 Geodesic morphology and the grind peak algorithm is described in
 Chapter 6 of Pierre Soille's book \"Morphological Image Analysis:
@@ -2396,7 +2617,7 @@ Principles and Applications\", Second Edition, Springer, 2003.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -2508,7 +2729,7 @@ have a lower label.
 
 The GetOutput() function of this class returns an itk::LabelMap .
 
-This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -2665,12 +2886,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::BinaryMagnitudeImageFilter::Execute "
-
-Execute the filter on the input images
-
 ";
 
 %feature("docstring")  itk::simple::BinaryMagnitudeImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::BinaryMagnitudeImageFilter::GetName "
@@ -2863,12 +3084,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::BinaryMinMaxCurvatureFlowImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::BinaryMinMaxCurvatureFlowImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::BinaryMinMaxCurvatureFlowImageFilter::GetName "
@@ -2935,7 +3156,7 @@ The structuring element is assumed to be composed of binary values
 > 0 are candidates for affecting the center pixel.
 
 This code was contributed in the Insight Journal paper: \"Binary
-morphological closing and opening image filters\" by Lehmann G. https://hdl.handle.net/1926/141 http://www.insight-journal.org/browse/publication/58
+morphological closing and opening image filters\" by Lehmann G. https://www.insight-journal.org/browse/publication/58
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -3066,7 +3287,7 @@ The structuring element is assumed to be composed of binary values
 > 0 are candidates for affecting the center pixel.
 
 This code was contributed in the Insight Journal paper: \"Binary
-morphological closing and opening image filters\" by Lehmann G. https://hdl.handle.net/1926/141 http://www.insight-journal.org/browse/publication/58
+morphological closing and opening image filters\" by Lehmann G. https://www.insight-journal.org/browse/publication/58
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -3190,7 +3411,7 @@ Where \"!=\" is the equality operator in C++.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 See:
  itk::simple::BinaryNot for the procedural interface
 
@@ -3208,17 +3429,17 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::BinaryNotImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::BinaryNotImageFilter::Execute "
 
 Execute the filter on the input image
 
 ";
 
-%feature("docstring")  itk::simple::BinaryNotImageFilter::Execute "
-";
-
 %feature("docstring")  itk::simple::BinaryNotImageFilter::GetBackgroundValue "
 
-Get the value used as \"background\". Defaults to NumericTraits<PixelType>::NonpositiveMin() .
+Set/Get the value used as \"background\". Defaults to NumericTraits<PixelType>::NonpositiveMin() .
 
 ";
 
@@ -3237,7 +3458,7 @@ Name of this class
 
 %feature("docstring")  itk::simple::BinaryNotImageFilter::SetBackgroundValue "
 
-Set the value used as \"background\". Defaults to NumericTraits<PixelType>::NonpositiveMin() .
+Set/Get the value used as \"background\". Defaults to NumericTraits<PixelType>::NonpositiveMin() .
 
 ";
 
@@ -3277,7 +3498,7 @@ The structuring element is assumed to be composed of binary values
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -3412,7 +3633,7 @@ Binary projection.
 
 
 This class was contributed to the Insight Journal by Gaetan Lehmann.
-The original paper can be found at https://hdl.handle.net/1926/164
+The original paper can be found at https://www.insight-journal.org/browse/publication/71
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -3607,7 +3828,7 @@ Second Edition, Springer, 2003.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -3724,7 +3945,7 @@ Second Edition, Springer, 2003.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -3933,12 +4154,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::BinaryThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::BinaryThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::BinaryThresholdImageFilter::GetInsideValue "
@@ -4009,7 +4230,7 @@ BinaryThreshold projection.
 
 
 This class was contributed to the Insight Journal by Gaetan Lehmann.
-the original paper can be found at https://hdl.handle.net/1926/164
+the original paper can be found at https://www.insight-journal.org/browse/publication/71
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -4211,12 +4432,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::BitwiseNotImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::BitwiseNotImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::BitwiseNotImageFilter::GetName "
@@ -4356,7 +4577,7 @@ Destructor
 Computes 1/(1+x) for each pixel in the image.
 
 
-The filter expect both the input and output images to have the same
+The filter expects both the input and output images to have the same
 number of dimensions, and both of a scalar image type.
 See:
  itk::simple::BoundedReciprocal for the procedural interface
@@ -4375,12 +4596,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::BoundedReciprocalImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::BoundedReciprocalImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::BoundedReciprocalImageFilter::GetName "
@@ -4409,7 +4630,7 @@ approach.
 
 
 This code was contributed in the Insight Journal paper: \"Efficient
-implementation of kernel filtering\" by Beare R., Lehmann G https://hdl.handle.net/1926/555 http://www.insight-journal.org/browse/publication/160
+implementation of kernel filtering\" by Beare R., Lehmann G https://www.insight-journal.org/browse/publication/160
 
 
 Richard Beare
@@ -4474,7 +4695,7 @@ approach.
 
 
 This code was contributed in the Insight Journal paper: \"Efficient
-implementation of kernel filtering\" by Beare R., Lehmann G https://hdl.handle.net/1926/555 http://www.insight-journal.org/browse/publication/160
+implementation of kernel filtering\" by Beare R., Lehmann G https://www.insight-journal.org/browse/publication/160
 
 
 Gaetan Lehmann
@@ -4538,7 +4759,7 @@ This filter is an implementation of a Canny edge detector for scalar-
 valued images.
 
 
-Based on John Canny's paper \"A Computational Approach  to Edge
+Based on John Canny's paper \"A Computational Approach to Edge
 Detection\"(IEEE Transactions on Pattern Analysis and Machine
 Intelligence, Vol. PAMI-8, No.6, November 1986), there are four major
 steps used in the edge-detection scheme: (1) Smooth the input image
@@ -4623,12 +4844,8 @@ Set/Get the variance of the Gaussian smoothing filter.
 ";
 
 %feature("docstring")  itk::simple::CannyEdgeDetectionImageFilter::SetLowerThreshold "
-";
 
-%feature("docstring")  itk::simple::CannyEdgeDetectionImageFilter::SetMaximumError "
-
-Set/Get the MaximumError parameter used by the Gaussian smoothing
-filter in this algorithm
+Set the lower threshold value for detected edges.
 
 ";
 
@@ -4638,10 +4855,17 @@ Set the values of the MaximumError vector all to value
 
 ";
 
+%feature("docstring")  itk::simple::CannyEdgeDetectionImageFilter::SetMaximumError "
+
+Set/Get the MaximumError parameter used by the Gaussian smoothing
+filter in this algorithm
+
+";
+
 %feature("docstring")  itk::simple::CannyEdgeDetectionImageFilter::SetUpperThreshold "
 
-Set the Threshold value for detected edges. TODO: Document in the
-ITKv4 migration guide that the SetThreshold member function was
+Set the upper threshold value for detected edges. TODO: Document in
+the ITKv4 migration guide that the SetThreshold member function was
 removed from the CannyEdgeDetectionImageFilter , and that both UpperThreshold and LowerThreshold need to be set. To
 get the same results as with the SetThreshold method change
 \"myfilter->SetThrehsold\" to \"myfilter->SetUpperThreshold\", and add
@@ -4651,13 +4875,13 @@ get the same results as with the SetThreshold method change
 
 %feature("docstring")  itk::simple::CannyEdgeDetectionImageFilter::SetVariance "
 
-Set/Get the variance of the Gaussian smoothing filter.
+Set the values of the Variance vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::CannyEdgeDetectionImageFilter::SetVariance "
 
-Set the values of the Variance vector all to value
+Set/Get the variance of the Gaussian smoothing filter.
 
 ";
 
@@ -4693,7 +4917,7 @@ used to try to segment a region by itself. Like all other level-set
 based segmentation filters (see SegmentationLevelSetImageFilter ), it works by first constructing a scalar speed term and a vector
 advection field based on edge features in the image. The level set
 front is then moved according to these two terms with the addition of
-a third curvature term to contol the smoothness of the solution.
+a third curvature term to control the smoothness of the solution.
 
 The speed term is constructed as the Danielsson distance transform of
 the Canny edge image, as calculated by the CannyEdgeDetectionImageFilter . This scalar speed can be tuned in and out of the final evolution
@@ -4780,12 +5004,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::CannySegmentationLevelSetImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::CannySegmentationLevelSetImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::CannySegmentationLevelSetImageFilter::GetAdvectionScaling "
@@ -5058,10 +5282,9 @@ CenteredVersorTransformInitializerFilter is a helper class intended to initializ
 versor, and translation of the VersorRigid3DTransform.
 
 
-This class derived from the CenteredTransformInitializerand uses it in
-a more constrained context. It always uses the Moments mode, and also
-takes advantage of the second order moments in order to initialize the
-Versorrepresenting rotation.
+This class is derived from the CenteredTransformInitializerFilter and uses it in a more constrained context. It always uses the Moments
+mode, and also takes advantage of the second order moments in order to
+initialize the Versor representing rotation.
 
 
 See:
@@ -5164,12 +5387,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ChangeLabelImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ChangeLabelImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ChangeLabelImageFilter::GetChangeMap "
@@ -5212,7 +5435,7 @@ Labels that are relabeled to the same label Id are automatically
 merged and optimized into a single LabelObject . The background label can also be changed. Any object relabeled to
 the output background will automatically be removed.
 
-This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -5237,12 +5460,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ChangeLabelLabelMapFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ChangeLabelLabelMapFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ChangeLabelLabelMapFilter::GetChangeMap "
@@ -5382,12 +5605,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ClampImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ClampImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ClampImageFilter::GetLowerBound "
@@ -5516,7 +5739,7 @@ Name of this class
 %feature("docstring")  itk::simple::ClosingByReconstructionImageFilter::GetPreserveIntensities "
 
 Set/Get whether the original intensities of the image retained for
-those pixels unaffected by the opening by reconstrcution. If Off, the
+those pixels unaffected by the opening by reconstruction. If Off, the
 output pixel contrast will be reduced.
 
 ";
@@ -5560,7 +5783,7 @@ Set the kernel or structuring element used for the morphology.
 %feature("docstring")  itk::simple::ClosingByReconstructionImageFilter::SetPreserveIntensities "
 
 Set/Get whether the original intensities of the image retained for
-those pixels unaffected by the opening by reconstrcution. If Off, the
+those pixels unaffected by the opening by reconstruction. If Off, the
 output pixel contrast will be reduced.
 
 ";
@@ -5774,6 +5997,9 @@ Set/Get Command Name
 ";
 
 %feature("docstring")  itk::simple::Command::SetName "
+
+Get object name.
+
 ";
 
 %feature("docstring")  itk::simple::Command::~Command "
@@ -5806,12 +6032,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ComplexToImaginaryImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ComplexToImaginaryImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ComplexToImaginaryImageFilter::GetName "
@@ -5856,12 +6082,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ComplexToModulusImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ComplexToModulusImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ComplexToModulusImageFilter::GetName "
@@ -5906,12 +6132,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ComplexToPhaseImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ComplexToPhaseImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ComplexToPhaseImageFilter::GetName "
@@ -5956,12 +6182,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ComplexToRealImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ComplexToRealImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ComplexToRealImageFilter::GetName "
@@ -6013,24 +6239,24 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ComposeImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::ComposeImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::ComposeImageFilter::GetName "
@@ -6049,6 +6275,95 @@ Print ourselves out
 
 Destructor
 
+";
+
+
+%feature("docstring") itk::simple::ComposeScaleSkewVersor3DTransform "
+
+This transform applies a versor rotation and translation & scale/skew
+to the space.
+
+
+The transform can be described as: $ (\\\\textbf{R}_v * \\\\textbf{S} * \\\\textbf{K})\\\\textbf{x} $ where $\\\\textbf{R}_v$ is the rotation matrix given the versor, where $\\\\textbf{S}$ is the diagonal scale matrix. where $\\\\textbf{K}$ is the upper triangle skew (shear) matrix.
+
+
+See:
+ itk::ComposeScaleSkewVersor3DTransform
+
+
+C++ includes: sitkComposeScaleSkewVersor3DTransform.h
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::ComposeScaleSkewVersor3DTransform "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::ComposeScaleSkewVersor3DTransform "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::ComposeScaleSkewVersor3DTransform "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::ComposeScaleSkewVersor3DTransform "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::ComposeScaleSkewVersor3DTransform "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::GetCenter "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::GetMatrix "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::GetName "
+
+Name of this class
+
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::GetScale "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::GetSkew "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::GetTranslation "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::GetVersor "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::SetCenter "
+
+fixed parameter
+
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::SetRotation "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::SetRotation "
+
+parameter
+
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::SetScale "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::SetSkew "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::SetTranslation "
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::Translate "
+
+additional methods
+
+";
+
+%feature("docstring")  itk::simple::ComposeScaleSkewVersor3DTransform::~ComposeScaleSkewVersor3DTransform "
 ";
 
 
@@ -6097,26 +6412,6 @@ Remove all transforms from the stack.
 
 %feature("docstring")  itk::simple::CompositeTransform::CompositeTransform "
 
-Construct an empty CompositeTransform.
-
-
-The created CompositeTransform is initialized with zero transforms. Additional transforms of
-dimensions can be added.
-
-";
-
-%feature("docstring")  itk::simple::CompositeTransform::CompositeTransform "
-
-Create CompositeTransform converted or holding the transform argument.
-
-
-If the Transform is internally a CompositeTransform, a shallow copy to the internal transform will be made. Otherwise a
-new CompositeTransform is constructed which holds the transform argument.
-
-";
-
-%feature("docstring")  itk::simple::CompositeTransform::CompositeTransform "
-
 A lazy copy constructor.
 
 
@@ -6134,6 +6429,26 @@ contains additional composite transforms, deep copies will be made and
 nested composite transforms will be constructed.
 
 An exception is thrown if the vector is empty.
+
+";
+
+%feature("docstring")  itk::simple::CompositeTransform::CompositeTransform "
+
+Create CompositeTransform converted or holding the transform argument.
+
+
+If the Transform is internally a CompositeTransform, a shallow copy to the internal transform will be made. Otherwise a
+new CompositeTransform is constructed which holds the transform argument.
+
+";
+
+%feature("docstring")  itk::simple::CompositeTransform::CompositeTransform "
+
+Construct an empty CompositeTransform.
+
+
+The created CompositeTransform is initialized with zero transforms. Additional transforms of
+dimensions can be added.
 
 ";
 
@@ -6406,12 +6721,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::ConnectedComponentImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ConnectedComponentImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ConnectedComponentImageFilter::FullyConnectedOff "
@@ -6698,7 +7013,7 @@ This filter ignores the spacing, origin, and orientation of the kernel
 image and treats them as identical to those in the input image.
  This code was contributed in the Insight Journal paper:
 
-\"Image Kernel Convolution\" by Tustison N., Gee J. https://hdl.handle.net/1926/1323 http://www.insight-journal.org/browse/publication/208
+\"Image Kernel Convolution\" by Tustison N., Gee J. https://insight-journal.org/browse/publication/208
 
 
 Nicholas J. Tustison
@@ -6815,12 +7130,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::CosImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::CosImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::CosImageFilter::GetName "
@@ -6869,12 +7184,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::CropImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::CropImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::CropImageFilter::GetLowerBoundaryCropSize "
@@ -6922,9 +7237,10 @@ Destructor
 
 %feature("docstring") itk::simple::CurvatureAnisotropicDiffusionImageFilter "
 
-This filter performs anisotropic diffusion on a scalar itk::Image using the modified curvature diffusion equation (MCDE) implemented in
-itkCurvatureNDAnisotropicDiffusionFunction. For detailed information
-on anisotropic diffusion and the MCDE see
+This filter performs anisotropic diffusion on a scalar itk::Image using the modified curvature diffusion equation (MCDE).
+
+
+For detailed information on anisotropic diffusion and the MCDE see
 itkAnisotropicDiffusionFunction and
 itkCurvatureNDAnisotropicDiffusionFunction.
 
@@ -6970,12 +7286,12 @@ its spacing.
 ";
 
 %feature("docstring")  itk::simple::CurvatureAnisotropicDiffusionImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::CurvatureAnisotropicDiffusionImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::CurvatureAnisotropicDiffusionImageFilter::GetConductanceParameter "
@@ -7097,12 +7413,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::CurvatureFlowImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::CurvatureFlowImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::CurvatureFlowImageFilter::GetName "
@@ -7196,13 +7512,13 @@ Set/get the shift. Shifts may be positive or negative.
 
 %feature("docstring")  itk::simple::CyclicShiftImageFilter::SetShift "
 
-Set/get the shift. Shifts may be positive or negative.
+Set the values of the Shift vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::CyclicShiftImageFilter::SetShift "
 
-Set the values of the Shift vector all to value
+Set/get the shift. Shifts may be positive or negative.
 
 ";
 
@@ -7283,7 +7599,7 @@ Set/Get the desired coordinate orientation for the output image
 
 %feature("docstring")  itk::simple::DICOMOrientImageFilter::GetFlipAxes "
 
-Get flip axes.
+    Get flip axes.
 
 This value is computed during Update.    This is a measurement. Its value is updated in the Execute
 methods, so the value will only be valid after an execution.
@@ -7298,7 +7614,7 @@ Name of this class
 
 %feature("docstring")  itk::simple::DICOMOrientImageFilter::GetPermuteOrder "
 
-Get axes permute order.
+    Get axes permute order.
 
 This value is computed during Update.    This is a measurement. Its value is updated in the Execute
 methods, so the value will only be valid after an execution.
@@ -7386,7 +7702,11 @@ Execute the filter on the input image
 
 %feature("docstring")  itk::simple::DanielssonDistanceMapImageFilter::GetInputIsBinary "
 
-Get if the input is binary. See SetInputIsBinary() .
+Set/Get if the input is binary. If this variable is set, each nonzero
+pixel in the input image will be given a unique numeric code to be
+used by the Voronoi partition. If the image is binary but you are not
+interested in the Voronoi regions of the different nonzero pixels,
+then you need not set this.
 
 ";
 
@@ -7398,13 +7718,34 @@ Name of this class
 
 %feature("docstring")  itk::simple::DanielssonDistanceMapImageFilter::GetSquaredDistance "
 
-Get the distance squared.
+Set/Get if the distance should be squared.
 
 ";
 
 %feature("docstring")  itk::simple::DanielssonDistanceMapImageFilter::GetUseImageSpacing "
 
-Get whether spacing is used.
+Set/Get if image spacing should be used in computing distances.
+
+";
+
+%feature("docstring")  itk::simple::DanielssonDistanceMapImageFilter::GetVectorDistanceMap "
+
+Get vector field of distances.
+
+This is a measurement. Its value is updated in the Execute methods, so
+the value will only be valid after an execution.
+
+";
+
+%feature("docstring")  itk::simple::DanielssonDistanceMapImageFilter::GetVoronoiMap "
+
+Get Voronoi Map This map shows for each pixel what object is closest
+to it. Each object should be labeled by a number (larger than 0), so
+the map has a value for each pixel corresponding to the label of the
+closest object.
+
+This is a measurement. Its value is updated in the Execute methods, so
+the value will only be valid after an execution.
 
 ";
 
@@ -7419,7 +7760,7 @@ Set the value of InputIsBinary to true or false respectfully.
 
 %feature("docstring")  itk::simple::DanielssonDistanceMapImageFilter::SetInputIsBinary "
 
-Set if the input is binary. If this variable is set, each nonzero
+Set/Get if the input is binary. If this variable is set, each nonzero
 pixel in the input image will be given a unique numeric code to be
 used by the Voronoi partition. If the image is binary but you are not
 interested in the Voronoi regions of the different nonzero pixels,
@@ -7429,13 +7770,13 @@ then you need not set this.
 
 %feature("docstring")  itk::simple::DanielssonDistanceMapImageFilter::SetSquaredDistance "
 
-Set if the distance should be squared.
+Set/Get if the distance should be squared.
 
 ";
 
 %feature("docstring")  itk::simple::DanielssonDistanceMapImageFilter::SetUseImageSpacing "
 
-Set if image spacing should be used in computing distances.
+Set/Get if image spacing should be used in computing distances.
 
 ";
 
@@ -7524,12 +7865,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::DemonsRegistrationFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::DemonsRegistrationFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::DemonsRegistrationFilter::GetElapsedIterations "
@@ -7684,22 +8025,15 @@ Gaussian whose standard deviations are specified with SetUpdateFieldStandardDevi
 
 %feature("docstring")  itk::simple::DemonsRegistrationFilter::SetStandardDeviations "
 
-Set/Get the Gaussian smoothing standard deviations for the
-displacement field. The values are set with respect to pixel
-coordinates.
+Set the values of the StandardDeviations vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::DemonsRegistrationFilter::SetStandardDeviations "
 
-Set the values of the StandardDeviations vector all to value
-
-";
-
-%feature("docstring")  itk::simple::DemonsRegistrationFilter::SetUpdateFieldStandardDeviations "
-
-Set the Gaussian smoothing standard deviations for the update field.
-The values are set with respect to pixel coordinates.
+Set/Get the Gaussian smoothing standard deviations for the
+displacement field. The values are set with respect to pixel
+coordinates.
 
 ";
 
@@ -7707,6 +8041,13 @@ The values are set with respect to pixel coordinates.
 
 Set the values of the UpdateFieldStandardDeviations vector all to
 value
+
+";
+
+%feature("docstring")  itk::simple::DemonsRegistrationFilter::SetUpdateFieldStandardDeviations "
+
+Set the Gaussian smoothing standard deviations for the update field.
+The values are set with respect to pixel coordinates.
 
 ";
 
@@ -7736,6 +8077,14 @@ respectfully.
 %feature("docstring")  itk::simple::DemonsRegistrationFilter::SmoothUpdateFieldOn "
 
 Set the value of SmoothUpdateField to true or false respectfully.
+
+";
+
+%feature("docstring")  itk::simple::DemonsRegistrationFilter::StopRegistration "
+
+This is an active measurement. It may be accessed while the filter is
+being executing in command call-backs and can be accessed after
+execution.
 
 ";
 
@@ -7836,7 +8185,9 @@ filter parameters.
 %feature("docstring")  itk::simple::DerivativeImageFilter::GetUseImageSpacing "
 
 Set/Get whether or not the filter will use the spacing of the input
-image in its calculations
+image in its calculations. Use On to compute the derivatives in
+physical space; use Off to ignore the image spacing and to compute the
+derivatives in isotropic voxel space. Default is On.
 
 ";
 
@@ -7857,7 +8208,9 @@ filter parameters.
 %feature("docstring")  itk::simple::DerivativeImageFilter::SetUseImageSpacing "
 
 Set/Get whether or not the filter will use the spacing of the input
-image in its calculations
+image in its calculations. Use On to compute the derivatives in
+physical space; use Off to ignore the image spacing and to compute the
+derivatives in isotropic voxel space. Default is On.
 
 ";
 
@@ -7925,7 +8278,7 @@ Tom Vercauteren, INRIA & Mauna Kea Technologies
 WARNING:
 This filter assumes that the fixed image type, moving image type and
 deformation field type all have the same number of dimensions.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/510
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/154
 
 
 See:
@@ -7947,12 +8300,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::GetElapsedIterations "
@@ -8120,22 +8473,15 @@ Gaussian whose standard deviations are specified with SetUpdateFieldStandardDevi
 
 %feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::SetStandardDeviations "
 
-Set/Get the Gaussian smoothing standard deviations for the
-displacement field. The values are set with respect to pixel
-coordinates.
+Set the values of the StandardDeviations vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::SetStandardDeviations "
 
-Set the values of the StandardDeviations vector all to value
-
-";
-
-%feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::SetUpdateFieldStandardDeviations "
-
-Set the Gaussian smoothing standard deviations for the update field.
-The values are set with respect to pixel coordinates.
+Set/Get the Gaussian smoothing standard deviations for the
+displacement field. The values are set with respect to pixel
+coordinates.
 
 ";
 
@@ -8143,6 +8489,13 @@ The values are set with respect to pixel coordinates.
 
 Set the values of the UpdateFieldStandardDeviations vector all to
 value
+
+";
+
+%feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::SetUpdateFieldStandardDeviations "
+
+Set the Gaussian smoothing standard deviations for the update field.
+The values are set with respect to pixel coordinates.
 
 ";
 
@@ -8176,6 +8529,14 @@ respectfully.
 %feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::SmoothUpdateFieldOn "
 
 Set the value of SmoothUpdateField to true or false respectfully.
+
+";
+
+%feature("docstring")  itk::simple::DiffeomorphicDemonsRegistrationFilter::StopRegistration "
+
+This is an active measurement. It may be accessed while the filter is
+being executing in command call-backs and can be accessed after
+execution.
 
 ";
 
@@ -8330,8 +8691,8 @@ When the Gaussian kernel is small, this filter tends to run faster
 than itk::RecursiveGaussianImageFilter .
 
 
-Ivan Macia, VICOMTech, Spain, http://www.vicomtech.es
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/1290
+Ivan Macia, Vicomtech, Spain, https://www.vicomtech.org/en
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/179
 
 
 See:
@@ -8469,14 +8830,14 @@ image in its calculations. Default is ImageSpacingOn.
 
 %feature("docstring")  itk::simple::DiscreteGaussianDerivativeImageFilter::SetVariance "
 
-Convenience Set methods for setting all dimensional parameters to the
-same values.
+Set the values of the Variance vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::DiscreteGaussianDerivativeImageFilter::SetVariance "
 
-Set the values of the Variance vector all to value
+Convenience Set methods for setting all dimensional parameters to the
+same values.
 
 ";
 
@@ -8580,7 +8941,10 @@ Name of this class
 %feature("docstring")  itk::simple::DiscreteGaussianImageFilter::GetUseImageSpacing "
 
 Set/Get whether or not the filter will use the spacing of the input
-image in its calculations
+image in its calculations. Use On to take the image spacing
+information into account and to specify the Gaussian variance in real
+world units; use Off to ignore the image spacing and to specify the
+Gaussian variance in voxel units. Default is On.
 
 ";
 
@@ -8594,12 +8958,12 @@ false then the units are pixels.
 ";
 
 %feature("docstring")  itk::simple::DiscreteGaussianImageFilter::SetMaximumError "
-";
-
-%feature("docstring")  itk::simple::DiscreteGaussianImageFilter::SetMaximumError "
 
 Set the values of the MaximumError vector all to value
 
+";
+
+%feature("docstring")  itk::simple::DiscreteGaussianImageFilter::SetMaximumError "
 ";
 
 %feature("docstring")  itk::simple::DiscreteGaussianImageFilter::SetMaximumKernelWidth "
@@ -8612,17 +8976,20 @@ MaximumError demands it. The default is 32 pixels.
 %feature("docstring")  itk::simple::DiscreteGaussianImageFilter::SetUseImageSpacing "
 
 Set/Get whether or not the filter will use the spacing of the input
-image in its calculations
+image in its calculations. Use On to take the image spacing
+information into account and to specify the Gaussian variance in real
+world units; use Off to ignore the image spacing and to specify the
+Gaussian variance in voxel units. Default is On.
 
-";
-
-%feature("docstring")  itk::simple::DiscreteGaussianImageFilter::SetVariance "
 ";
 
 %feature("docstring")  itk::simple::DiscreteGaussianImageFilter::SetVariance "
 
 Set the values of the Variance vector all to value
 
+";
+
+%feature("docstring")  itk::simple::DiscreteGaussianImageFilter::SetVariance "
 ";
 
 %feature("docstring")  itk::simple::DiscreteGaussianImageFilter::ToString "
@@ -8690,12 +9057,12 @@ dimensionality N, and a numerical type specified as TRealType, the
 output image will be of type itk::Image<TRealType, N>.
 
 Filter Parameters
-The method SetUseImageSpacingOn will cause derivatives in the image to
-be scaled (inversely) with the pixel size of the input image,
-effectively taking derivatives in world coordinates (versus isotropic
-image space). SetUseImageSpacingOff turns this functionality off.
-Default is UseImageSpacingOn. The parameter UseImageSpacing can be set
-directly with the method SetUseImageSpacing(bool) .
+The method UseImageSpacingOn will cause derivatives in the image to be
+scaled (inversely) with the pixel size of the input image, effectively
+taking derivatives in world coordinates (versus isotropic image
+space). UseImageSpacingOff turns this functionality off. Default is
+UseImageSpacingOn. The parameter UseImageSpacing can be set directly
+with the method SetUseImageSpacing(bool) .
  Weights can be applied to the derivatives directly using the
 SetDerivativeWeights method. Note that if UseImageSpacing is set to
 TRUE (ON), then these weights will be overridden by weights derived
@@ -8770,6 +9137,14 @@ Name of this class
 ";
 
 %feature("docstring")  itk::simple::DisplacementFieldJacobianDeterminantFilter::GetUseImageSpacing "
+
+Set/Get whether or not the filter will use the spacing of the input
+image (1/spacing) in the calculation of the Jacobian determinant. Use
+On to compute the Jacobian determinant in the space in which the data
+was acquired; use Off to reset the derivative weights, ignore the
+image spacing, and to compute the Jacobian determinant in the image
+space. Default is On.
+
 ";
 
 %feature("docstring")  itk::simple::DisplacementFieldJacobianDeterminantFilter::SetDerivativeWeights "
@@ -8783,7 +9158,11 @@ values.
 %feature("docstring")  itk::simple::DisplacementFieldJacobianDeterminantFilter::SetUseImageSpacing "
 
 Set/Get whether or not the filter will use the spacing of the input
-image in its calculations
+image (1/spacing) in the calculation of the Jacobian determinant. Use
+On to compute the Jacobian determinant in the space in which the data
+was acquired; use Off to reset the derivative weights, ignore the
+image spacing, and to compute the Jacobian determinant in the image
+space. Default is On.
 
 ";
 
@@ -8827,6 +9206,9 @@ C++ includes: sitkDisplacementFieldTransform.h
 ";
 
 %feature("docstring")  itk::simple::DisplacementFieldTransform::DisplacementFieldTransform "
+";
+
+%feature("docstring")  itk::simple::DisplacementFieldTransform::DisplacementFieldTransform "
 
 Consume an image to construct a displacement field transform.
 
@@ -8839,9 +9221,6 @@ constructed Image object.
 Image must be of sitkVectorFloat64 pixel type with the number of components
 equal to the image dimension.
 
-";
-
-%feature("docstring")  itk::simple::DisplacementFieldTransform::DisplacementFieldTransform "
 ";
 
 %feature("docstring")  itk::simple::DisplacementFieldTransform::DisplacementFieldTransform "
@@ -8948,12 +9327,6 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::DivideFloorImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::DivideFloorImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::DivideFloorImageFilter::Execute "
@@ -8963,6 +9336,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::DivideFloorImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::DivideFloorImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::DivideFloorImageFilter::Execute "
@@ -9014,12 +9393,6 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::DivideImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::DivideImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::DivideImageFilter::Execute "
@@ -9029,6 +9402,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::DivideImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::DivideImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::DivideImageFilter::Execute "
@@ -9090,12 +9469,6 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::DivideRealImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::DivideRealImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::DivideRealImageFilter::Execute "
@@ -9105,6 +9478,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::DivideRealImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::DivideRealImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::DivideRealImageFilter::Execute "
@@ -9327,12 +9706,12 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::EdgePotentialImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::EdgePotentialImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::EdgePotentialImageFilter::GetName "
@@ -9351,6 +9730,841 @@ Print ourselves out
 
 Destructor
 
+";
+
+
+%feature("docstring") itk::simple::ElastixImageFilter "
+
+The class that wraps the elastix registration library.
+
+C++ includes: sitkElastixImageFilter.h
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddFixedImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddFixedImage "
+
+Adds an image to the end of the container of fixed images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddFixedMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddFixedMask "
+
+Adds an image to the end of the container of fixed masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddMovingImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddMovingImage "
+
+Adds an image to the end of the container of moving images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddMovingMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddMovingMask "
+
+Adds an image to the end of the container of moving masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameter "
+
+Adds a parameter specified by key, with the specified value to all parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameter "
+
+Adds a parameter specified by key, with the specified values to all parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameter "
+
+Adds a parameter specified by key, with the specified value to the parameter map at the specified
+(zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameter "
+
+Adds a parameter specified by key, with the specified values to the parameter map at the specified
+(zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::AddParameterMap "
+
+Adds a parameter map to the container of parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::DualExecuteInternal "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::ElastixImageFilter "
+
+Default-constructor.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::ElastixImageFilterImpl "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::Execute "
+
+Executes the registration, and returns the result image.
+
+
+
+Before executing, the number of moving images must equal the number of
+fixed images, the number of fixed masks must be either zero, or one,
+or equal to the number of fixed images, and the number of moving masks
+must be either zero, or one, or equal to the number of moving images
+
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetDefaultParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetDefaultParameterMap "
+
+Returns the default parameter map for the specified function arguments
+( transformName may be \"translation\", \"rigid\" , \"affine\", \"nonrigid\", or
+\"bspline\").
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedImage "
+
+Retrieves a reference to the container of fixed images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedImage "
+
+Retrieves a reference to the fixed image at the specified (zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedMask "
+
+Retrieves a reference to the container of fixed masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedMask "
+
+Retrieves a reference to the fixed mask at the specified (zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedPointSetFileName "
+
+Returns the name of the current point set file of points from the
+fixed image.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetInitialTransformParameterFileName "
+
+Returns the initial transform parameter file name.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetInitialTransformParameterFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetLogFileName "
+
+Returns the name of the current log file.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetLogFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetLogToConsole "
+
+Returns whether logging to console is switched on.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetLogToConsole "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetLogToFile "
+
+Returns whether logging to file is switched on.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetLogToFile "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingImage "
+
+Retrieves a reference to the moving image at the specified (zero-
+based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingImage "
+
+Retrieves a reference to the moving image at the specified (zero-
+based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingMask "
+
+Retrieves a reference to the container of moving masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingMask "
+
+Retrieves a reference to the moving mask at the specified (zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingPointSetFileName "
+
+Returns the name of the current point set file of points from the
+moving image.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetMovingPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfFixedImages "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfFixedImages "
+
+Returns the number of fixed images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfFixedMasks "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfFixedMasks "
+
+Returns the number of fixed masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfMovingImages "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfMovingImages "
+
+Returns the number of moving images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfMovingMasks "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfMovingMasks "
+
+Returns the number of moving masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfParameterMaps "
+
+Returns the number of parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfParameterMaps "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfThreads "
+
+Returns the current maximum number of threads.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetNumberOfThreads "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetOutputDirectory "
+
+Returns the current output directory.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetParameter "
+
+Retrieves the values of the parameter specified by key, when there is only one parameter map.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetParameter "
+
+Retrieves the values of the parameter specified by key, from the parameter map at the specified (zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetParameterMap "
+
+Returns a copy of the parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetResultImage "
+
+Returns the result image.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetResultImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetTransformParameterMap "
+
+Returns all transform parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetTransformParameterMap "
+
+Returns the transform parameter map at the specified (zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::GetTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::IsEmpty "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::LogToConsoleOff "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::LogToConsoleOff "
+
+Switches logging to console off.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::LogToConsoleOn "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::LogToConsoleOn "
+
+Switches logging to console on.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::LogToFileOff "
+
+Switches logging to file off.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::LogToFileOff "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::LogToFileOn "
+
+Switches logging to file on.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::LogToFileOn "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::PrintParameterMap "
+
+Prints all parameter maps to standard output.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::PrintParameterMap "
+
+Prints the specified parameter map to standard output.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::PrintParameterMap "
+
+Prints the specified parameter maps to standard output.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::ReadParameterFile "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::ReadParameterFile "
+
+Reads the parameter file specified by filename, and returns its content as a parameter map.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedImage "
+
+Removes all fixed images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedImage "
+
+Removes an image at the specified (zero-based) index from the container of fixed images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedMask "
+
+Removes all fixed masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedMask "
+
+Removes an image at the specified (zero-based) index from the container of fixed masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedPointSetFileName "
+
+Clears the current point set file name of points from the fixed image.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveInitialTransformParameterFileName "
+
+Clears the initial transform parameter file name.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveInitialTransformParameterFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveLogFileName "
+
+Clears the name of the current log file.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveLogFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingImage "
+
+Removes all moving images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingImage "
+
+Removes an image at the specified (zero-based) index from the container of moving images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingMask "
+
+Removes all moving masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingMask "
+
+Removes an image at the specified (zero-based) index from the container of moving masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingPointSetFileName "
+
+Clears the current point set file name of points from the moving
+image.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveMovingPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveOutputDirectory "
+
+Clears the name of the current output directory. (Does not remove the
+actual directory.)
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveParameter "
+
+Removes the parameter specified by key from all parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::RemoveParameter "
+
+Removes the parameter specified by key from the parameter map at the specified (zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedImage "
+
+Sets a fixed image. Stores the image into the container of fixed
+images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedImage "
+
+Sets multiple fixed images. Stores the images into the container of
+fixed images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedMask "
+
+Sets a fixed mask. Stores the image into the container of fixed masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedMask "
+
+Sets multiple fixed masks. Stores the images into the container of
+fixed masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedPointSetFileName "
+
+Specifies a set of points from the fixed image by a point set file, fixedPointSetFileName.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetInitialTransformParameterFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetInitialTransformParameterFileName "
+
+Specifies the initial transformation by the specified transform
+parameter file name.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetLogFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetLogFileName "
+
+Sets the name of the current log file.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetLogToConsole "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetLogToConsole "
+
+Switches logging to console on ( true) or off ( false), as specified by its function argument.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetLogToFile "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetLogToFile "
+
+Switches logging to file on ( true) or off ( false), as specified by its function argument.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingImage "
+
+Sets a moving image. Stores the image into the container of moving
+images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingImage "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingImage "
+
+Sets multiple moving images. Stores the images into the container of
+moving images.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingMask "
+
+Sets a moving mask. Stores the image into the container of moving
+masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingMask "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingMask "
+
+Sets multiple moving masks. Stores the images into the container of
+moving masks.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetMovingPointSetFileName "
+
+Specifies a set of points from the moving image by a point set file, movingPointSetFileName.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetNumberOfThreads "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetNumberOfThreads "
+
+Sets the maximum number of threads to the specified number n.
+
+
+
+As a side effect, it may modify the global maximum number of threads, as it internally calls ITK's  MultiThreaderBase.SetGlobalMaximumNumberOfThreads.
+
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetOutputDirectory "
+
+Sets the output directory.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameter "
+
+Sets the value of the parameter specified by key, in all parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameter "
+
+Sets the values of the parameter specified by key, in all parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameter "
+
+Sets the value of the parameter specified by key, in the parameter map at the specified (zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameter "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameter "
+
+Sets the values of the parameter specified by key, in the parameter map at the specified (zero-based) index.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameterMap "
+
+Specifies a single parameter map.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameterMap "
+
+Specifies the parameter map by a transformName (\"translation\", \"rigid\" , \"affine\", \"nonrigid\", or
+\"bspline\"), and optionally numberOfResolutions and finalGridSpacingInPhysicalUnits.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameterMap "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::SetParameterMap "
+
+Specifies multiple parameter maps.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::WriteParameterFile "
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::WriteParameterFile "
+
+Writes a parameter map to the file, specified by filename.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::~ElastixImageFilter "
+
+Destructor.
+
+";
+
+%feature("docstring")  itk::simple::ElastixImageFilter::~ElastixImageFilterImpl "
 ";
 
 
@@ -9391,12 +10605,6 @@ parameters
 ";
 
 %feature("docstring")  itk::simple::EqualImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::EqualImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::EqualImageFilter::Execute "
@@ -9406,15 +10614,21 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::EqualImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::EqualImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::EqualImageFilter::Execute "
 
 Execute the filter on an image and a constant with the given
 parameters
+
+";
+
+%feature("docstring")  itk::simple::EqualImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::EqualImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::EqualImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -9747,12 +10961,12 @@ C++ includes: sitkExpImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ExpImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ExpImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ExpImageFilter::ExpImageFilter "
@@ -9799,12 +11013,12 @@ C++ includes: sitkExpNegativeImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ExpNegativeImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ExpNegativeImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ExpNegativeImageFilter::ExpNegativeImageFilter "
@@ -9990,12 +11204,12 @@ C++ includes: sitkExtractImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ExtractImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ExtractImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ExtractImageFilter::ExtractImageFilter "
@@ -10104,11 +11318,15 @@ This filter ignores the spacing, origin, and orientation of the kernel
 image and treats them as identical to those in the input image.
  This code was adapted from the Insight Journal contribution:
 
-\"FFT Based Convolution\" by Gaetan Lehmann https://hdl.handle.net/10380/3154
+\"FFT Based Convolution\" by Gaetan Lehmann https://www.insight-journal.org/browse/publication/717
 
 
 See:
  ConvolutionImageFilter
+
+ InverseDeconvolutionImageFilter
+
+ IterativeDeconvolutionImageFilter
 
  itk::simple::FFTConvolution for the procedural interface
 
@@ -10248,7 +11466,7 @@ C++ includes: sitkFFTNormalizedCorrelationImageFilter.h
 
 %feature("docstring")  itk::simple::FFTNormalizedCorrelationImageFilter::Execute "
 
-Execute the filter on the input images
+Execute the filter on the input image
 
 ";
 
@@ -10265,10 +11483,28 @@ Name of this class
 
 ";
 
+%feature("docstring")  itk::simple::FFTNormalizedCorrelationImageFilter::GetRequiredFractionOfOverlappingPixels "
+
+Set and get the required fraction of overlapping pixels
+
+";
+
 %feature("docstring")  itk::simple::FFTNormalizedCorrelationImageFilter::GetRequiredNumberOfOverlappingPixels "
+
+Set and get the required number of overlapping pixels
+
+";
+
+%feature("docstring")  itk::simple::FFTNormalizedCorrelationImageFilter::SetRequiredFractionOfOverlappingPixels "
+
+Set and get the required fraction of overlapping pixels
+
 ";
 
 %feature("docstring")  itk::simple::FFTNormalizedCorrelationImageFilter::SetRequiredNumberOfOverlappingPixels "
+
+Set and get the required number of overlapping pixels
+
 ";
 
 %feature("docstring")  itk::simple::FFTNormalizedCorrelationImageFilter::ToString "
@@ -10297,7 +11533,7 @@ pads the input appropriately.
 
 This code was adapted from the Insight Journal contribution:
 
-\"FFT Based Convolution\" by Gaetan Lehmann https://hdl.handle.net/10380/3154
+\"FFT Based Convolution\" by Gaetan Lehmann https://www.insight-journal.org/browse/publication/717
 
 
 Gaetan Lehmann
@@ -10392,7 +11628,7 @@ image.
 For images with an odd-sized dimension, applying this filter twice
 will not produce the same image as the original one without using
 SetInverse(true) on one (and only one) of the two filters.
-https://hdl.handle.net/1926/321
+https://www.insight-journal.org/browse/publication/125
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -10477,7 +11713,7 @@ Medians aren't separable, but if you want a large robust smoother to
 be relatively quick then it is worthwhile pretending that they are.
 
 This code was contributed in the Insight Journal paper: \"Efficient
-implementation of kernel filtering\" by Beare R., Lehmann G https://hdl.handle.net/1926/555 http://www.insight-journal.org/browse/publication/160
+implementation of kernel filtering\" by Beare R., Lehmann G https://hdl.handle.net/1926/555 https://www.insight-journal.org/browse/publication/160
 
 
 Richard Beare
@@ -10631,6 +11867,9 @@ parameters
 
 ";
 
+%feature("docstring")  itk::simple::FastMarchingBaseImageFilter::GetInitialTrialValues "
+";
+
 %feature("docstring")  itk::simple::FastMarchingBaseImageFilter::GetName "
 
 Name of this class
@@ -10656,6 +11895,12 @@ Get the Fast Marching algorithm Stopping Value.
 %feature("docstring")  itk::simple::FastMarchingBaseImageFilter::GetTrialPoints "
 
 Get the container of Trial Points representing the initial front.
+
+";
+
+%feature("docstring")  itk::simple::FastMarchingBaseImageFilter::SetInitialTrialValues "
+
+Set the initial seed values for corresponding trial point.
 
 ";
 
@@ -10806,6 +12051,9 @@ parameters
 
 ";
 
+%feature("docstring")  itk::simple::FastMarchingImageFilter::GetInitialTrialValues "
+";
+
 %feature("docstring")  itk::simple::FastMarchingImageFilter::GetName "
 
 Name of this class
@@ -10828,6 +12076,12 @@ Get the Fast Marching algorithm Stopping Value.
 %feature("docstring")  itk::simple::FastMarchingImageFilter::GetTrialPoints "
 
 Get the container of Trial Points representing the initial front.
+
+";
+
+%feature("docstring")  itk::simple::FastMarchingImageFilter::SetInitialTrialValues "
+
+Set the initial seed values for corresponding trial points.
 
 ";
 
@@ -10956,6 +12210,9 @@ the value will only be valid after an execution.
 
 ";
 
+%feature("docstring")  itk::simple::FastMarchingUpwindGradientImageFilter::GetInitialTrialValues "
+";
+
 %feature("docstring")  itk::simple::FastMarchingUpwindGradientImageFilter::GetName "
 
 Name of this class
@@ -10999,6 +12256,12 @@ the value will only be valid after an execution.
 ";
 
 %feature("docstring")  itk::simple::FastMarchingUpwindGradientImageFilter::GetTrialPoints "
+";
+
+%feature("docstring")  itk::simple::FastMarchingUpwindGradientImageFilter::SetInitialTrialValues "
+
+Set the initial seed values for corresponding trial point.
+
 ";
 
 %feature("docstring")  itk::simple::FastMarchingUpwindGradientImageFilter::SetNormalizationFactor "
@@ -11077,7 +12340,7 @@ for each iteration is computed in DemonsRegistrationFunction .
 
 
 Tom Vercauteren, INRIA & Mauna Kea Technologies
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/510
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/154
 
 
 WARNING:
@@ -11096,12 +12359,12 @@ C++ includes: sitkFastSymmetricForcesDemonsRegistrationFilter.h
 ";
 
 %feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::FastSymmetricForcesDemonsRegistrationFilter "
@@ -11239,6 +12502,9 @@ Set/Get the desired limits of the Gaussian kernel width.
 ";
 
 %feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::SetMaximumUpdateStepLength "
+
+Set/Get the maximum update step length.
+
 ";
 
 %feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::SetNumberOfIterations "
@@ -11264,22 +12530,15 @@ Gaussian whose standard deviations are specified with SetUpdateFieldStandardDevi
 
 %feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::SetStandardDeviations "
 
-Set/Get the Gaussian smoothing standard deviations for the
-displacement field. The values are set with respect to pixel
-coordinates.
+Set the values of the StandardDeviations vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::SetStandardDeviations "
 
-Set the values of the StandardDeviations vector all to value
-
-";
-
-%feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::SetUpdateFieldStandardDeviations "
-
-Set the Gaussian smoothing standard deviations for the update field.
-The values are set with respect to pixel coordinates.
+Set/Get the Gaussian smoothing standard deviations for the
+displacement field. The values are set with respect to pixel
+coordinates.
 
 ";
 
@@ -11287,6 +12546,13 @@ The values are set with respect to pixel coordinates.
 
 Set the values of the UpdateFieldStandardDeviations vector all to
 value
+
+";
+
+%feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::SetUpdateFieldStandardDeviations "
+
+Set the Gaussian smoothing standard deviations for the update field.
+The values are set with respect to pixel coordinates.
 
 ";
 
@@ -11312,6 +12578,14 @@ respectfully.
 %feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::SmoothUpdateFieldOn "
 
 Set the value of SmoothUpdateField to true or false respectfully.
+
+";
+
+%feature("docstring")  itk::simple::FastSymmetricForcesDemonsRegistrationFilter::StopRegistration "
+
+This is an active measurement. It may be accessed while the filter is
+being executing in command call-backs and can be accessed after
+execution.
 
 ";
 
@@ -11458,7 +12732,11 @@ input images in the frequency domain.
 
 
 See:
- InverseFFTImageFilter , FFTComplexToComplexImageFilter
+ Forward1DFFTImageFilter
+
+ InverseFFTImageFilter
+
+ ComplexToComplexFFTImageFilter
 
  itk::simple::ForwardFFT for the procedural interface
 
@@ -11518,6 +12796,12 @@ The method that defines action to be taken by the command
 
 %feature("docstring")  itk::simple::FunctionCommand::SetCallbackFunction "
 
+Set as a C++ function, which is compatible with lambdas.
+
+";
+
+%feature("docstring")  itk::simple::FunctionCommand::SetCallbackFunction "
+
 Generic method to set a class's member function to be called in the
 Execute method.
 
@@ -11534,12 +12818,6 @@ Set a C-Style function to be called in the Execute method
 Set a C-Style function with a void* clientData as an argument. The
 caller is responsible for managing the life of the clientData and that
 it's valid when Execute is called with the clientData.
-
-";
-
-%feature("docstring")  itk::simple::FunctionCommand::SetCallbackFunction "
-
-Set as a C++ function, which is compatible with lambdas.
 
 ";
 
@@ -11560,7 +12838,7 @@ the remaining N dimensions. Orientation can be manipulated via the Transform cla
 
 The output image may be of any dimension.
 
-This implementation was contributed as a paper to the Insight Journal https://hdl.handle.net/1926/500
+This implementation was contributed as a paper to the Insight Journal https://www.insight-journal.org/browse/publication/150
 See:
  itk::simple::GaborSource for the procedural interface
 
@@ -11633,13 +12911,13 @@ Set/Get the modulation frequency of the sine or cosine component.
 
 %feature("docstring")  itk::simple::GaborImageSource::SetMean "
 
-Set/Get the mean in each direction.
+Set the values of the Mean vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::GaborImageSource::SetMean "
 
-Set the values of the Mean vector all to value
+Set/Get the mean in each direction.
 
 ";
 
@@ -11651,13 +12929,13 @@ Set the values of the Mean vector all to value
 
 %feature("docstring")  itk::simple::GaborImageSource::SetSigma "
 
-Set/Get the the standard deviation in each direction.
+Set the values of the Sigma vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::GaborImageSource::SetSigma "
 
-Set the values of the Sigma vector all to value
+Set/Get the the standard deviation in each direction.
 
 ";
 
@@ -11775,13 +13053,13 @@ Set the value of Normalized to true or false respectfully.
 
 %feature("docstring")  itk::simple::GaussianImageSource::SetMean "
 
-Set/Get the mean in each direction.
+Set the values of the Mean vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::GaussianImageSource::SetMean "
 
-Set the values of the Mean vector all to value
+Set/Get the mean in each direction.
 
 ";
 
@@ -11806,13 +13084,13 @@ multiply the true value of the Gaussian.
 
 %feature("docstring")  itk::simple::GaussianImageSource::SetSigma "
 
-Set/Get the standard deviation in each direction.
+Set the values of the Sigma vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::GaussianImageSource::SetSigma "
 
-Set the values of the Sigma vector all to value
+Set/Get the standard deviation in each direction.
 
 ";
 
@@ -11850,12 +13128,12 @@ copied.
 ";
 
 %feature("docstring")  itk::simple::GenericException::GenericException "
-";
-
-%feature("docstring")  itk::simple::GenericException::GenericException "
 
 Constructor. Needed to ensure the exception object can be copied.
 
+";
+
+%feature("docstring")  itk::simple::GenericException::GenericException "
 ";
 
 %feature("docstring")  itk::simple::GenericException::GenericException "
@@ -11950,7 +13228,7 @@ inwards (NEGATIVE scaling parameter).
  This implementation allows the user to set the weights between the
 propagation, advection and curvature term using methods SetPropagationScaling() , SetAdvectionScaling() , SetCurvatureScaling() . In general, the larger the CurvatureScaling, the smoother the
 resulting contour. To follow the implementation in Caselles et al
-paper, set the PropagationScaling to $ c $ (the inflation or ballon force) and AdvectionScaling and
+paper, set the PropagationScaling to $ c $ (the inflation or balloon force) and AdvectionScaling and
 CurvatureScaling both to 1.0.
 
 OUTPUTS
@@ -11983,12 +13261,12 @@ C++ includes: sitkGeodesicActiveContourLevelSetImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::GeodesicActiveContourLevelSetImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::GeodesicActiveContourLevelSetImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::GeodesicActiveContourLevelSetImageFilter::GeodesicActiveContourLevelSetImageFilter "
@@ -12085,9 +13363,10 @@ Destructor
 
 %feature("docstring") itk::simple::GradientAnisotropicDiffusionImageFilter "
 
-This filter performs anisotropic diffusion on a scalar itk::Image using the classic Perona-Malik, gradient magnitude based equation
-implemented in itkGradientNDAnisotropicDiffusionFunction. For detailed
-information on anisotropic diffusion, see
+This filter performs anisotropic diffusion on a scalar itk::Image using the classic Perona-Malik, gradient magnitude based equation.
+
+
+For detailed information on anisotropic diffusion, see
 itkAnisotropicDiffusionFunction and
 itkGradientNDAnisotropicDiffusionFunction.
 
@@ -12121,12 +13400,12 @@ its spacing.
 ";
 
 %feature("docstring")  itk::simple::GradientAnisotropicDiffusionImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::GradientAnisotropicDiffusionImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::GradientAnisotropicDiffusionImageFilter::GetConductanceParameter "
@@ -12238,6 +13517,13 @@ when the flag is OFF. The default value of this flag is On.
 ";
 
 %feature("docstring")  itk::simple::GradientImageFilter::GetUseImageSpacing "
+
+Set/Get whether or not the filter will use the spacing of the input
+image in its calculations. Use On to take the image spacing
+information into account and to compute the derivatives in physical
+space; use Off to ignore the image spacing and to compute the
+derivatives in isotropic voxel space. Default is On.
+
 ";
 
 %feature("docstring")  itk::simple::GradientImageFilter::GradientImageFilter "
@@ -12263,7 +13549,10 @@ when the flag is OFF. The default value of this flag is On.
 %feature("docstring")  itk::simple::GradientImageFilter::SetUseImageSpacing "
 
 Set/Get whether or not the filter will use the spacing of the input
-image in its calculations
+image in its calculations. Use On to take the image spacing
+information into account and to compute the derivatives in physical
+space; use Off to ignore the image spacing and to compute the
+derivatives in isotropic voxel space. Default is On.
 
 ";
 
@@ -12336,7 +13625,9 @@ Name of this class
 %feature("docstring")  itk::simple::GradientMagnitudeImageFilter::GetUseImageSpacing "
 
 Set/Get whether or not the filter will use the spacing of the input
-image in its calculations
+image in the computation of the derivatives. Use On to compute the
+gradient in physical space; use Off to ignore image spacing and to
+compute the gradient in isotropic voxel space. Default is On.
 
 ";
 
@@ -12350,7 +13641,9 @@ parameters
 %feature("docstring")  itk::simple::GradientMagnitudeImageFilter::SetUseImageSpacing "
 
 Set/Get whether or not the filter will use the spacing of the input
-image in its calculations
+image in the computation of the derivatives. Use On to compute the
+gradient in physical space; use Off to ignore image spacing and to
+compute the gradient in isotropic voxel space. Default is On.
 
 ";
 
@@ -12393,12 +13686,12 @@ C++ includes: sitkGradientMagnitudeRecursiveGaussianImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::GradientMagnitudeRecursiveGaussianImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::GradientMagnitudeRecursiveGaussianImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::GradientMagnitudeRecursiveGaussianImageFilter::GetName "
@@ -12409,7 +13702,7 @@ Name of this class
 
 %feature("docstring")  itk::simple::GradientMagnitudeRecursiveGaussianImageFilter::GetNormalizeAcrossScale "
 
-Define which normalization factor will be used for the Gaussian
+Set/Get the normalization factor that will be used for the Gaussian.
 See:
  RecursiveGaussianImageFilter::SetNormalizeAcrossScale
 
@@ -12418,7 +13711,7 @@ See:
 
 %feature("docstring")  itk::simple::GradientMagnitudeRecursiveGaussianImageFilter::GetSigma "
 
-Set Sigma value. Sigma is measured in the units of image spacing.
+Set/Get Sigma value. Sigma is measured in the units of image spacing.
 
 ";
 
@@ -12440,7 +13733,7 @@ Set the value of NormalizeAcrossScale to true or false respectfully.
 
 %feature("docstring")  itk::simple::GradientMagnitudeRecursiveGaussianImageFilter::SetNormalizeAcrossScale "
 
-Define which normalization factor will be used for the Gaussian
+Set/Get the normalization factor that will be used for the Gaussian.
 See:
  RecursiveGaussianImageFilter::SetNormalizeAcrossScale
 
@@ -12449,7 +13742,7 @@ See:
 
 %feature("docstring")  itk::simple::GradientMagnitudeRecursiveGaussianImageFilter::SetSigma "
 
-Set Sigma value. Sigma is measured in the units of image spacing.
+Set/Get Sigma value. Sigma is measured in the units of image spacing.
 
 ";
 
@@ -12507,6 +13800,9 @@ See:
 ";
 
 %feature("docstring")  itk::simple::GradientRecursiveGaussianImageFilter::GetSigma "
+
+Get the value of Sigma along the first dimension.
+
 ";
 
 %feature("docstring")  itk::simple::GradientRecursiveGaussianImageFilter::GetUseImageDirection "
@@ -12549,7 +13845,8 @@ See:
 
 %feature("docstring")  itk::simple::GradientRecursiveGaussianImageFilter::SetSigma "
 
-Set Sigma value. Sigma is measured in the units of image spacing.
+Set/Get the Sigma value. Sigma is measured in the units of image
+spacing.
 
 ";
 
@@ -12594,9 +13891,9 @@ Enhance pixels associated with a dark object (identified by a seed
 pixel) where the dark object is surrounded by a brighter object.
 
 
-GrayscaleConnectedClosingImagefilter is useful for enhancing dark
-objects that are surrounded by bright borders. This filter makes it
-easier to threshold the image and extract just the object of interest.
+GrayscaleConnectedClosingImageFilter is useful for enhancing dark objects that are surrounded by bright
+borders. This filter makes it easier to threshold the image and
+extract just the object of interest.
 
 Geodesic morphology and the connected closing algorithm are described
 in Chapter 6 of Pierre Soille's book \"Morphological Image Analysis:
@@ -12693,9 +13990,9 @@ Enhance pixels associated with a bright object (identified by a seed
 pixel) where the bright object is surrounded by a darker object.
 
 
-GrayscaleConnectedOpeningImagefilter is useful for enhancing bright
-objects that are surrounded by dark borders. This filter makes it
-easier to threshold the image and extract just the object of interest.
+GrayscaleConnectedOpeningImageFilter is useful for enhancing bright objects that are surrounded by dark
+borders. This filter makes it easier to threshold the image and
+extract just the object of interest.
 
 Geodesic morphology and the connected opening algorithm is described
 in Chapter 6 of Pierre Soille's book \"Morphological Image Analysis:
@@ -13059,7 +14356,7 @@ Destructor
 
 %feature("docstring") itk::simple::GrayscaleGeodesicDilateImageFilter "
 
-geodesic gray scale dilation of an image
+Geodesic grayscale dilation of an image.
 
 
 Geodesic dilation operates on a \"marker\" image and a \"mask\" image.
@@ -13084,9 +14381,7 @@ Geodesic morphology is described in Chapter 6 of Pierre Soille's book
 Edition, Springer, 2003.
 
 A noniterative version of this algorithm can be found in the ReconstructionByDilationImageFilter . This noniterative solution is much faster than the implementation
-provided here. All ITK filters that previously used
-GrayscaleGeodesicDiliateImageFilter as part of their implementation
-have been converted to use the ReconstructionByDilationImageFilter . The GrayscaleGeodesicDilateImageFilter is maintained for backward compatibility.
+provided here. All ITK filters that previously used GrayscaleGeodesicDilateImageFilter as part of their implementation have been converted to use the ReconstructionByDilationImageFilter . The GrayscaleGeodesicDilateImageFilter is maintained for backward compatibility.
 
 
 See:
@@ -13413,11 +14708,10 @@ Destructor
 
 %feature("docstring") itk::simple::GrayscaleMorphologicalClosingImageFilter "
 
-gray scale dilation of an image
+Grayscale closing of an image.
 
 
-Erode an image using grayscale morphology. Dilation takes the maximum
-of all the pixels identified by the structuring element.
+Close an image using grayscale morphology.
 
 The structuring element is assumed to be composed of binary values
 (zero or one). Only elements of the structuring element having values
@@ -13522,11 +14816,10 @@ Destructor
 
 %feature("docstring") itk::simple::GrayscaleMorphologicalOpeningImageFilter "
 
-gray scale dilation of an image
+Grayscale opening of an image.
 
 
-Dilate an image using grayscale morphology. Dilation takes the maximum
-of all the pixels identified by the structuring element.
+Open an image using grayscale morphology.
 
 The structuring element is assumed to be composed of binary values
 (zero or one). Only elements of the structuring element having values
@@ -13659,12 +14952,6 @@ C++ includes: sitkGreaterEqualImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
@@ -13674,15 +14961,21 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
 
 Execute the filter on an image and a constant with the given
 parameters
+
+";
+
+%feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::GreaterEqualImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -13769,12 +15062,6 @@ C++ includes: sitkGreaterImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::GreaterImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::GreaterImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::GreaterImageFilter::Execute "
@@ -13784,15 +15071,21 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::GreaterImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::GreaterImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::GreaterImageFilter::Execute "
 
 Execute the filter on an image and a constant with the given
 parameters
+
+";
+
+%feature("docstring")  itk::simple::GreaterImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::GreaterImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::GreaterImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -13857,20 +15150,16 @@ Generate an n-dimensional image of a grid.
 GridImageSource generates an image of a grid. From the abstract... \"Certain classes
 of images find disparate use amongst members of the ITK community for
 such purposes as visualization, simulation, testing, etc. Currently
-there exists two derived classes from the ImageSource class used for
-generating specific images for various applications, viz.
-RandomImageSource and GaussianImageSource . We propose to add to this
-set with the class GridImageSource which, obviously enough, produces a
-grid image. Such images are useful for visualizing deformation when
-used in conjunction with the WarpImageFilter , simulating magnetic
-resonance tagging images, or creating optical illusions with which to
-amaze your friends.\"
+there exists two derived classes from the ImageSource class used for generating specific images for various applications,
+viz. RandomImageSource and GaussianImageSource. We propose to add to this set with the class GridImageSource which, obviously enough, produces a grid image. Such images are
+useful for visualizing deformation when used in conjunction with the WarpImageFilter, simulating magnetic resonance tagging images, or creating optical
+illusions with which to amaze your friends.\"
 
 The output image may be of any dimension.
 
 
 Tustison N., Avants B., Gee J. University of Pennsylvania
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/475
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/140
 See:
  itk::simple::GridSource for the procedural interface
 
@@ -13932,6 +15221,12 @@ functions.
 %feature("docstring")  itk::simple::GridImageSource::GetSpacing "
 ";
 
+%feature("docstring")  itk::simple::GridImageSource::GetWhichDimensions "
+
+Set/Get the dimensions which are gridded.
+
+";
+
 %feature("docstring")  itk::simple::GridImageSource::GridImageSource "
 
 Default Constructor that takes no arguments and initializes default
@@ -13968,14 +15263,14 @@ Set/Get the scale factor to multiply the true value of the grid.
 
 %feature("docstring")  itk::simple::GridImageSource::SetSigma "
 
-Set/Get the standard deviation of the Gaussians or width of the box
-functions.
+Set the values of the Sigma vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::GridImageSource::SetSigma "
 
-Set the values of the Sigma vector all to value
+Set/Get the standard deviation of the Gaussians or width of the box
+functions.
 
 ";
 
@@ -13983,6 +15278,12 @@ Set the values of the Sigma vector all to value
 ";
 
 %feature("docstring")  itk::simple::GridImageSource::SetSpacing "
+";
+
+%feature("docstring")  itk::simple::GridImageSource::SetWhichDimensions "
+
+Set/Get the dimensions which are gridded.
+
 ";
 
 %feature("docstring")  itk::simple::GridImageSource::ToString "
@@ -14645,9 +15946,9 @@ first and last bin bounds to include the minimum and maximum intensity
 values of the entire reference image, but only intensity values
 greater than the mean will be used to populate the histogram.
 
-The source image can be set via either SetInput() or SetSourceImage()
-. The reference object used is selected with can be set via
-SetReferenceImage() or SetReferenceHistogram() .
+The source image can be set via either SetInput() or SetSourceImage().
+The reference object used is selected with can be set via
+SetReferenceImage() or SetReferenceHistogram().
 
 SetNumberOfHistogramLevels() sets the number of bins used when creating histograms of the source
 and reference images. SetNumberOfMatchPoints() governs the number of quantile values to be matched.
@@ -14672,7 +15973,7 @@ C++ includes: sitkHistogramMatchingImageFilter.h
 
 %feature("docstring")  itk::simple::HistogramMatchingImageFilter::Execute "
 
-Execute the filter on the input images
+Execute the filter on the input image
 
 ";
 
@@ -14769,7 +16070,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -14784,12 +16085,12 @@ C++ includes: sitkHuangThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::HuangThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::HuangThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::HuangThresholdImageFilter::GetInsideValue "
@@ -14943,6 +16244,62 @@ false otherwise.
 
 ";
 
+%feature("docstring")  itk::simple::Image::EvaluateAtContinuousIndex "
+
+Interpolate pixel value at a continuous index.
+
+
+This method is not supported for Label pixel types.
+
+The valid range of continuous index is [-0.5, size-0.5] for each
+dimension. An exception is thrown if index is out of bounds.
+
+
+
+Parameters:
+
+index:
+The continuous index must be at least the length of the image
+dimension.
+
+interp:
+The interpolation type to use, only sitkNearest and sitkLinear are
+supported for Vector and Complex pixel types.
+
+
+All supported pixel types are returned as an array, where complex
+numbers are returned with the real followed by the complex component.
+
+
+";
+
+%feature("docstring")  itk::simple::Image::EvaluateAtPhysicalPoint "
+
+Interpolate pixel value at a physical point.
+
+This method is not supported for Label pixel types.
+
+An exception is thrown if the point is out of the defined region for
+the image.
+
+
+
+Parameters:
+
+point:
+The physical point at which the interpolation is computed.
+
+interp:
+The interpolation type to use, only sitkNearest and sitkLinear are
+supported for Vector and Complex pixel types.
+
+
+All supported pixel types are returned as an array, where complex
+numbers are returned with the real followed by the complex component.
+
+
+";
+
 %feature("docstring")  itk::simple::Image::GetDepth "
 
 Get the number of pixels the Image is in the third dimension or 0 if the Image is only 2D
@@ -14993,8 +16350,9 @@ data dictionary. Iterate through with these keys to get the values.
 Get the number of components for each pixel.
 
 
-For scalar images this methods returns 1. For vector images the number
-of components for each pixel is returned.
+For images with scalar or complex pixel types this method returns one.
+For images with a vector pixel type the method returns the number of
+vector components per pixel.
 
 ";
 
@@ -15003,7 +16361,7 @@ of components for each pixel is returned.
 Get the number of pixels in the image.
 
 
-To Calculate the total number of values stored continuously for the
+To calculate the total number of values stored continuously for the
 image's buffer, the NumberOfPixels should be multiplied by
 NumberOfComponentsPerPixel in order to account for multiple component
 images.
@@ -15032,6 +16390,15 @@ Return the pixel type as a human readable string value.
 
 Get the number of pixels the Image is in each dimension as a std::vector. The size of the vector is
 equal to the number of dimensions for the image.
+
+";
+
+%feature("docstring")  itk::simple::Image::GetSizeOfPixelComponent "
+
+Get the number of bytes per component of a pixel.
+
+
+Returns the sizeof the pixel component type.
 
 ";
 
@@ -15089,6 +16456,29 @@ make sure that coping actually happens to the itk::Image pointed to is only poin
 
 ";
 
+%feature("docstring")  itk::simple::Image::ProxyForInPlaceOperation "
+
+Advanced method not commonly needed.
+
+
+This method is designed to support implementations \"in-place\" object
+behavior for methods which operate on r-value references. The returned
+image is a new image which has a low level pointer to this object's
+image buffer, without the SimpleITK or ITK reference counting. This is
+implemented by setting the new ITK Image's buffer to the same as this objects without ownership.
+
+
+WARNING:
+This method bypasses the SimpleITK reference counting, and the
+reference needs to be manually maintained in the scope. The resulting
+object is designed only to be a temporary.
+ In the following example this method is used instead of an std::move call when the filter's first argument takes an r-value reference. The img object will container the results of the filter execution, and the img image buffer will be preserved in case of exceptions, and the meta-
+data will remain in the img object.
+
+The meta-data dictionary is not copied to the returned proxy image.
+
+";
+
 %feature("docstring")  itk::simple::Image::SetMetaData "
 
 Set an entry in the meta-data dictionary.
@@ -15098,7 +16488,70 @@ Replaces or creates an entry in the image's meta-data dictionary.
 
 ";
 
+%feature("docstring")  itk::simple::Image::ToScalarImage "
+
+Convert a image of vector pixel type to a scalar image with N+1
+dimensions.
+
+
+This method will convert a vector image to a scalar image with the
+size of the first dimension equal to the number of components. If the
+image is already a scalar image then the image is returned.
+
+For the additional dimension the origin is set to zero, the spacing to
+one, and the new components of the direction cosine to the identity
+matrix.
+
+An exception is thrown if the image is has SITK_MAX_DIMENSION
+dimensions or if the pixel type is a label or complex pixel type.
+
+
+
+Parameters:
+
+inPlace:
+If true then the image is made unique and converted in place updating
+this image, otherwise a copy of the image is made and returned.
+
+
+See:
+ ToVectorImage
+
+
+";
+
 %feature("docstring")  itk::simple::Image::ToString "
+";
+
+%feature("docstring")  itk::simple::Image::ToVectorImage "
+
+Convert the first dimension to the components for image with vector
+pixel type.
+
+
+This method will convert a scalar image to a vector image with the
+number of components equal to the size of the first dimension. If the
+image is already a vector image then the image is returned.
+
+The components of the direction cosine matrix for the first dimension
+must be the identity matrix, or else an exception is thrown.
+
+An exception is thrown if the image is 2D or if the pixel type is a
+label or complex pixel type.
+
+
+
+Parameters:
+
+inPlace:
+If true then the image is made unique and converted in place updating
+this image, otherwise a copy of the image is made and returned.
+
+
+See:
+ ToScalarImage
+
+
 ";
 
 %feature("docstring")  itk::simple::Image::TransformContinuousIndexToPhysicalPoint "
@@ -15164,6 +16617,13 @@ C++ includes: sitkImageFileReader.h
 ";
 
 %feature("docstring")  itk::simple::ImageFileReader::Execute "
+
+Set/Get The output PixelType of the image.
+
+
+By default the value is sitkUnknown, which enable the output pixel
+type to be same as the file. If the pixel type is specified then the itk::ConvertPixelBuffer will be used to convert the pixels.
+
 ";
 
 %feature("docstring")  itk::simple::ImageFileReader::GetExtractIndex "
@@ -15360,24 +16820,12 @@ Default Destructor
 
 %feature("docstring") itk::simple::ImageReaderBase "
 
-An abract base class for image readers.
+An abstract base class for image readers.
 
 C++ includes: sitkImageReaderBase.h
 ";
 
-%feature("docstring")  itk::simple::ImageReaderBase::Execute "
-";
-
-%feature("docstring")  itk::simple::ImageReaderBase::GetRegisteredImageIOs "
-
-Get a vector of the names of registered itk ImageIOs.
-
-";
-
 %feature("docstring")  itk::simple::ImageReaderBase::ImageReaderBase "
-";
-
-%feature("docstring")  itk::simple::ImageReaderBase::ToString "
 ";
 
 %feature("docstring")  itk::simple::ImageReaderBase::~ImageReaderBase "
@@ -15877,6 +17325,20 @@ See:
 
 ";
 
+%feature("docstring")  itk::simple::ImageRegistrationMethod::StopRegistration "
+
+Stop Registration if actively running.
+
+This is an active method which can be called during a callback.
+Invoking this method will halt the registration at the current
+iteration, if supported by the optimizer. The LBFGSB, LBFGS2, and the
+Amoeba optimizers do not support user stopping.
+
+If user stopping is not supported or the optimizer is available ( not
+executed ), then false will be returned.
+
+";
+
 %feature("docstring")  itk::simple::ImageRegistrationMethod::ToString "
 
 Print the information about the object to a string.
@@ -15907,6 +17369,16 @@ Once the image series is read the meta-data is directly accessible
 from the reader.
 
 
+If the pixel type for the returned image is not specified it is
+deduced from the first image in the series. This approach is
+computationally efficient and assumes that all images in a series have
+the same pixel type. In rare situations this is not the case, not all
+images have the same pixel type. If this leads to a narrowing
+conversion (e.g. first image pixel type is unsigned int and others are
+float) the returned image does not represent the data correctly. To
+resolve such situations, explicitly specify the expected pixel type
+via the SetOutputPixelType method before reading the series.
+
 See:
  itk::simple::ReadImage for the procedural interface
 
@@ -15915,6 +17387,13 @@ C++ includes: sitkImageSeriesReader.h
 ";
 
 %feature("docstring")  itk::simple::ImageSeriesReader::Execute "
+
+Set/Get The output PixelType of the image.
+
+
+By default the value is sitkUnknown, which enable the output pixel
+type to be same as the file. If the pixel type is specified then the itk::ConvertPixelBuffer will be used to convert the pixels.
+
 ";
 
 %feature("docstring")  itk::simple::ImageSeriesReader::GetFileNames "
@@ -16026,12 +17505,6 @@ C++ includes: sitkImageSeriesWriter.h
 %feature("docstring")  itk::simple::ImageSeriesWriter::Execute "
 ";
 
-%feature("docstring")  itk::simple::ImageSeriesWriter::GetName "
-
-return user readable name of the filter
-
-";
-
 %feature("docstring")  itk::simple::ImageSeriesWriter::GetRegisteredImageIOs "
 
 Get a vector of the names of registered itk ImageIOs.
@@ -16057,11 +17530,11 @@ Display an image in an external viewer (Fiji by default)
 
 
 The ImageViewer class displays an image with an external image display application.
-By default the class will search for a Fiji ( https://fiji.sc ) executable. The image is written out to a temporary file and then
+By default the class will search for a Fiji executable. The image is written out to a temporary file and then
 passed to the application.
 
-When SimpleITK is first invoked the following environment variables
-are queried to set up the external viewer:
+When the first ImageViewer object is constructed the following environment variables are queried
+to set up the external viewer:
 
 SITK_SHOW_EXTENSION: file format extension of the temporary image
 file. The default is '.mha', the MetaIO file format.
@@ -16069,7 +17542,7 @@ file. The default is '.mha', the MetaIO file format.
 SITK_SHOW_COMMAND: The user can specify an application other than Fiji
 to view images.
 
-These environment variables are only checked at SimpleITK's launch.
+The environment variables are not checked for subsequent ImageViewer objects.
 
 C++ includes: sitkImageViewer.h
 ";
@@ -16105,12 +17578,15 @@ Set the full path to the viewing application used in the command
 string.
 
 
-The SetApplication method expects a full path name.
+The SetApplication method expects the app parameter to be a full path name to the display application's
+executable. For instance, on Windows when using Fiji, one would use
+the full path to the ImageJ-win64.exe such as:'C:\\\\Users\\\\dave\\\\Fiji.app\\\\ImageJ-win64.exe'
+
+On Linux, app would be set to something like:'/home/dave/bin/Fiji.app/ImageJ-linux64'
 
 Using this method overrides the default application search.
 
-By default, when this method is called, the command string is set to
-\"%a %f\" which simply means the application path followed by the temporary image file.
+By default, when this method is called, the command string is set to \"%a %f\" which simply means the application path followed by the temporary image file.
 
 ";
 
@@ -16177,6 +17653,13 @@ C++ includes: sitkImportImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ImportImageFilter::Execute "
+
+Set/Get The output PixelType of the image.
+
+
+By default the value is sitkUnknown, which enable the output pixel
+type to be same as the file. If the pixel type is specified then the itk::ConvertPixelBuffer will be used to convert the pixels.
+
 ";
 
 %feature("docstring")  itk::simple::ImportImageFilter::GetDirection "
@@ -16283,12 +17766,12 @@ C++ includes: sitkIntensityWindowingImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::IntensityWindowingImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::IntensityWindowingImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::IntensityWindowingImageFilter::GetName "
@@ -16388,7 +17871,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -16403,12 +17886,12 @@ C++ includes: sitkIntermodesThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::IntermodesThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::IntermodesThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::IntermodesThresholdImageFilter::GetInsideValue "
@@ -16943,12 +18426,12 @@ C++ includes: sitkInvertIntensityImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::InvertIntensityImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::InvertIntensityImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::InvertIntensityImageFilter::GetMaximum "
@@ -17094,7 +18577,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -17109,12 +18592,12 @@ C++ includes: sitkIsoDataThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::IsoDataThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::IsoDataThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::IsoDataThresholdImageFilter::GetInsideValue "
@@ -17380,16 +18863,18 @@ the thresholds will be replaced with this value. The default is 1.
 
 %feature("docstring")  itk::simple::IsolatedConnectedImageFilter::SetSeed1 "
 
-DeprecatedSet seed point 1. This seed will be isolated from Seed2 (if
-possible). All pixels connected to this seed will be replaced with
-ReplaceValue. This method is deprecated, please use AddSeed1() .
+     Set a single seed point 1.
+
+This seed will be isolated from Seed2 (if possible). All pixels
+connected to this seed will be replaced with ReplaceValue.
 
 ";
 
 %feature("docstring")  itk::simple::IsolatedConnectedImageFilter::SetSeed2 "
 
-DeprecatedSet seed point 2. This seed will be isolated from Seed1 (if
-possible). This method is deprecated, please use AddSeed2() .
+     Set a single seed point 2.
+
+This seed will be isolated from Seed1 (if possible).
 
 ";
 
@@ -17648,12 +19133,12 @@ images are N-dimensional, they are joined in order and the size of the
 N+1'th dimension of the output is same as the number of the inputs.
 The spacing and the origin (where the first input is placed) for the
 N+1'th dimension is specified in this filter. The output image
-informations for the first N dimensions are taken from the first
-input. Note that all the inputs should have the same information.
+information for the first N dimensions are taken from the first input.
+Note that all the inputs should have the same information.
 
 
 Hideaki Hiraki
- Contributed in the users list http://public.kitware.com/pipermail/insight-
+ Contributed in the users list https://public.kitware.com/pipermail/insight-
 users/2004-February/006542.html
 
 
@@ -17665,24 +19150,24 @@ C++ includes: sitkJoinSeriesImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::JoinSeriesImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::JoinSeriesImageFilter::GetName "
@@ -17750,7 +19235,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -17765,12 +19250,12 @@ C++ includes: sitkKittlerIllingworthThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::KittlerIllingworthThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::KittlerIllingworthThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::KittlerIllingworthThresholdImageFilter::GetInsideValue "
@@ -17886,7 +19371,7 @@ the same in the input and in the output image.
 The connectivity can be changed to minimum or maximum connectivity
 with SetFullyConnected() . Full connectivity produces thicker contours.
 
-https://hdl.handle.net/1926/1352
+https://www.insight-journal.org/browse/publication/217
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -17904,12 +19389,12 @@ C++ includes: sitkLabelContourImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LabelContourImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::LabelContourImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::LabelContourImageFilter::FullyConnectedOff "
@@ -17992,7 +19477,7 @@ the same in the input and the output image.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -18061,7 +19546,7 @@ the statistics attributes at once
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -18131,14 +19616,14 @@ execution.
 %feature("docstring")  itk::simple::LabelIntensityStatisticsImageFilter::GetComputeFeretDiameter "
 
 Set/Get whether the maximum Feret diameter should be computed or not.
-The defaut value is false, because of the high computation time
+The default value is false, because of the high computation time
 required.
 
 ";
 
 %feature("docstring")  itk::simple::LabelIntensityStatisticsImageFilter::GetComputePerimeter "
 
-Set/Get whether the perimeter should be computed or not. The defaut
+Set/Get whether the perimeter should be computed or not. The default
 value is false, because of the high computation time required.
 
 ";
@@ -18442,14 +19927,14 @@ to NumericTraits<PixelType>::NonpositiveMin() .
 %feature("docstring")  itk::simple::LabelIntensityStatisticsImageFilter::SetComputeFeretDiameter "
 
 Set/Get whether the maximum Feret diameter should be computed or not.
-The defaut value is false, because of the high computation time
+The default value is false, because of the high computation time
 required.
 
 ";
 
 %feature("docstring")  itk::simple::LabelIntensityStatisticsImageFilter::SetComputePerimeter "
 
-Set/Get whether the perimeter should be computed or not. The defaut
+Set/Get whether the perimeter should be computed or not. The default
 value is false, because of the high computation time required.
 
 ";
@@ -18492,7 +19977,7 @@ produce a gray pixel with the same intensity than the input one.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -18639,7 +20124,7 @@ Negated equals true. In Both cases, the label is set with SetLabel() .
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -18684,7 +20169,7 @@ or not.
 
 %feature("docstring")  itk::simple::LabelMapMaskImageFilter::GetCropBorder "
 
-Set/Get the boder added to the mask before the crop. The default is 0
+Set/Get the border added to the mask before the crop. The default is 0
 on all the axes.
 
 ";
@@ -18740,7 +20225,7 @@ or not.
 
 %feature("docstring")  itk::simple::LabelMapMaskImageFilter::SetCropBorder "
 
-Set/Get the boder added to the mask before the crop. The default is 0
+Set/Get the border added to the mask before the crop. The default is 0
 on all the axes.
 
 ";
@@ -18793,7 +20278,7 @@ produce a gray pixel with the same intensity than the input one.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -18871,7 +20356,7 @@ foreground. The background values of the original binary image can be
 restored by passing this image to the filter with the
 SetBackgroundImage() method.
 
-This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -18958,7 +20443,7 @@ LabelMapToBinaryImageFilter to a label image.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -19012,7 +20497,7 @@ Convert a LabelMap to a colored image.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -19074,7 +20559,7 @@ of two images. Background is assumed to be 0.
 
 This code was contributed in the Insight Journal paper: \"Introducing
 Dice, Jaccard, and Other Label Overlap Measures To ITK\" by Nicholas
-J. Tustison, James C. Gee https://hdl.handle.net/10380/3141 http://www.insight-journal.org/browse/publication/707
+J. Tustison, James C. Gee https://www.insight-journal.org/browse/publication/707
 
 
 Nicholas J. Tustison
@@ -19090,7 +20575,7 @@ C++ includes: sitkLabelOverlapMeasuresImageFilter.h
 
 %feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::Execute "
 
-Execute the filter on the input images
+Execute the filter on the input image
 
 ";
 
@@ -19106,7 +20591,27 @@ the value will only be valid after an execution.
 
 %feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetDiceCoefficient "
 
-Get the mean overlap (Dice coefficient) over all labels.
+Get the mean overlap (Dice coefficient) for the specified individual
+label.
+
+This is an active measurement. It may be accessed while the filter is
+being executing in command call-backs and can be accessed after
+execution.
+
+";
+
+%feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetFalseDiscoveryRate "
+
+Get the false discovery rate for the specified individual label.
+
+This is a measurement. Its value is updated in the Execute methods, so
+the value will only be valid after an execution.
+
+";
+
+%feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetFalseDiscoveryRate "
+
+Get the false discovery rate for the specified individual label.
 
 This is an active measurement. It may be accessed while the filter is
 being executing in command call-backs and can be accessed after
@@ -19125,7 +20630,7 @@ the value will only be valid after an execution.
 
 %feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetFalseNegativeError "
 
-Get the false negative error over all labels.
+Get the false negative error for the specified individual label.
 
 This is an active measurement. It may be accessed while the filter is
 being executing in command call-backs and can be accessed after
@@ -19144,7 +20649,7 @@ the value will only be valid after an execution.
 
 %feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetFalsePositiveError "
 
-Get the false positive error over all labels.
+Get the false positive error for the specified individual label.
 
 This is an active measurement. It may be accessed while the filter is
 being executing in command call-backs and can be accessed after
@@ -19164,7 +20669,8 @@ the value will only be valid after an execution.
 
 %feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetJaccardCoefficient "
 
-Get the union overlap (Jaccard coefficient) over all labels.
+Get the union overlap (Jaccard coefficient) for the specified
+individual label.
 
 This is an active measurement. It may be accessed while the filter is
 being executing in command call-backs and can be accessed after
@@ -19184,7 +20690,8 @@ the value will only be valid after an execution.
 
 %feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetMeanOverlap "
 
-Get the mean overlap (Dice coefficient) over all labels.
+Get the mean overlap (Dice coefficient) for the specified individual
+label.
 
 This is an active measurement. It may be accessed while the filter is
 being executing in command call-backs and can be accessed after
@@ -19210,7 +20717,8 @@ the value will only be valid after an execution.
 
 %feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetUnionOverlap "
 
-Get the union overlap (Jaccard coefficient) over all labels.
+Get the union overlap (Jaccard coefficient) for the specified
+individual label.
 
 This is an active measurement. It may be accessed while the filter is
 being executing in command call-backs and can be accessed after
@@ -19229,7 +20737,7 @@ the value will only be valid after an execution.
 
 %feature("docstring")  itk::simple::LabelOverlapMeasuresImageFilter::GetVolumeSimilarity "
 
-Get the volume similarity over all labels.
+Get the volume similarity for the specified individual label.
 
 This is an active measurement. It may be accessed while the filter is
 being executing in command call-backs and can be accessed after
@@ -19273,7 +20781,7 @@ intensity than the input one.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This class was contributed to the Insight Journal https://hdl.handle.net/1926/172
+ This class was contributed to the Insight Journal https://www.insight-journal.org/browse/publication/79
 
 
 See:
@@ -19290,17 +20798,17 @@ C++ includes: sitkLabelOverlayImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LabelOverlayImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LabelOverlayImageFilter::Execute "
 
 Execute the filter on the input image
 
 ";
 
-%feature("docstring")  itk::simple::LabelOverlayImageFilter::Execute "
-";
-
 %feature("docstring")  itk::simple::LabelOverlayImageFilter::GetBackgroundValue "
 
-Set/Get the background value
+Set/Get the background value.
 
 ";
 
@@ -19316,7 +20824,7 @@ Name of this class
 %feature("docstring")  itk::simple::LabelOverlayImageFilter::GetOpacity "
 
 Set/Get the opacity of the colored label image. The value must be
-between 0 and 1
+between 0 and 1.
 
 ";
 
@@ -19329,7 +20837,7 @@ parameters
 
 %feature("docstring")  itk::simple::LabelOverlayImageFilter::SetBackgroundValue "
 
-Set/Get the background value
+Set/Get the background value.
 
 ";
 
@@ -19339,7 +20847,7 @@ Set/Get the background value
 %feature("docstring")  itk::simple::LabelOverlayImageFilter::SetOpacity "
 
 Set/Get the opacity of the colored label image. The value must be
-between 0 and 1
+between 0 and 1.
 
 ";
 
@@ -19365,9 +20873,7 @@ attributes.
 A convenient class that converts a label image to a label map and
 valuates the shape attribute at once.
 
-This implementation was taken from the Insight Journal paper:
-
-https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -19730,7 +21236,7 @@ LabelStatisticsImageFilter computes the minimum, maximum, sum, mean, median, var
 of regions of an intensity image, where the regions are defined via a
 label map (a second input). The label image should be integral type.
 The filter needs all of its input image. It behaves as a filter with
-an input and output. Thus it can be inserted in a pipline with other
+an input and output. Thus it can be inserted in a pipeline with other
 filters and the statistics will only be recomputed if a downstream
 filter changes.
 
@@ -19932,7 +21438,7 @@ background label is produced.
 
 This code was contributed in the Insight Journal paper: \"The
 watershed transform in ITK - discussion and new developments\" by
-Beare R., Lehmann G. https://hdl.handle.net/1926/202 http://www.insight-journal.org/browse/publication/92
+Beare R., Lehmann G. https://www.insight-journal.org/browse/publication/92
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -19955,12 +21461,12 @@ C++ includes: sitkLabelToRGBImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LabelToRGBImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::LabelToRGBImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::LabelToRGBImageFilter::GetBackgroundValue "
@@ -20019,7 +21525,7 @@ keep is selected according to their label.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 See:
@@ -20034,12 +21540,12 @@ C++ includes: sitkLabelUniqueLabelMapFilter.h
 ";
 
 %feature("docstring")  itk::simple::LabelUniqueLabelMapFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::LabelUniqueLabelMapFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::LabelUniqueLabelMapFilter::GetName "
@@ -20137,24 +21643,24 @@ C++ includes: sitkLabelVotingImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::LabelVotingImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::LabelVotingImageFilter::GetLabelForUndecidedPixels "
@@ -20208,7 +21714,17 @@ images in a least squares sense. The indices are taken to correspond,
 so point 1 in the first set will get mapped close to point 1 in the
 second set, etc.
 
-Currently, the following transforms are supported by the class: VersorRigid3DTransform Rigid2DTransform AffineTransform BSplineTransform
+Currently, the following transforms are supported by the class:
+VersorRigid3DTransform
+
+Similarity3DTransform
+
+Rigid2DTransform
+
+AffineTransform
+
+BSplineTransform
+
 
 An equal number of fixed and moving landmarks need to be specified
 using SetFixedLandmarks() and SetMovingLandmarks() . Any number of landmarks may be specified. In the case of using
@@ -20226,7 +21742,7 @@ solution of absolute orientation using unit quaternions,\" http://people.csail.m
 The Affine Transform initializer is based on an algorithm by H Spaeth, and is described in
 the Insight Journal Article \"Affine Transformation for Landmark Based
 Registration Initializer in ITK\" by Kim E.Y., Johnson H., Williams N.
-available at http://midasjournal.com/browse/publication/825
+available at https://www.midasjournal.org/browse/publication/825
 
 Wiki Examples:
 
@@ -20334,7 +21850,7 @@ Destructor
 Deconvolve an image using the Landweber deconvolution algorithm.
 
 
-This filter implements the Landweber deconvolution algorthim as
+This filter implements the Landweber deconvolution algorithm as
 defined in Bertero M and Boccacci P, \"Introduction to Inverse
 Problems in Imaging\", 1998. The algorithm assumes that the input
 image has been formed by a linear shift-invariant system with a known
@@ -20352,7 +21868,7 @@ see ProjectedLandweberDeconvolutionImageFilter .
 This code was adapted from the Insight Journal contribution:
 
 \"Deconvolution: infrastructure and reference algorithms\" by Gaetan
-Lehmann https://hdl.handle.net/10380/3207
+Lehmann https://www.insight-journal.org/browse/publication/753
 
 
 Gaetan Lehmann, Biologie du Developpement et de la Reproduction, INRA
@@ -20463,12 +21979,15 @@ Destructor
 
 %feature("docstring") itk::simple::LaplacianImageFilter "
 
-This filter computes the Laplacian of a scalar-valued image. The
-Laplacian is an isotropic measure of the 2nd spatial derivative of an
-image. The Laplacian of an image highlights regions of rapid intensity
-change and is therefore often used for edge detection. Often, the
-Laplacian is applied to an image that has first been smoothed with a
-Gaussian filter in order to reduce its sensitivity to noise.
+This filter computes the Laplacian of a scalar-valued image.
+
+
+The Laplacian is an isotropic measure of the 2nd spatial derivative of
+an image. The Laplacian of an image highlights regions of rapid
+intensity change and is therefore often used for edge detection.
+Often, the Laplacian is applied to an image that has first been
+smoothed with a Gaussian filter in order to reduce its sensitivity to
+noise.
 
 
 The Laplacian at each pixel location is computed by convolution with
@@ -20596,7 +22115,7 @@ See:
 
 %feature("docstring")  itk::simple::LaplacianRecursiveGaussianImageFilter::GetSigma "
 
-Set Sigma value. Sigma is measured in the units of image spacing.
+Set/Get Sigma value. Sigma is measured in the units of image spacing.
 
 ";
 
@@ -20627,7 +22146,7 @@ See:
 
 %feature("docstring")  itk::simple::LaplacianRecursiveGaussianImageFilter::SetSigma "
 
-Set Sigma value. Sigma is measured in the units of image spacing.
+Set/Get Sigma value. Sigma is measured in the units of image spacing.
 
 ";
 
@@ -20720,12 +22239,12 @@ C++ includes: sitkLaplacianSegmentationLevelSetImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LaplacianSegmentationLevelSetImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::LaplacianSegmentationLevelSetImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::LaplacianSegmentationLevelSetImageFilter::GetCurvatureScaling "
@@ -20931,12 +22450,6 @@ C++ includes: sitkLessEqualImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
@@ -20946,15 +22459,21 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
 
 Execute the filter on an image and a constant with the given
 parameters
+
+";
+
+%feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LessEqualImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -21041,12 +22560,6 @@ C++ includes: sitkLessImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LessImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::LessImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::LessImageFilter::Execute "
@@ -21056,15 +22569,21 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::LessImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::LessImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::LessImageFilter::Execute "
 
 Execute the filter on an image and a constant with the given
 parameters
+
+";
+
+%feature("docstring")  itk::simple::LessImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LessImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::LessImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -21176,9 +22695,8 @@ for each iteration is computed in LevelSetMotionFunction.
 WARNING:
 This filter assumes that the fixed image type, moving image type and
 deformation field type all have the same number of dimensions.
- Ref: B.C. Vemuri, J. Ye, Y. Chen, C.M. Leonard. \"Image registration
-via level-set motion: applications to atlas-based segmentation\".
-Medical Image Analysis. Vol. 7. pp. 1-20. 2003.
+ Ref: B.C. Vemuri, J. Ye, Y. Chen, C.M. Leonard. \" Image registration via level-set motion: applications to atlas-based
+segmentation\". Medical Image Analysis. Vol. 7. pp. 1-20. 2003.
 
 
 See:
@@ -21193,12 +22711,12 @@ C++ includes: sitkLevelSetMotionRegistrationFilter.h
 ";
 
 %feature("docstring")  itk::simple::LevelSetMotionRegistrationFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::LevelSetMotionRegistrationFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::LevelSetMotionRegistrationFilter::GetAlpha "
@@ -21391,22 +22909,15 @@ Gaussian whose standard deviations are specified with SetUpdateFieldStandardDevi
 
 %feature("docstring")  itk::simple::LevelSetMotionRegistrationFilter::SetStandardDeviations "
 
-Set/Get the Gaussian smoothing standard deviations for the
-displacement field. The values are set with respect to pixel
-coordinates.
+Set the values of the StandardDeviations vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::LevelSetMotionRegistrationFilter::SetStandardDeviations "
 
-Set the values of the StandardDeviations vector all to value
-
-";
-
-%feature("docstring")  itk::simple::LevelSetMotionRegistrationFilter::SetUpdateFieldStandardDeviations "
-
-Set the Gaussian smoothing standard deviations for the update field.
-The values are set with respect to pixel coordinates.
+Set/Get the Gaussian smoothing standard deviations for the
+displacement field. The values are set with respect to pixel
+coordinates.
 
 ";
 
@@ -21414,6 +22925,13 @@ The values are set with respect to pixel coordinates.
 
 Set the values of the UpdateFieldStandardDeviations vector all to
 value
+
+";
+
+%feature("docstring")  itk::simple::LevelSetMotionRegistrationFilter::SetUpdateFieldStandardDeviations "
+
+Set the Gaussian smoothing standard deviations for the update field.
+The values are set with respect to pixel coordinates.
 
 ";
 
@@ -21476,7 +22994,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -21491,12 +23009,12 @@ C++ includes: sitkLiThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LiThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::LiThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::LiThresholdImageFilter::GetInsideValue "
@@ -21614,12 +23132,12 @@ C++ includes: sitkLog10ImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::Log10ImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::Log10ImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::Log10ImageFilter::GetName "
@@ -21664,12 +23182,12 @@ C++ includes: sitkLogImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::LogImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::LogImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::LogImageFilter::GetName "
@@ -21698,6 +23216,69 @@ Destructor
 ";
 
 
+%feature("docstring") itk::simple::LoggerBase "
+
+A base class to handle SimpleITK and ITK messages and logging.
+
+
+In ITK this function is implemented by the itk::OutputWindow, but in SimpleITK it is called a logger.
+
+Provides a base class for SimpleITK to provide the \"DisplayText\"
+methods that match the interface of itk::OutputWindow. Derived instances of LoggerBase are used by an internal adaptor derived from the itk::OutputWindow so that this object instances can be used in ITK.
+
+/sa itk::OutputWindow
+
+C++ includes: sitkLogger.h
+";
+
+%feature("docstring")  itk::simple::LoggerBase::DisplayDebugText "
+";
+
+%feature("docstring")  itk::simple::LoggerBase::DisplayErrorText "
+";
+
+%feature("docstring")  itk::simple::LoggerBase::DisplayGenericOutputText "
+";
+
+%feature("docstring")  itk::simple::LoggerBase::DisplayText "
+";
+
+%feature("docstring")  itk::simple::LoggerBase::DisplayWarningText "
+";
+
+%feature("docstring")  itk::simple::LoggerBase::GetName "
+
+Set object name.
+
+";
+
+%feature("docstring")  itk::simple::LoggerBase::LoggerBase "
+";
+
+%feature("docstring")  itk::simple::LoggerBase::SetAsGlobalITKLogger "
+
+Set this logger instance to the ITK output window.
+
+After calling this method, all ITK and SimpleITK display, warning and
+error texts will be handled by this object's methods.
+
+
+An ITKLogger object holding the previous itk::OutputWindow instance. The returned object can be used to restore the original
+instance.
+
+
+";
+
+%feature("docstring")  itk::simple::LoggerBase::SetName "
+
+Get object name.
+
+";
+
+%feature("docstring")  itk::simple::LoggerBase::~LoggerBase "
+";
+
+
 %feature("docstring") itk::simple::MagnitudeAndPhaseToComplexImageFilter "
 
 Implements pixel-wise conversion of magnitude and phase data into
@@ -21719,12 +23300,6 @@ C++ includes: sitkMagnitudeAndPhaseToComplexImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MagnitudeAndPhaseToComplexImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::MagnitudeAndPhaseToComplexImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::MagnitudeAndPhaseToComplexImageFilter::Execute "
@@ -21734,6 +23309,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::MagnitudeAndPhaseToComplexImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MagnitudeAndPhaseToComplexImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::MagnitudeAndPhaseToComplexImageFilter::Execute "
@@ -21801,12 +23382,12 @@ C++ includes: sitkMaskImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MaskImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::MaskImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::MaskImageFilter::GetMaskingValue "
@@ -21891,12 +23472,12 @@ C++ includes: sitkMaskNegatedImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MaskNegatedImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::MaskNegatedImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::MaskNegatedImageFilter::GetMaskingValue "
@@ -21940,6 +23521,93 @@ Print ourselves out
 ";
 
 %feature("docstring")  itk::simple::MaskNegatedImageFilter::~MaskNegatedImageFilter "
+
+Destructor
+
+";
+
+
+%feature("docstring") itk::simple::MaskedAssignImageFilter "
+
+Mask an image with a mask.
+
+
+This class is templated over the types of the input image type, the
+mask image type and the type of the output image. Numeric conversions
+(castings) are done by the C++ defaults.
+
+The pixel type of the input 2 image must have a valid definition of
+the operator != with zero. This condition is required because
+internally this filter will perform the operation
+
+
+The pixel from the input 1 is cast to the pixel type of the output
+image.
+
+Note that the input and the mask images must be of the same size.
+
+
+WARNING:
+Any pixel value other than masking value (0 by default) will not be
+masked out.
+
+See:
+ MaskNegatedImageFilter
+
+ itk::simple::MaskedAssign for the procedural interface
+
+ itk::MaskedAssignImageFilter for the Doxygen on the original ITK
+class.
+
+
+C++ includes: sitkMaskedAssignImageFilter.h
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::Execute "
+
+Execute the filter on the input image
+
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::GetAssignConstant "
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::GetName "
+
+Name of this class
+
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::MaskedAssignImageFilter "
+
+Default Constructor that takes no arguments and initializes default
+parameters
+
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::SetAssignConstant "
+
+Method to explicitly set the outside value of the mask when
+AssignImage is undefined. Defaults to 0
+
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::ToString "
+
+Print ourselves out
+
+";
+
+%feature("docstring")  itk::simple::MaskedAssignImageFilter::~MaskedAssignImageFilter "
 
 Destructor
 
@@ -22126,7 +23794,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -22141,12 +23809,12 @@ C++ includes: sitkMaximumEntropyThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MaximumEntropyThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::MaximumEntropyThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::MaximumEntropyThresholdImageFilter::GetInsideValue "
@@ -22269,12 +23937,6 @@ C++ includes: sitkMaximumImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MaximumImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::MaximumImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::MaximumImageFilter::Execute "
@@ -22284,6 +23946,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::MaximumImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MaximumImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::MaximumImageFilter::Execute "
@@ -22321,7 +23989,7 @@ Maximum projection.
 
 
 This class was contributed to the insight journal by Gaetan Lehmann.
-The original paper can be found at https://hdl.handle.net/1926/164
+The original paper can be found at https://www.insight-journal.org/browse/publication/71
 
 
 Gaetan Lehmann. Biologie du Developpement et de la reproduction, inra
@@ -22466,7 +24134,7 @@ Mean projection.
 
 
 This class was contributed to the Insight Journal by Gaetan Lehmann.
-The original paper can be found at https://hdl.handle.net/1926/164
+The original paper can be found at https://www.insight-journal.org/browse/publication/71
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -22614,7 +24282,7 @@ Median projection.
 
 
 This class was contributed to the Insight Journal by Gaetan Lehmann.
-The original paper can be found at https://hdl.handle.net/1926/164
+The original paper can be found at https://www.insight-journal.org/browse/publication/71
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -22696,7 +24364,7 @@ objects with the same label are merged. PACK (2): MergeLabelMapFilter relabel al
 occur. STRICT (3): MergeLabelMapFilter keeps the labels unchanged and raises an exception if the same label
 is found in several images.
 
-This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -22712,24 +24380,24 @@ C++ includes: sitkMergeLabelMapFilter.h
 ";
 
 %feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::MergeLabelMapFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::MergeLabelMapFilter::GetMethod "
@@ -22822,12 +24490,12 @@ C++ includes: sitkMinMaxCurvatureFlowImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MinMaxCurvatureFlowImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::MinMaxCurvatureFlowImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::MinMaxCurvatureFlowImageFilter::GetName "
@@ -22901,12 +24569,6 @@ C++ includes: sitkMinimumImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MinimumImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::MinimumImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::MinimumImageFilter::Execute "
@@ -22916,6 +24578,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::MinimumImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MinimumImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::MinimumImageFilter::Execute "
@@ -23024,7 +24692,7 @@ Minimum projection.
 
 
 This class was contributed to the Insight Journal by Gaetan Lehmann.
-The original paper can be found at https://hdl.handle.net/1926/164
+The original paper can be found at https://www.insight-journal.org/browse/publication/71
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -23203,17 +24871,17 @@ C++ includes: sitkModulusImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ModulusImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::ModulusImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::ModulusImageFilter::Execute "
 
 Execute the filter with an image and a constant
+
+";
+
+%feature("docstring")  itk::simple::ModulusImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -23264,7 +24932,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -23279,12 +24947,12 @@ C++ includes: sitkMomentsThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MomentsThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::MomentsThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::MomentsThresholdImageFilter::GetInsideValue "
@@ -23388,11 +25056,8 @@ Destructor
 
 %feature("docstring") itk::simple::MorphologicalGradientImageFilter "
 
-gray scale dilation of an image
+Compute the gradient of a grayscale image.
 
-
-Dilate an image using grayscale morphology. Dilation takes the maximum
-of all the pixels identified by the structuring element.
 
 The structuring element is assumed to be composed of binary values
 (zero or one). Only elements of the structuring element having values
@@ -23516,7 +25181,7 @@ Principles and Applications\", Second Edition, Springer, 2003.
 
 This code was contributed in the Insight Journal paper: \"The
 watershed transform in ITK - discussion and new developments\" by
-Beare R., Lehmann G. https://hdl.handle.net/1926/202 http://www.insight-journal.org/browse/publication/92
+Beare R., Lehmann G. https://www.insight-journal.org/browse/publication/92
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -23636,7 +25301,7 @@ Principles and Applications\", Second Edition, Springer, 2003.
 
 This code was contributed in the Insight Journal paper: \"The
 watershed transform in ITK - discussion and new developments\" by
-Beare R., Lehmann G. https://hdl.handle.net/1926/202 http://www.insight-journal.org/browse/publication/92
+Beare R., Lehmann G. https://www.insight-journal.org/browse/publication/92
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -23760,7 +25425,7 @@ The algorithm is based on the binary STAPLE algorithm by Warfield et
 al. as published originally in
 
 S. Warfield, K. Zou, W. Wells, \"Validation of image segmentation and
-expert  quality with an expectation-maximization algorithm\" in MICCAI
+expert quality with an expectation-maximization algorithm\" in MICCAI
 2002: Fifth International Conference on Medical Image Computing and Computer-Assisted Intervention, Springer-Verlag,
 Heidelberg, Germany, 2002, pp. 298-306
 
@@ -23830,24 +25495,24 @@ C++ includes: sitkMultiLabelSTAPLEImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::GetConfusionMatrix "
@@ -23862,7 +25527,7 @@ execution.
 
 %feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::GetLabelForUndecidedPixels "
 
-Get label value used for undecided pixels.
+     Get label value used for undecided pixels.
 
 After updating the filter, this function returns the actual label
 value used for undecided pixels in the current output. Note that this
@@ -23885,7 +25550,7 @@ Name of this class
 
 %feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::GetPriorProbabilities "
 
-Get prior class probabilities.
+     Get prior class probabilities.
 
 After updating the filter, this function returns the actual prior
 class probabilities. If these were not previously set by a call to
@@ -23921,10 +25586,9 @@ Set maximum number of iterations.
 
 %feature("docstring")  itk::simple::MultiLabelSTAPLEImageFilter::SetPriorProbabilities "
 
-Set manual estimates for the a priori class probabilities. The size of
-the array must be greater than the value of the largest label. The
-index into the array corresponds to the label value in the segmented
-image for the class.
+     Set manual estimates for the a priori class probabilities. The
+size of the array must be greater than the value of the largest label. The index into the array corresponds to the label
+value in the segmented image for the class.
 
 ";
 
@@ -23965,12 +25629,6 @@ C++ includes: sitkMultiplyImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::MultiplyImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::MultiplyImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::MultiplyImageFilter::Execute "
@@ -23980,6 +25638,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::MultiplyImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::MultiplyImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::MultiplyImageFilter::Execute "
@@ -24022,8 +25686,8 @@ nonuniformity associated with MR images. The algorithm assumes a
 simple parametric model (Gaussian) for the bias field and does not
 require tissue class segmentation. In addition, there are only a
 couple of parameters to tune with the default values performing quite
-well. N3 has been publicly available as a set of perl scripts ( http://www.bic.mni.mcgill.ca/ServicesSoftwareAdvancedImageProcessingTo
-ols/HomePage )
+well. N3 has been publicly available as a set of perl scripts ( https://www.bic.mni.mcgill.ca/ServicesSoftwareAdvancedImageProcessingT
+ools/HomePage )
 
 The N4 algorithm, encapsulated with this class, is a variation of the
 original N3 algorithm with the additional benefits of an improved
@@ -24063,7 +25727,7 @@ results with a B-spline scalar field estimate of the bias field.
 
 Nicholas J. Tustison
  Contributed by Nicholas J. Tustison, James C. Gee in the Insight
-Journal paper: https://hdl.handle.net/10380/3053
+Journal paper: https://www.insight-journal.org/browse/publication/640
 
 REFERENCE
  J.G. Sled, A.P. Zijdenbos and A.C. Evans. \"A Nonparametric Method
@@ -24083,12 +25747,12 @@ C++ includes: sitkN4BiasFieldCorrectionImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::N4BiasFieldCorrectionImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::N4BiasFieldCorrectionImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::N4BiasFieldCorrectionImageFilter::GetBiasFieldFullWidthAtHalfMaximum "
@@ -24108,15 +25772,64 @@ fitting level or terminates if it is at the last level.
 
 ";
 
+%feature("docstring")  itk::simple::N4BiasFieldCorrectionImageFilter::GetCurrentConvergenceMeasurement "
+
+Get the current convergence measurement. This is a helper function for
+reporting observations.
+
+This is an active measurement. It may be accessed while the filter is
+being executing in command call-backs and can be accessed after
+execution.
+
+";
+
+%feature("docstring")  itk::simple::N4BiasFieldCorrectionImageFilter::GetCurrentLevel "
+
+Get the current fitting level. This is a helper function for reporting
+observations.
+
+This is an active measurement. It may be accessed while the filter is
+being executing in command call-backs and can be accessed after
+execution.
+
+";
+
+%feature("docstring")  itk::simple::N4BiasFieldCorrectionImageFilter::GetElapsedIterations "
+
+Get the number of elapsed iterations. This is a helper function for
+reporting observations.
+
+This is an active measurement. It may be accessed while the filter is
+being executing in command call-backs and can be accessed after
+execution.
+
+";
+
+%feature("docstring")  itk::simple::N4BiasFieldCorrectionImageFilter::GetLogBiasFieldAsImage "
+
+The computed log bias field correction. Typically, a reduced size
+image is used as input to the N4 filter using something like
+itkShrinkImageFilter. Since the output is a corrected version of the
+input, the user will probably want to apply the bias field correction
+to the full resolution image. Returns the b-spline log bias field
+reconstructioned onto the space of the referenceImage parameter. An
+input image can be corrected by: input/exp(bias_field).
+
+
+ This is an active measurement. It may be accessed while the  filter
+is being executing in command call-backs and can be  accessed after
+execution.
+
+";
+
 %feature("docstring")  itk::simple::N4BiasFieldCorrectionImageFilter::GetMaskLabel "
 
-DeprecatedSet/Get mask label value. If a binary mask image is
-specified and if UseMaskValue is true, only those input image voxels
-corresponding with mask image values equal to MaskLabel are used in
-estimating the bias field. If a MaskImage is specified and
-UseMaskLabel is false, all input image voxels corresponding to non-
-zero voxels in the MaskImage are used in estimating the bias field.
-Default = 1.
+Set/Get mask label value. If a binary mask image is specified and if
+UseMaskValue is true, only those input image voxels corresponding with
+mask image values equal to MaskLabel are used in estimating the bias
+field. If a MaskImage is specified and UseMaskLabel is false, all
+input image voxels corresponding to non-zero voxels in the MaskImage
+are used in estimating the bias field. Default = 1.
 
 ";
 
@@ -24311,24 +26024,24 @@ C++ includes: sitkNaryAddImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NaryAddImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::NaryAddImageFilter::GetName "
@@ -24393,24 +26106,24 @@ C++ includes: sitkNaryMaximumImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NaryMaximumImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::NaryMaximumImageFilter::GetName "
@@ -24742,7 +26455,7 @@ This transform is especially useful for normalizing a convolution
 kernel.
 
 This code was contributed in the Insight Journal paper: \"FFT based
-convolution\" by Lehmann G. https://hdl.handle.net/10380/3154
+convolution\" by Lehmann G. https://insight-journal.org/browse/publication/717
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -24900,12 +26613,6 @@ C++ includes: sitkNotEqualImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
@@ -24915,15 +26622,21 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
 
 Execute the filter on an image and a constant with the given
 parameters
+
+";
+
+%feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::NotEqualImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -25008,12 +26721,12 @@ C++ includes: sitkNotImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::NotImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::NotImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::NotImageFilter::GetName "
@@ -25039,6 +26752,40 @@ Print ourselves out
 
 Destructor
 
+";
+
+
+%feature("docstring") itk::simple::ObjectOwnedBase "
+
+An abstract base class to connect this object with the lifetime of
+another.
+
+
+This class maintains a list of Objects and callbacks to call when this
+object is deleted.
+
+Optionally, \"OwnedByObjects\" property can be enabled so that when
+the last referenced object is removed this object will be deleted.
+
+C++ includes: sitkObjectOwnedBase.h
+";
+
+%feature("docstring")  itk::simple::ObjectOwnedBase::GetName "
+
+Set object name.
+
+";
+
+%feature("docstring")  itk::simple::ObjectOwnedBase::ObjectOwnedBase "
+";
+
+%feature("docstring")  itk::simple::ObjectOwnedBase::SetName "
+
+Get object name.
+
+";
+
+%feature("docstring")  itk::simple::ObjectOwnedBase::~ObjectOwnedBase "
 ";
 
 
@@ -25246,7 +26993,7 @@ morphological opening, the opening by reconstruction preserves the
 shape of the components that are not removed by erosion. The opening
 by reconstruction of an image \"f\" is defined as:
 
-OpeningByReconstruction(f) = DilationByRecontruction(f, Erosion(f)).
+OpeningByReconstruction(f) = DilationByReconstruction(f, Erosion(f)).
 
 Opening by reconstruction not only removes structures destroyed by the
 erosion, but also levels down the contrast of the brightest regions.
@@ -25318,7 +27065,7 @@ Name of this class
 %feature("docstring")  itk::simple::OpeningByReconstructionImageFilter::GetPreserveIntensities "
 
 Set/Get whether the original intensities of the image retained for
-those pixels unaffected by the opening by reconstrcution. If Off, the
+those pixels unaffected by the opening by reconstruction. If Off, the
 output pixel contrast will be reduced.
 
 ";
@@ -25369,7 +27116,7 @@ Set the kernel or structuring element used for the morphology.
 %feature("docstring")  itk::simple::OpeningByReconstructionImageFilter::SetPreserveIntensities "
 
 Set/Get whether the original intensities of the image retained for
-those pixels unaffected by the opening by reconstrcution. If Off, the
+those pixels unaffected by the opening by reconstruction. If Off, the
 output pixel contrast will be reduced.
 
 ";
@@ -25414,17 +27161,17 @@ C++ includes: sitkOrImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::OrImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::OrImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::OrImageFilter::Execute "
 
 Execute the filter with an image and a constant
+
+";
+
+%feature("docstring")  itk::simple::OrImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -25526,6 +27273,10 @@ Set/Get the number of thresholds. Default is 1.
 ";
 
 %feature("docstring")  itk::simple::OtsuMultipleThresholdsImageFilter::GetReturnBinMidpoint "
+
+Should the threshold value be mid-point of the bin or the maximum?
+Default is to return bin maximum.
+
 ";
 
 %feature("docstring")  itk::simple::OtsuMultipleThresholdsImageFilter::GetThresholds "
@@ -25578,6 +27329,10 @@ Set/Get the number of thresholds. Default is 1.
 ";
 
 %feature("docstring")  itk::simple::OtsuMultipleThresholdsImageFilter::SetReturnBinMidpoint "
+
+Should the threshold value be mid-point of the bin or the maximum?
+Default is to return bin maximum.
+
 ";
 
 %feature("docstring")  itk::simple::OtsuMultipleThresholdsImageFilter::SetValleyEmphasis "
@@ -25622,7 +27377,7 @@ Richard Beare
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -25637,12 +27392,12 @@ C++ includes: sitkOtsuThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::OtsuThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::OtsuThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::OtsuThresholdImageFilter::GetInsideValue "
@@ -25769,25 +27524,34 @@ Destructor
 
 %feature("docstring") itk::simple::PasteImageFilter "
 
-Paste an image into another image.
+Paste an image (or a constant value) into another image.
 
 
-PasteImageFilter allows you to take a section of one image and paste into another
-image. The SetDestinationIndex() method prescribes where in the first input to start pasting data from
-the second input. The SetSourceRegion method prescribes the section of
-the second image to paste into the first. If the output requested
-region does not include the SourceRegion after it has been
-repositioned to DestinationIndex, then the output will just be a copy
-of the input.
+PasteImageFilter allows a region in a destination image to be filled with a source
+image or a constant pixel value. The SetDestinationIndex() method prescribes where in the destination input to start pasting
+data from the source input. The SetSourceRegion method prescribes the
+section of the second image to paste into the first. When a constant
+pixel value is set, the SourceRegion describes the size of the region
+filled. If the output requested region does not include the
+SourceRegion after it has been repositioned to DestinationIndex, then
+the output will just be a copy of the input.
 
-The two inputs and output image will have the same pixel type.
-See:
- itk::simple::Paste for the procedural interface
+This filter supports running \"InPlace\" to efficiently reuses the
+destination image buffer for the output, removing the need to copy the
+destination pixels to the output.
 
- itk::PasteImageFilter for the Doxygen on the original ITK class.
-
+When the source image is a lower dimension than the destination image
+then the DestinationSkipAxes parameter specifies which axes in the
+destination image are set to 1 when copying the region or filling with
+a constant.
 
 C++ includes: sitkPasteImageFilter.h
+";
+
+%feature("docstring")  itk::simple::PasteImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::PasteImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::PasteImageFilter::Execute "
@@ -25803,6 +27567,21 @@ Execute the filter on the input image
 
 Set/Get the destination index (where in the first input the second
 input will be pasted.
+
+";
+
+%feature("docstring")  itk::simple::PasteImageFilter::GetDestinationSkipAxes "
+
+Set/Get the array describing which axes in the destination image to
+skip
+
+The axes with true values are set to 1, to fill the difference between
+the dimension of the input and source image. The number of true values
+in DestinationSkipAxes plus the DestinationImageDimension must equal
+the InputImageDimension.
+
+By default this array contains SourceImageDimension false values
+followed by true values for the remainder.
 
 ";
 
@@ -25832,6 +27611,21 @@ input will be pasted.
 
 ";
 
+%feature("docstring")  itk::simple::PasteImageFilter::SetDestinationSkipAxes "
+
+Set/Get the array describing which axes in the destination image to
+skip
+
+The axes with true values are set to 1, to fill the difference between
+the dimension of the input and source image. The number of true value
+in DestinationSkipAxes plus the DestinationImageDimension must equal
+the InputImageDimension.
+
+By default this array contains SourceImageDimension false values
+followed by true values for the remainder.
+
+";
+
 %feature("docstring")  itk::simple::PasteImageFilter::SetSourceIndex "
 ";
 
@@ -25857,7 +27651,7 @@ Derived class implementing a specific patch-based denoising algorithm,
 as detailed below.
 
 
-This class is derived from the base class PatchBasedDenoisingBaseImageFilter; please refer to the documentation of the base class first. This
+This class is derived from the base class PatchBasedDenoisingBaseImageFilter ; please refer to the documentation of the base class first. This
 class implements a denoising filter that uses iterative non-local, or
 semi-local, weighted averaging of image patches for image denoising.
 The intensity at each pixel 'p' gets updated as a weighted average of
@@ -26138,7 +27932,7 @@ Permutes the image axes according to a user specified order.
 PermuateAxesImageFilter permutes the image axes according to a user
 specified order. The permutation order is set via method SetOrder(
 order ) where the input is an array of ImageDimension number of
-unsigned int. The elements of the array must be a rearrangment of the
+unsigned int. The elements of the array must be a rearrangement of the
 numbers from 0 to ImageDimension - 1.
 
 The i-th axis of the output image corresponds with the order[i]-th
@@ -26292,17 +28086,20 @@ Destructor
 Private implementation idiom image base class.
 
 
-We utilize the private implementation ( or PImple) programming idiom
-to modify the behavior of the simple image class based on the
-different image types.
+We utilize the private implementation ( or PImpl) programming idiom to
+modify the behavior of the simple image class based on the different
+image types.
 
-This class is designed to utilize the trivial copy, and assgnement
+This class is designed to utilize the trivial copy, and assignment
 operators
 
 C++ includes: sitkPimpleImageBase.h
 ";
 
 %feature("docstring")  itk::simple::PimpleImageBase::DeepCopy "
+";
+
+%feature("docstring")  itk::simple::PimpleImageBase::EvaluateAtContinuousIndex "
 ";
 
 %feature("docstring")  itk::simple::PimpleImageBase::GetBufferAsDouble "
@@ -26482,6 +28279,9 @@ C++ includes: sitkPimpleImageBase.h
 %feature("docstring")  itk::simple::PimpleImageBase::GetWidth "
 ";
 
+%feature("docstring")  itk::simple::PimpleImageBase::ProxyCopy "
+";
+
 %feature("docstring")  itk::simple::PimpleImageBase::SetDirection "
 ";
 
@@ -26607,12 +28407,6 @@ C++ includes: sitkPowImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::PowImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::PowImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::PowImageFilter::Execute "
@@ -26622,6 +28416,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::PowImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::PowImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::PowImageFilter::Execute "
@@ -26679,6 +28479,16 @@ If there is no active process the method has no effect.
 
 %feature("docstring")  itk::simple::ProcessObject::AddCommand "
 
+Directly add a callback to observe an event.
+
+
+This overloaded method can take a C++ lambda function as a second
+argument.
+
+";
+
+%feature("docstring")  itk::simple::ProcessObject::AddCommand "
+
 Add a Command Object to observer the event.
 
 
@@ -26702,16 +28512,6 @@ For more information see the page CommandPage.
 
 The return value is reserved for latter usage.
 
-
-";
-
-%feature("docstring")  itk::simple::ProcessObject::AddCommand "
-
-Directly add a callback to observe an event.
-
-
-This overloaded method can take a C++ lambda function as a second
-argument.
 
 ";
 
@@ -26782,7 +28582,7 @@ images formed by counting photons, for example.
 This code was adapted from the Insight Journal contribution:
 
 \"Deconvolution: infrastructure and reference algorithms\" by Gaetan
-Lehmann https://hdl.handle.net/10380/3207
+Lehmann https://www.insight-journal.org/browse/publication/753
 
 
 Gaetan Lehmann, Biologie du Developpement et de la Reproduction, INRA
@@ -26916,7 +28716,7 @@ The structuring element is assumed to be composed of binary values
 > 0 are candidates for affecting the center pixel.
 
 This code was contributed in the Insight Journal paper: \"Efficient
-implementation of kernel filtering\" by Beare R., Lehmann G https://hdl.handle.net/1926/555 http://www.insight-journal.org/browse/publication/160
+implementation of kernel filtering\" by Beare R., Lehmann G https://www.insight-journal.org/browse/publication/160
 
 
 See:
@@ -26939,6 +28739,12 @@ Execute the filter on the input image
 
 ";
 
+%feature("docstring")  itk::simple::RankImageFilter::GetKernelType "
+
+Get the kernel or structuring element .
+
+";
+
 %feature("docstring")  itk::simple::RankImageFilter::GetName "
 
 Name of this class
@@ -26958,13 +28764,13 @@ parameters
 
 ";
 
-%feature("docstring")  itk::simple::RankImageFilter::SetRadius "
+%feature("docstring")  itk::simple::RankImageFilter::SetKernelType "
+
+Set the kernel or structuring element.
+
 ";
 
 %feature("docstring")  itk::simple::RankImageFilter::SetRadius "
-
-Set the values of the Radius vector all to value
-
 ";
 
 %feature("docstring")  itk::simple::RankImageFilter::SetRank "
@@ -27121,8 +28927,8 @@ Geodesic morphology is described in Chapter 6.2 of Pierre Soille's
 book \"Morphological Image Analysis: Principles and Applications\",
 Second Edition, Springer, 2003.
 
-Algorithm implemented in this filter is based on algorithm described
-by Kevin Robinson and Paul F. Whelan in \"Efficient Morphological
+Algorithm implemented in this filter is based on algorithm described by Kevin
+Robinson and Paul F. Whelan in \"Efficient Morphological
 Reconstruction: A Downhill Filter\", Pattern Recognition Letters,
 Volume 25, Issue 15, November 2004, Pages 1759-1767.
 
@@ -27224,8 +29030,8 @@ Geodesic morphology is described in Chapter 6.2 of Pierre Soille's
 book \"Morphological Image Analysis: Principles and Applications\",
 Second Edition, Springer, 2003.
 
-Algorithm implemented in this filter is based on algorithm described
-by Kevin Robinson and Paul F. Whelan in \"Efficient Morphological
+Algorithm implemented in this filter is based on algorithm described by Kevin
+Robinson and Paul F. Whelan in \"Efficient Morphological
 Reconstruction: A Downhill Filter\", Pattern Recognition Letters,
 Volume 25, Issue 15, November 2004, Pages 1759-1767.
 
@@ -27329,9 +29135,9 @@ Details of the implementation are described in the technical report: R.
 Deriche, \"Recursively Implementing The Gaussian and Its
 Derivatives\", INRIA, 1993, ftp://ftp.inria.fr/INRIA/tech-reports/RR/RR-1893.ps.gz
 
-Further improvements of the algorithm are described in: G. Farneback &
-C.-F. Westin, \"On Implementation of Recursive Gaussian  Filters\", so
-far unpublished.
+Further improvements of the algorithm are described in: G. Farnebäck &
+C.-F. Westin, \"Improving Deriche-style Recursive Gaussian Filters\".
+J Math Imaging Vis 26, 293–299 (2006). https://doi.org/10.1007/s10851-006-8464-z
 
 As compared to itk::DiscreteGaussianImageFilter , this filter tends to be faster for large kernels, and it can take
 the derivative of the blurred image in one step. Also, note that we
@@ -27350,12 +29156,12 @@ C++ includes: sitkRecursiveGaussianImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::RecursiveGaussianImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::RecursiveGaussianImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::RecursiveGaussianImageFilter::GetDirection "
@@ -27372,7 +29178,7 @@ Name of this class
 
 %feature("docstring")  itk::simple::RecursiveGaussianImageFilter::GetOrder "
 
-Set/Get the Order of the Gaussian to convolve with.
+     Set/Get the Order of the Gaussian to convolve with.
 
 
 ZeroOrder is equivalent to convolving with a Gaussian. This is the
@@ -27416,7 +29222,7 @@ parameters
 
 %feature("docstring")  itk::simple::RecursiveGaussianImageFilter::SetNormalizeAcrossScale "
 
-Set/Get the flag for normalizing the gaussian over scale-space.
+     Set/Get the flag for normalizing the gaussian over scale-space.
 
 This flag enables the analysis of the differential shape of features
 independent of their size ( both pixels and physical size ). Following
@@ -27450,7 +29256,7 @@ other methods such as a discrete Gaussian kernel should be considered.
 
 %feature("docstring")  itk::simple::RecursiveGaussianImageFilter::SetOrder "
 
-Set/Get the Order of the Gaussian to convolve with.
+     Set/Get the Order of the Gaussian to convolve with.
 
 
 ZeroOrder is equivalent to convolving with a Gaussian. This is the
@@ -27589,7 +29395,7 @@ a maxima or not. The desired behavior can be selected with the SetFlatIsMaxima()
 Gaetan Lehmann
  This class was contributed to the Insight Journal by author Gaetan
 Lehmann. Biologie du Developpement et de la Reproduction, INRA de
-Jouy-en-Josas, France. The paper can be found at https://hdl.handle.net/1926/153
+Jouy-en-Josas, France. The paper can be found at https://www.insight-journal.org/browse/publication/65
 
 
 See:
@@ -27640,7 +29446,7 @@ to NumericTraits<PixelType>::NonpositiveMin() .
 
 %feature("docstring")  itk::simple::RegionalMaximaImageFilter::GetFlatIsMaxima "
 
-Set/Get wether a flat image must be considered as a maxima or not.
+Set/Get whether a flat image must be considered as a maxima or not.
 Defaults to true.
 
 ";
@@ -27730,7 +29536,7 @@ a minima or not. The SetFlatIsMinima() method let the user choose which behavior
 
 This class was contributed to the Insight Journal by
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
-de Jouy-en-Josas, France. https://hdl.handle.net/1926/153
+de Jouy-en-Josas, France. https://www.insight-journal.org/browse/publication/65
 
 See:
  RegionalMaximaImageFilter
@@ -27780,7 +29586,7 @@ to NumericTraits<PixelType>::NonpositiveMin() .
 
 %feature("docstring")  itk::simple::RegionalMinimaImageFilter::GetFlatIsMinima "
 
-Set/Get wether a flat image must be considered as a minima or not.
+Set/Get whether a flat image must be considered as a minima or not.
 Defaults to true.
 
 ";
@@ -27823,7 +29629,7 @@ to NumericTraits<PixelType>::NonpositiveMin() .
 
 %feature("docstring")  itk::simple::RegionalMinimaImageFilter::SetFlatIsMinima "
 
-Set/Get wether a flat image must be considered as a minima or not.
+Set/Get whether a flat image must be considered as a minima or not.
 Defaults to true.
 
 ";
@@ -27876,7 +29682,7 @@ relabeling.
 
 RelabelComponentImageFilter is typically used on the output of the ConnectedComponentImageFilter for those applications that want to extract the largest object or the
 \"k\" largest objects. Any particular object can be extracted from the
-relabeled output using a BinaryThresholdImageFilter . A group of objects can be extracted from the relabled output using
+relabeled output using a BinaryThresholdImageFilter . A group of objects can be extracted from the relabeled output using
 a ThresholdImageFilter .
 
 Once all the objects are relabeled, the application can query the
@@ -27892,7 +29698,7 @@ small ones were discarded.
 RelabelComponentImageFilter can be run as an \"in place\" filter, where it will overwrite its
 output. The default is run out of place (or generate a separate
 output). \"In place\" operation can be controlled via methods in the
-superclass, InPlaceImageFilter::InPlaceOn() and InPlaceImageFilter::InPlaceOff() .
+superclass, InPlaceImageFilter::InPlaceOn() and InPlaceImageFilter::InPlaceOff().
 
 
 See:
@@ -27907,12 +29713,12 @@ C++ includes: sitkRelabelComponentImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::RelabelComponentImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::RelabelComponentImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::RelabelComponentImageFilter::GetMinimumObjectSize "
@@ -28038,7 +29844,7 @@ attempts to reorganize the labels consecutively. The user can assign
 an arbitrary value to the background; the filter will assign the
 labels consecutively by skipping the background value.
 
-This implementation was taken from the Insight Journal paper: https://hdl.handle.net/1926/584 or http://www.insight-journal.org/browse/publication/176
+This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/176
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
 
@@ -28054,12 +29860,12 @@ C++ includes: sitkRelabelLabelMapFilter.h
 ";
 
 %feature("docstring")  itk::simple::RelabelLabelMapFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::RelabelLabelMapFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::RelabelLabelMapFilter::GetName "
@@ -28118,7 +29924,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -28133,12 +29939,12 @@ C++ includes: sitkRenyiEntropyThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::RenyiEntropyThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::RenyiEntropyThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::RenyiEntropyThresholdImageFilter::GetInsideValue "
@@ -28313,7 +30119,7 @@ Name of this class
 
 %feature("docstring")  itk::simple::ResampleImageFilter::GetOutputDirection "
 
-Set the output direciton cosine matrix.
+Set the output direction cosine matrix.
 
 ";
 
@@ -28370,7 +30176,7 @@ possible pixel values), and BSplineInterpolateImageFunction (which provides a hi
 
 %feature("docstring")  itk::simple::ResampleImageFilter::SetOutputDirection "
 
-Set the output direciton cosine matrix.
+Set the output direction cosine matrix.
 
 ";
 
@@ -28476,12 +30282,12 @@ C++ includes: sitkRescaleIntensityImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::RescaleIntensityImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::RescaleIntensityImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::RescaleIntensityImageFilter::GetName "
@@ -28540,7 +30346,7 @@ independent of the other pixels.
 This code was adapted from the Insight Journal contribution:
 
 \"Deconvolution: infrastructure and reference algorithms\" by Gaetan
-Lehmann https://hdl.handle.net/10380/3207
+Lehmann https://www.insight-journal.org/browse/publication/753
 
 
 Gaetan Lehmann, Biologie du Developpement et de la Reproduction, INRA
@@ -28653,12 +30459,12 @@ C++ includes: sitkRoundImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::RoundImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::RoundImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::RoundImageFilter::GetName "
@@ -28687,6 +30493,58 @@ Destructor
 ";
 
 
+%feature("docstring") itk::simple::SITK_FINAL "
+
+A class to hold itk::OutputWindows instances.
+
+All \"DisplayText\" methods are forwarded to the held OutputWindow instance.
+
+Neither the ownership nor callback functionality of the ObjectOwnedBase is supported.
+
+C++ includes: sitkLogger.h
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::DisplayDebugText "
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::DisplayErrorText "
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::DisplayGenericOutputText "
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::DisplayText "
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::DisplayWarningText "
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::ITKLogger "
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::ITKLogger "
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::ITKLogger "
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::SetAsGlobalITKLogger "
+
+Set the ITK logger to the ITK OutputWindow instance held.
+
+Overrides the base functionality to eliminate the creation of the
+intermediary adaptor class.
+
+
+The previous logger.
+
+
+";
+
+%feature("docstring")  itk::simple::SITK_FINAL::~ITKLogger "
+";
+
+
 %feature("docstring") itk::simple::SLICImageFilter "
 
 Simple Linear Iterative Clustering (SLIC) super-pixel segmentation.
@@ -28700,10 +30558,10 @@ computation. The SLIC algorithm can be viewed as a spatially
 constrained iterative k-means method.
 
 The original algorithm was designed to cluster on the joint domain of
-the images index space and it's CIELAB color space. This
-implementation works with images of arbitrary dimension as well as
-scalar, single channel, images and most multi-component image types
-including ITK's arbitrary length VectorImage .
+the images index space and its CIELAB color space. This implementation
+works with images of arbitrary dimension as well as scalar, single
+channel, images and most multi-component image types including ITK's
+arbitrary length VectorImage .
 
 The distance between a pixel and a cluster is the sum of squares of
 the difference between their joint range and domains ( index and value
@@ -28716,7 +30574,7 @@ id is zero.
 
 This code was contributed in the Insight Journal paper: \"Scalable
 Simple Linear Iterative Clustering (SSLIC) Using a Generic and
-Parallel Approach\" by Lowekamp B. C., Chen D. T., Yaniv Z., Yoo T. S. https://hdl.handle.net/1926/3596
+Parallel Approach\" by Lowekamp B. C., Chen D. T., Yaniv Z., Yoo T. S. https://www.insight-journal.org/browse/publication/989
 See:
  itk::simple::SLIC for the procedural interface
 
@@ -28862,7 +30720,7 @@ of each pixel being in the object targeted by the segmentation.
 The STAPLE algorithm is described in
 
 S. Warfield, K. Zou, W. Wells, \"Validation of image segmentation and
-expert  quality with an expectation-maximization algorithm\" in MICCAI
+expert quality with an expectation-maximization algorithm\" in MICCAI
 2002: Fifth International Conference on Medical Image Computing and Computer-Assisted Intervention, Springer-Verlag,
 Heidelberg, Germany, 2002, pp. 298-306
 
@@ -28946,24 +30804,24 @@ C++ includes: sitkSTAPLEImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::STAPLEImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::STAPLEImageFilter::GetConfidenceWeight "
@@ -29102,7 +30960,7 @@ pepper pixels are equally distributed.
 
 Gaetan Lehmann
  This code was contributed in the Insight Journal paper \"Noise
-Simulation\". https://hdl.handle.net/10380/3158
+Simulation\". https://www.insight-journal.org/browse/publication/721
 See:
  itk::simple::SaltAndPepperNoise for the procedural interface
 
@@ -29113,12 +30971,12 @@ C++ includes: sitkSaltAndPepperNoiseImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SaltAndPepperNoiseImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::SaltAndPepperNoiseImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::SaltAndPepperNoiseImageFilter::GetName "
@@ -29176,18 +31034,14 @@ filter.
 This code was adapted from the paper: \"An active contour model
 without edges\" T. Chan and L. Vese. In Scale-Space Theories in
 Computer Vision, pages 141-151, 1999.
-
-
 Mosaliganti K., Smith B., Gelas A., Gouaillard A., Megason S.
  This code was taken from the Insight Journal paper: \"Cell Tracking
-using Coupled Active Surfaces for Nuclei and Membranes\" http://www.insight-journal.org/browse/publication/642 https://hdl.handle.net/10380/3055
-
-That is based on the papers: \"Level Set Segmentation: Active Contours
-without edge\" http://www.insight-journal.org/browse/publication/322 https://hdl.handle.net/1926/1532
+using Coupled Active Surfaces for Nuclei and Membranes\" https://www.insight-journal.org/browse/publication/642 https://hdl.handle.net/10380/3055 That is based on the papers: \"Level Set Segmentation: Active
+Contours without edge\" https://www.insight-journal.org/browse/publication/322 https://hdl.handle.net/1926/1532
 
 and
 
-\"Level set segmentation using coupled active surfaces\" http://www.insight-journal.org/browse/publication/323 https://hdl.handle.net/1926/1533
+\"Level set segmentation using coupled active surfaces\" https://www.insight-journal.org/browse/publication/323 https://hdl.handle.net/1926/1533
 See:
  itk::simple::ScalarChanAndVeseDenseLevelSet for the procedural interface
 
@@ -29356,12 +31210,12 @@ C++ includes: sitkScalarConnectedComponentImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ScalarConnectedComponentImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ScalarConnectedComponentImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ScalarConnectedComponentImageFilter::FullyConnectedOff "
@@ -29547,7 +31401,7 @@ mapped to the entire range of colors.
 
 This code was contributed in the Insight Journal paper: \"Meeting Andy
 Warhol Somewhere Over the Rainbow: RGB Colormapping and ITK\" by
-Tustison N., Zhang H., Lehmann G., Yushkevich P., Gee J. https://hdl.handle.net/1926/1452 http://www.insight-journal.org/browse/publication/285
+Tustison N., Zhang H., Lehmann G., Yushkevich P., Gee J. https://www.insight-journal.org/browse/publication/285
 
 
 See:
@@ -29689,12 +31543,12 @@ fixed parameter
 ";
 
 %feature("docstring")  itk::simple::ScaleSkewVersor3DTransform::SetRotation "
-
-parameter
-
 ";
 
 %feature("docstring")  itk::simple::ScaleSkewVersor3DTransform::SetRotation "
+
+parameter
+
 ";
 
 %feature("docstring")  itk::simple::ScaleSkewVersor3DTransform::SetScale "
@@ -29828,12 +31682,12 @@ fixed parameter
 ";
 
 %feature("docstring")  itk::simple::ScaleVersor3DTransform::SetRotation "
-
-parameter
-
 ";
 
 %feature("docstring")  itk::simple::ScaleVersor3DTransform::SetRotation "
+
+parameter
+
 ";
 
 %feature("docstring")  itk::simple::ScaleVersor3DTransform::SetScale "
@@ -29867,7 +31721,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -29882,12 +31736,12 @@ C++ includes: sitkShanbhagThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ShanbhagThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ShanbhagThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ShanbhagThresholdImageFilter::GetInsideValue "
@@ -30032,7 +31886,7 @@ a combination of PropagationScaling and CurvatureScaling parameters.
 The larger the CurvatureScaling parameter, the smoother the resulting
 contour. The CurvatureScaling parameter should be non-negative for
 proper operation of this algorithm. To follow the implementation in
-Malladi et al paper, set the PropagtionScaling to $\\\\pm 1.0$ and CurvatureScaling to $ \\\\epsilon $ .
+Malladi et al paper, set the PropagationScaling to $\\\\pm 1.0$ and CurvatureScaling to $ \\\\epsilon $ .
 
 Note that there is no advection term for this filter. Setting the
 advection scaling will have no effect.
@@ -30068,12 +31922,12 @@ C++ includes: sitkShapeDetectionLevelSetImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ShapeDetectionLevelSetImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ShapeDetectionLevelSetImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ShapeDetectionLevelSetImageFilter::GetCurvatureScaling "
@@ -30193,6 +32047,12 @@ Name of this class
 
 ";
 
+%feature("docstring")  itk::simple::ShiftScaleImageFilter::GetOutputPixelType "
+
+Get the output pixel type.
+
+";
+
 %feature("docstring")  itk::simple::ShiftScaleImageFilter::GetOverflowCount "
 
 Get the number of pixels that underflowed and overflowed.
@@ -30222,6 +32082,12 @@ Get the number of pixels that underflowed and overflowed.
 
 This is a measurement. Its value is updated in the Execute methods, so
 the value will only be valid after an execution.
+
+";
+
+%feature("docstring")  itk::simple::ShiftScaleImageFilter::SetOutputPixelType "
+
+Set the output pixel type, if sitkUnknown then the input type is used.
 
 ";
 
@@ -30300,7 +32166,7 @@ where $ N() $ is a normally distributed random variable of mean 0 and variance 1
 
 Gaetan Lehmann
  This code was contributed in the Insight Journal paper \"Noise
-Simulation\". https://hdl.handle.net/10380/3158
+Simulation\". https://www.insight-journal.org/browse/publication/721
 See:
  itk::simple::ShotNoise for the procedural interface
 
@@ -30311,12 +32177,12 @@ C++ includes: sitkShotNoiseImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ShotNoiseImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ShotNoiseImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ShotNoiseImageFilter::GetName "
@@ -30473,12 +32339,12 @@ C++ includes: sitkSigmoidImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SigmoidImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::SigmoidImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::SigmoidImageFilter::GetAlpha "
@@ -30533,11 +32399,12 @@ Destructor
 
 %feature("docstring") itk::simple::SignedDanielssonDistanceMapImageFilter "
 
+This filter computes the signed distance map of the input image as an
+approximation with pixel accuracy to the Euclidean distance.
+
+
 This class is parameterized over the type of the input image and the
 type of the output image.
-
-This filter computes the distance map of the input image as an
-approximation with pixel accuracy to the Euclidean distance.
 
 For purposes of evaluating the signed distance map, the input is
 assumed to be binary composed of pixels with value 0 and non-zero.
@@ -30605,6 +32472,15 @@ Get the distance squared.
 %feature("docstring")  itk::simple::SignedDanielssonDistanceMapImageFilter::GetUseImageSpacing "
 
 Get whether spacing is used.
+
+";
+
+%feature("docstring")  itk::simple::SignedDanielssonDistanceMapImageFilter::GetVectorDistanceMap "
+
+Get vector field of distances.
+
+This is a measurement. Its value is updated in the Execute methods, so
+the value will only be valid after an execution.
 
 ";
 
@@ -30712,10 +32588,9 @@ input binary image. Normally this is zero and, as such, zero is the
 default value. Other than that, the usage is completely analogous to
 the itk::DanielssonDistanceImageFilter class except it does not return
 the Voronoi map.
- Reference: C. R. Maurer, Jr., R. Qi, and V. Raghavan, \"A Linear Time
-Algorithm for Computing Exact Euclidean Distance Transforms of Binary
-Images in Arbitrary Dimensions\", IEEE - Transactions on Pattern
-Analysis and Machine Intelligence, 25(2): 265-270, 2003.
+ Reference: C. R. Maurer, Jr., R. Qi, and V. Raghavan, \"A Linear Time Algorithm for Computing Exact Euclidean Distance Transforms of Binary Images in
+Arbitrary Dimensions\", IEEE - Transactions on Pattern Analysis and
+Machine Intelligence, 25(2): 265-270, 2003.
 See:
  itk::simple::SignedMaurerDistanceMap for the procedural interface
 
@@ -30959,12 +32834,12 @@ fixed parameter
 ";
 
 %feature("docstring")  itk::simple::Similarity3DTransform::SetRotation "
-
-parameter
-
 ";
 
 %feature("docstring")  itk::simple::Similarity3DTransform::SetRotation "
+
+parameter
+
 ";
 
 %feature("docstring")  itk::simple::Similarity3DTransform::SetScale "
@@ -31012,7 +32887,7 @@ The measure is derived from a reliability measure known as the kappa
 statistic. $S$ is sensitive to both differences in size and in location and have
 been in the literature for comparing two segmentation masks. For more
 information see: \"Morphometric Analysis of White Matter Lesions in MR
-Images: Method and  Validation\", A. P. Zijdenbos, B. M. Dawant, R. A.
+Images: Method and Validation\", A. P. Zijdenbos, B. M. Dawant, R. A.
 Margolin and A. C. Palmer, IEEE Trans. on Medical Imaging, 13(4) pp
 716-724,1994
 
@@ -31221,12 +33096,12 @@ C++ includes: sitkSinImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SinImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::SinImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::SinImageFilter::GetName "
@@ -31334,14 +33209,14 @@ Set/Get the first index extracted from the input image
 
 %feature("docstring")  itk::simple::SliceImageFilter::SetStep "
 
-Set/Get the stride of indexes extracted An exception will be generated
-if 0.
+Set the values of the Step vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::SliceImageFilter::SetStep "
 
-Set the values of the Step vector all to value
+Set/Get the stride of indexes extracted An exception will be generated
+if 0.
 
 ";
 
@@ -31393,12 +33268,12 @@ C++ includes: sitkSmoothingRecursiveGaussianImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SmoothingRecursiveGaussianImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::SmoothingRecursiveGaussianImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::SmoothingRecursiveGaussianImageFilter::GetName "
@@ -31409,8 +33284,8 @@ Name of this class
 
 %feature("docstring")  itk::simple::SmoothingRecursiveGaussianImageFilter::GetNormalizeAcrossScale "
 
-Set/Get the flag for normalizing the Gaussian over scale-space. This
-method does not effect the output of this filter.
+     Set/Get the flag for normalizing the Gaussian over scale-space.
+This method does not effect the output of this filter.
 
 
 See:
@@ -31437,8 +33312,8 @@ Set the value of NormalizeAcrossScale to true or false respectfully.
 
 %feature("docstring")  itk::simple::SmoothingRecursiveGaussianImageFilter::SetNormalizeAcrossScale "
 
-Set/Get the flag for normalizing the Gaussian over scale-space. This
-method does not effect the output of this filter.
+     Set/Get the flag for normalizing the Gaussian over scale-space.
+This method does not effect the output of this filter.
 
 
 See:
@@ -31449,16 +33324,16 @@ See:
 
 %feature("docstring")  itk::simple::SmoothingRecursiveGaussianImageFilter::SetSigma "
 
-Set the standard deviation of the Gaussian used for smoothing. Sigma
-is measured in the units of image spacing. You may use the method
-SetSigma to set the same value across each axis or use the method
-SetSigmaArray if you need different values along each axis.
+Set the values of the Sigma vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::SmoothingRecursiveGaussianImageFilter::SetSigma "
 
-Set the values of the Sigma vector all to value
+Set the standard deviation of the Gaussian used for smoothing. Sigma
+is measured in the units of image spacing. You may use the method
+SetSigma to set the same value across each axis or use the method
+SetSigmaArray if you need different values along each axis.
 
 ";
 
@@ -31565,7 +33440,7 @@ $ G \\\\sim \\\\Gamma(\\\\frac{1}{\\\\sigma^2}, \\\\sigma^2) $
 
 Gaetan Lehmann
  This code was contributed in the Insight Journal paper \"Noise
-Simulation\". https://hdl.handle.net/10380/3158
+Simulation\". https://www.insight-journal.org/browse/publication/721
 See:
  itk::simple::SpeckleNoise for the procedural interface
 
@@ -31576,12 +33451,12 @@ C++ includes: sitkSpeckleNoiseImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SpeckleNoiseImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::SpeckleNoiseImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::SpeckleNoiseImageFilter::GetName "
@@ -31646,12 +33521,12 @@ C++ includes: sitkSqrtImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SqrtImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::SqrtImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::SqrtImageFilter::GetName "
@@ -31696,12 +33571,12 @@ C++ includes: sitkSquareImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SquareImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::SquareImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::SquareImageFilter::GetName "
@@ -31768,12 +33643,6 @@ C++ includes: sitkSquaredDifferenceImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SquaredDifferenceImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::SquaredDifferenceImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::SquaredDifferenceImageFilter::Execute "
@@ -31783,6 +33652,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::SquaredDifferenceImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::SquaredDifferenceImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::SquaredDifferenceImageFilter::Execute "
@@ -31820,7 +33695,7 @@ Mean projection.
 
 
 This class was contributed to the Insight Journal by Gaetan Lehmann.
-The original paper can be found at https://hdl.handle.net/1926/164
+The original paper can be found at https://www.insight-journal.org/browse/publication/71
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -31897,7 +33772,7 @@ Compute min, max, variance and mean of an Image .
 StatisticsImageFilter computes the minimum, maximum, sum, sum of squares, mean, variance
 sigma of an image. The filter needs all of its input image. It behaves
 as a filter with an input and output. Thus it can be inserted in a
-pipline with other filters and the statistics will only be recomputed
+pipeline with other filters and the statistics will only be recomputed
 if a downstream filter changes.
 
 This filter is automatically multi-threaded and can stream its input
@@ -32007,9 +33882,9 @@ This filter computes the stochastic fractal dimension of the input
 image.
 
 
-The methodology is based on Madelbrot's fractal theory and the concept
-of fractional Brownian motion and yields images which have been used
-for classification and edge enhancement.
+The methodology is based on Mandelbrot's fractal theory and the
+concept of fractional Brownian motion and yields images which have
+been used for classification and edge enhancement.
 
 This class which is templated over the input and output images as well
 as a mask image type. The input is a scalar image, an optional
@@ -32021,7 +33896,7 @@ This filter was contributed by Nick Tustison and James Gee from the
 PICSL lab, at the University of Pennsylvania as an paper to the
 Insight Journal:
 
-\"Stochastic Fractal Dimension Image\" https://hdl.handle.net/1926/1525 http://www.insight-journal.org/browse/publication/318
+\"Stochastic Fractal Dimension Image\" https://hdl.handle.net/1926/1525 https://www.insight-journal.org/browse/publication/318
 
 
 Nick Tustison
@@ -32036,12 +33911,12 @@ C++ includes: sitkStochasticFractalDimensionImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::StochasticFractalDimensionImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::StochasticFractalDimensionImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::StochasticFractalDimensionImageFilter::GetName "
@@ -32121,12 +33996,6 @@ C++ includes: sitkSubtractImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::SubtractImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::SubtractImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::SubtractImageFilter::Execute "
@@ -32136,6 +34005,12 @@ Execute the filter with an image and a constant
 ";
 
 %feature("docstring")  itk::simple::SubtractImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::SubtractImageFilter::Execute "
+
+Execute the filter on the input images
+
 ";
 
 %feature("docstring")  itk::simple::SubtractImageFilter::Execute "
@@ -32173,7 +34048,7 @@ Sum projection.
 
 
 This class was contributed to the Insight Journal by Gaetan Lehmann.
-The original paper can be found at https://hdl.handle.net/1926/164
+The original paper can be found at https://www.insight-journal.org/browse/publication/71
 
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
@@ -32298,12 +34173,12 @@ C++ includes: sitkSymmetricForcesDemonsRegistrationFilter.h
 ";
 
 %feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::GetElapsedIterations "
@@ -32450,22 +34325,15 @@ Gaussian whose standard deviations are specified with SetUpdateFieldStandardDevi
 
 %feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::SetStandardDeviations "
 
-Set/Get the Gaussian smoothing standard deviations for the
-displacement field. The values are set with respect to pixel
-coordinates.
+Set the values of the StandardDeviations vector all to value
 
 ";
 
 %feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::SetStandardDeviations "
 
-Set the values of the StandardDeviations vector all to value
-
-";
-
-%feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::SetUpdateFieldStandardDeviations "
-
-Set the Gaussian smoothing standard deviations for the update field.
-The values are set with respect to pixel coordinates.
+Set/Get the Gaussian smoothing standard deviations for the
+displacement field. The values are set with respect to pixel
+coordinates.
 
 ";
 
@@ -32473,6 +34341,13 @@ The values are set with respect to pixel coordinates.
 
 Set the values of the UpdateFieldStandardDeviations vector all to
 value
+
+";
+
+%feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::SetUpdateFieldStandardDeviations "
+
+Set the Gaussian smoothing standard deviations for the update field.
+The values are set with respect to pixel coordinates.
 
 ";
 
@@ -32495,6 +34370,14 @@ respectfully.
 %feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::SmoothUpdateFieldOn "
 
 Set the value of SmoothUpdateField to true or false respectfully.
+
+";
+
+%feature("docstring")  itk::simple::SymmetricForcesDemonsRegistrationFilter::StopRegistration "
+
+This is an active measurement. It may be accessed while the filter is
+being executing in command call-backs and can be accessed after
+execution.
 
 ";
 
@@ -32543,12 +34426,12 @@ C++ includes: sitkTanImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::TanImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::TanImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::TanImageFilter::GetName "
@@ -32595,12 +34478,12 @@ C++ includes: sitkTernaryAddImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::TernaryAddImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::TernaryAddImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::TernaryAddImageFilter::GetName "
@@ -32647,12 +34530,12 @@ C++ includes: sitkTernaryMagnitudeImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::TernaryMagnitudeImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::TernaryMagnitudeImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::TernaryMagnitudeImageFilter::GetName "
@@ -32699,12 +34582,12 @@ C++ includes: sitkTernaryMagnitudeSquaredImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::TernaryMagnitudeSquaredImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::TernaryMagnitudeSquaredImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::TernaryMagnitudeSquaredImageFilter::GetName "
@@ -32768,12 +34651,12 @@ C++ includes: sitkThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ThresholdImageFilter::GetLower "
@@ -32869,8 +34752,8 @@ Thresholding works well on images with a large number of objects to be
 counted.
 References:
 1) Urish KL, August J, Huard J. \"Unsupervised segmentation for
-myofiber counting in immunoflourescent images\". Insight Journal. ISC
-/NA-MIC/MICCAI Workshop on Open-Source Software (2005) Dspace handle: https://hdl.handle.net/1926/48 2) Pikaz A, Averbuch, A. \"Digital image thresholding based on
+myofiber counting in immunofluorescent microscopy images\". Insight
+Journal. ISC/NA-MIC/MICCAI Workshop on Open-Source Software (2005) https://insight-journal.org/browse/publication/40 2) Pikaz A, Averbuch, A. \"Digital image thresholding based on
 topological stable-state\". Pattern Recognition, 29(5): 829-843, 1996.
 
 Questions: email Ken Urish at ken.urish(at)gmail.com Please cc the itk
@@ -33075,12 +34958,12 @@ C++ includes: sitkThresholdSegmentationLevelSetImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::ThresholdSegmentationLevelSetImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::ThresholdSegmentationLevelSetImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::ThresholdSegmentationLevelSetImageFilter::GetCurvatureScaling "
@@ -33319,24 +35202,24 @@ C++ includes: sitkTileImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::TileImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::TileImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::TileImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::TileImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::TileImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::TileImageFilter::Execute "
 
 Execute the filter on the input images
 
-";
-
-%feature("docstring")  itk::simple::TileImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::TileImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::TileImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::TileImageFilter::Execute "
-";
-
-%feature("docstring")  itk::simple::TileImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::TileImageFilter::GetDefaultPixelValue "
@@ -33557,6 +35440,25 @@ By default a 3-d identity transform is constructed.
 
 %feature("docstring")  itk::simple::Transform::Transform "
 
+Use an image to construct a transform.
+
+
+The input displacement image is transferred to the constructed
+transform object. The input image is modified to be a default
+constructed Image object.
+
+Only the sitkDisplacementField transformation type can currently be
+constructed this way. Image must be of sitkVectorFloat64 pixel type with the number of components
+equal to the image dimension.
+
+Deprecated
+This constructor will be removed in future releases.
+
+
+";
+
+%feature("docstring")  itk::simple::Transform::Transform "
+
 Construct a SimpleITK Transform from a pointer to an ITK composite transform.
 
 ";
@@ -33568,25 +35470,6 @@ Construct a SimpleITK Transform from a pointer to an ITK composite transform.
 
 Construct a specific transformation.
 
-
-Deprecated
-This constructor will be removed in future releases.
-
-
-";
-
-%feature("docstring")  itk::simple::Transform::Transform "
-
-Use an image to construct a transform.
-
-
-The input displacement image is transferred to the constructed
-transform object. The input image is modified to be a default
-constructed Image object.
-
-Only the sitkDisplacementField transformation type can currently be
-constructed this way. Image must be of sitkVectorFloat64 pixel type with the number of components
-equal to the image dimension.
 
 Deprecated
 This constructor will be removed in future releases.
@@ -33623,6 +35506,137 @@ The dimension of the vector and point must match the transform.
 ";
 
 
+%feature("docstring") itk::simple::TransformGeometryImageFilter "
+
+Modify an image's geometric meta-data, changing its \"physical\"
+extent.
+
+
+The TransformGeometryImageFilter \"physically\" changes the image in space using the given
+transformation. The resulting image is an image with the same voxel
+values as the input, but with different physical space representation
+as affected by the transform.
+
+The specific transformation type can be any type derived from the MatrixOffsetTransformBase and the TranslationTransform . The modification of the geometric meta-data is an alternative to
+resampling the moving image onto the fixed image grid, after
+registration. The advantages of using this approach over resampling
+are two-fold, it does not introduce artifacts into the result because
+the original intensity information is not modified, and it is
+computationally more efficient.
+
+When the filter is used with a rigid or translation transformation the
+resulting image can be saved in any desired format. When the filter is
+used with an affine transformation the resulting image should be saved
+in a format that supports a non ortho-normal direction cosine matrix
+(e.g. nrrd).
+
+Let us call the transform operation from the fixed image to moving
+image TfmF2M . Given a set of points from the fixed image in physical
+space (i.e. physicalFixedImagePoints ), the aim is to convert those
+points into the moving image physical space as
+physicalMovingImagePoints = TfmF2M( physicalFixedImagePoints ) , and
+then be able to get the image values as movingContinuousIndexPoints =
+movingImage->TransformPhysicalPointToContinuousIndex(
+physicalMovingImagePoints ) .
+
+We desire to change the moving image direction cosine $\\\\mathbf{D}$ and origin $\\\\mathbf{o}$ such that we can compute the moving image points as
+movingContinuousIndexPoints =
+newMovingImage->TransformPhysicalPointToContinuousIndex(
+physicalFixedImagePoints )
+
+Let us introduce the notation that will be used to formalize the
+transformation:
+
+
+Image-related parameters:
+
+$\\\\mathbf{D}$ : direction cosine matrix
+
+$\\\\mathbf{o}$ : origin vector
+
+$\\\\mathbf{S}$ : spacing
+
+$\\\\mathbf{ci}$ : continuous index
+
+$\\\\mathbf{D}^{'}$ : new direction cosine matrix
+
+$\\\\mathbf{o}^{'}$ : new origin vector
+
+Image content in corresponding space:
+
+$\\\\mathbf{f}_{p}$ : fixed image points in physical space
+
+$\\\\mathbf{m}_{p}$ : moving image points in physical space
+
+Rigid transform-related parameters:
+
+$\\\\mathbf{R}$ : rotation matrix
+
+$\\\\mathbf{c}$ : center of rotation vector
+
+$\\\\mathbf{t}$ : translation vector
+ The TransformPhysicalPointToContinuousIndex method performs then:
+\\\\begin{eqnarray*} \\\\mathbf{ci} &=
+\\\\mathbf{S}^{-1}\\\\mathbf{D}^{-1}( \\\\mathbf{m}_{p} -
+\\\\mathbf{o} ) \\\\ \\\\mathbf{m}_{p} &=
+\\\\mathbf{R}(\\\\mathbf{f}_{p} - \\\\mathbf{c}) + \\\\mathbf{c} +
+\\\\mathbf{t} \\\\end{eqnarray*}
+
+After substitution:
+
+\\\\begin{eqnarray*} \\\\mathbf{m}_{c} &=
+\\\\underbrace{\\\\mathbf{R}^{-1}\\\\mathbf{D}}_\\\\text{new
+cosine}\\\\mathbf{S} * \\\\mathbf{i} +
+\\\\underbrace{\\\\mathbf{R}^{-1} * \\\\mathbf{o} - \\\\mathbf{R}^{-1}
+* \\\\mathbf{c} - \\\\mathbf{R}^{-1}*t}_\\\\text{new origin} +
+\\\\mathbf{c} \\\\ \\\\ \\\\mathbf{D}^{'} &=
+\\\\mathbf{R}^{-1}\\\\mathbf{D} \\\\ \\\\mathbf{o}^{'} &=
+\\\\mathbf{R}^{-1} * ( \\\\mathbf{o} - \\\\mathbf{c} - \\\\mathbf{t} )
++ \\\\mathbf{c} \\\\end{eqnarray*}
+See:
+ itk::simple::TransformGeometry for the procedural interface
+
+ itk::TransformGeometryImageFilter for the Doxygen on the original ITK class.
+
+
+C++ includes: sitkTransformGeometryImageFilter.h
+";
+
+%feature("docstring")  itk::simple::TransformGeometryImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::TransformGeometryImageFilter::Execute "
+
+Execute the filter on the input image
+
+";
+
+%feature("docstring")  itk::simple::TransformGeometryImageFilter::GetName "
+
+Name of this class
+
+";
+
+%feature("docstring")  itk::simple::TransformGeometryImageFilter::ToString "
+
+Print ourselves out
+
+";
+
+%feature("docstring")  itk::simple::TransformGeometryImageFilter::TransformGeometryImageFilter "
+
+Default Constructor that takes no arguments and initializes default
+parameters
+
+";
+
+%feature("docstring")  itk::simple::TransformGeometryImageFilter::~TransformGeometryImageFilter "
+
+Destructor
+
+";
+
+
 %feature("docstring") itk::simple::TransformToDisplacementFieldFilter "
 
 Generate a displacement field from a coordinate transform.
@@ -33644,7 +35658,7 @@ ThreadedGenerateData() method for its implementation.
 
 
 Marius Staring, Leiden University Medical Center, The Netherlands.
- This class was taken from the Insight Journal paper: https://hdl.handle.net/1926/1387
+ This class was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/240
 See:
  itk::simple::TransformToDisplacementFieldFilter for the procedural interface
 
@@ -33754,6 +35768,365 @@ Destructor
 ";
 
 
+%feature("docstring") itk::simple::TransformixImageFilter "
+C++ includes: sitkTransformixImageFilter.h
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::AddTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::AddTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::AddTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::AddTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::AddTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::AddTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeDeformationFieldOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeDeformationFieldOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeDeformationFieldOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeDeformationFieldOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeDeterminantOfSpatialJacobianOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeDeterminantOfSpatialJacobianOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeDeterminantOfSpatialJacobianOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeDeterminantOfSpatialJacobianOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeSpatialJacobianOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeSpatialJacobianOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeSpatialJacobianOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ComputeSpatialJacobianOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::Execute "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ExecuteInternal "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetComputeDeformationField "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetComputeDeformationField "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetComputeDeterminantOfSpatialJacobian "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetComputeDeterminantOfSpatialJacobian "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetComputeSpatialJacobian "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetComputeSpatialJacobian "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetDeformationField "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetDeformationField "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetLogFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetLogFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetLogToConsole "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetLogToConsole "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetLogToFile "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetLogToFile "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetMovingImage "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetMovingImage "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetNumberOfTransformParameterMaps "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetNumberOfTransformParameterMaps "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetResultImage "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetResultImage "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::GetTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::IsEmpty "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::LogToConsoleOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::LogToConsoleOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::LogToConsoleOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::LogToConsoleOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::LogToFileOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::LogToFileOff "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::LogToFileOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::LogToFileOn "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::PrintParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ReadParameterFile "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::ReadParameterFile "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveLogFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveLogFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveMovingImage "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveMovingImage "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::RemoveTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetComputeDeformationField "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetComputeDeformationField "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetComputeDeterminantOfSpatialJacobian "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetComputeDeterminantOfSpatialJacobian "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetComputeSpatialJacobian "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetComputeSpatialJacobian "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetFixedPointSetFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetLogFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetLogFileName "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetLogToConsole "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetLogToConsole "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetLogToFile "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetLogToFile "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetMovingImage "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetMovingImage "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetOutputDirectory "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::SetTransformParameterMap "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::TransformixImageFilter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::TransformixImageFilterImpl "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::WriteParameterFile "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::WriteParameterFile "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::~TransformixImageFilter "
+";
+
+%feature("docstring")  itk::simple::TransformixImageFilter::~TransformixImageFilterImpl "
+";
+
+
 %feature("docstring") itk::simple::TranslationTransform "
 
 Translation of a 2D or 3D coordinate space.
@@ -33807,7 +36180,7 @@ Australia.
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -33822,12 +36195,12 @@ C++ includes: sitkTriangleThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::TriangleThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::TriangleThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::TriangleThresholdImageFilter::GetInsideValue "
@@ -33956,12 +36329,12 @@ C++ includes: sitkUnaryMinusImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::UnaryMinusImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::UnaryMinusImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::UnaryMinusImageFilter::GetName "
@@ -34002,7 +36375,7 @@ to achieve the edge enhancing effect. https://en.wikipedia.org/w/index.php?title
 It has configurable amount, radius (sigma) and threshold, and whether
 to clamp the resulting values to the range of output type.
 
-Formula: sharpened=original+[abs(original-blurred)-threshold]*amount
+Formula: sharpened=original+[ itk::Math::abs (original-blurred)-threshold]*amount
 
 If clamping is turned off (it is on by default), casting to output
 pixel format is done using C++ defaults, meaning that values are not
@@ -34024,6 +36397,15 @@ See:
 C++ includes: sitkUnsharpMaskImageFilter.h
 ";
 
+%feature("docstring")  itk::simple::UnsharpMaskImageFilter::ClampOff "
+";
+
+%feature("docstring")  itk::simple::UnsharpMaskImageFilter::ClampOn "
+
+Set the value of Clamp to true or false respectfully.
+
+";
+
 %feature("docstring")  itk::simple::UnsharpMaskImageFilter::Execute "
 
 Execute the filter on the input image
@@ -34034,6 +36416,9 @@ Execute the filter on the input image
 
 Set/Get amount of enhancement. Usual range: 0.1 to 2.0. Default: 0.5.
 
+";
+
+%feature("docstring")  itk::simple::UnsharpMaskImageFilter::GetClamp "
 ";
 
 %feature("docstring")  itk::simple::UnsharpMaskImageFilter::GetName "
@@ -34058,6 +36443,12 @@ Set/Get threshold for enhancement. Default: 0.
 %feature("docstring")  itk::simple::UnsharpMaskImageFilter::SetAmount "
 
 Set/Get amount of enhancement. Usual range: 0.1 to 2.0. Default: 0.5.
+
+";
+
+%feature("docstring")  itk::simple::UnsharpMaskImageFilter::SetClamp "
+
+Set/Get whether to clamp values to supported range of output type.
 
 ";
 
@@ -34112,7 +36503,7 @@ completely flat image will be marked as a regional maxima by this
 filter.
 
 This code was contributed in the Insight Journal paper: \"Finding
-regional extrema - methods and performance\" by Beare R., Lehmann G. https://hdl.handle.net/1926/153 http://www.insight-journal.org/browse/publication/65
+regional extrema - methods and performance\" by Beare R., Lehmann G. https://www.insight-journal.org/browse/publication/65
 
 
 Richard Beare. Department of Medicine, Monash University, Melbourne,
@@ -34199,7 +36590,7 @@ completely flat image will be marked as a regional minima by this
 filter.
 
 This code was contributed in the Insight Journal paper: \"Finding
-regional extrema - methods and performance\" by Beare R., Lehmann G. https://hdl.handle.net/1926/153 http://www.insight-journal.org/browse/publication/65
+regional extrema - methods and performance\" by Beare R., Lehmann G. https://www.insight-journal.org/browse/publication/65
 
 
 Richard Beare. Department of Medicine, Monash University, Melbourne,
@@ -34293,7 +36684,7 @@ After this initial segmentation is calculated, the mean and variance
 are re-calculated. All the pixels in the previous segmentation are
 used to calculate the mean the standard deviation (as opposed to using
 the pixels in the neighborhood of the seed point). The segmentation is
-then recalculted using these refined estimates for the mean and
+then recalculated using these refined estimates for the mean and
 variance of the pixel values. This process is repeated for the
 specified number of iterations. Setting the \"NumberOfIterations\" to
 zero stops the algorithm after the initial segmentation from the seed
@@ -34535,12 +36926,12 @@ C++ includes: sitkVectorIndexSelectionCastImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::VectorIndexSelectionCastImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::VectorIndexSelectionCastImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::VectorIndexSelectionCastImageFilter::GetIndex "
@@ -34614,12 +37005,12 @@ C++ includes: sitkVectorMagnitudeImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::VectorMagnitudeImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::VectorMagnitudeImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::VectorMagnitudeImageFilter::GetName "
@@ -34701,12 +37092,12 @@ fixed parameter
 ";
 
 %feature("docstring")  itk::simple::VersorRigid3DTransform::SetRotation "
-
-parameter
-
 ";
 
 %feature("docstring")  itk::simple::VersorRigid3DTransform::SetRotation "
+
+parameter
+
 ";
 
 %feature("docstring")  itk::simple::VersorRigid3DTransform::SetTranslation "
@@ -34779,12 +37170,12 @@ fixed parameter
 ";
 
 %feature("docstring")  itk::simple::VersorTransform::SetRotation "
-
-parameter
-
 ";
 
 %feature("docstring")  itk::simple::VersorTransform::SetRotation "
+
+parameter
+
 ";
 
 %feature("docstring")  itk::simple::VersorTransform::VersorTransform "
@@ -34851,7 +37242,7 @@ Execute the filter on the input image
 Majority threshold. It is the number of pixels over 50% that will
 decide whether an OFF pixel will become ON or not. For example, if the
 neighborhood of a pixel has 124 pixels (excluding itself), the 50%
-will be 62, and if you set upd a Majority threshold of 5, that means
+will be 62, and if you set up a Majority threshold of 5, that means
 that the filter will require 67 or more neighbor pixels to be ON in
 order to switch the current OFF pixel to ON. The default value is 1.
 
@@ -34877,7 +37268,7 @@ Name of this class
 Majority threshold. It is the number of pixels over 50% that will
 decide whether an OFF pixel will become ON or not. For example, if the
 neighborhood of a pixel has 124 pixels (excluding itself), the 50%
-will be 62, and if you set upd a Majority threshold of 5, that means
+will be 62, and if you set up a Majority threshold of 5, that means
 that the filter will require 67 or more neighbor pixels to be ON in
 order to switch the current OFF pixel to ON. The default value is 1.
 
@@ -35113,7 +37504,7 @@ binary input image and the Background .
 Majority threshold. It is the number of pixels over 50% that will
 decide whether an OFF pixel will become ON or not. For example, if the
 neighborhood of a pixel has 124 pixels (excluding itself), the 50%
-will be 62, and if you set upd a Majority threshold of 5, that means
+will be 62, and if you set up a Majority threshold of 5, that means
 that the filter will require 67 or more neighbor pixels to be ON in
 order to switch the current OFF pixel to ON. The default value is 1.
 
@@ -35158,7 +37549,7 @@ binary input image and the Background .
 Majority threshold. It is the number of pixels over 50% that will
 decide whether an OFF pixel will become ON or not. For example, if the
 neighborhood of a pixel has 124 pixels (excluding itself), the 50%
-will be 62, and if you set upd a Majority threshold of 5, that means
+will be 62, and if you set up a Majority threshold of 5, that means
 that the filter will require 67 or more neighbor pixels to be ON in
 order to switch the current OFF pixel to ON. The default value is 1.
 
@@ -35234,7 +37625,7 @@ interpolation typed used is the LinearInterpolateImageFunction . The user can sp
 Position mapped to outside of the input image buffer are assigned a
 edge padding value.
 
-The LargetPossibleRegion for the output is inherited from the input
+The LargestPossibleRegion for the output is inherited from the input
 displacement field. The output image spacing, origin and orientation
 may be set via SetOutputSpacing, SetOutputOrigin and
 SetOutputDirection. The default are respectively a vector of 1's, a
@@ -35497,7 +37888,7 @@ blurred image, this filter produces an estimate $\\\\hat{f}(x)$ of the true unde
 
 This filter requires two inputs, the image to be deconvolved and the
 blurring kernel. These two inputs can be set using the methods
-SetInput() and SetKernelImage() , respectively.
+SetInput() and SetKernelImage(), respectively.
 
 The power spectral densities of the signal and noise are typically
 unavailable for a given problem. In particular, $P_f(\\\\omega)$ cannot be computed from $f(x)$ because this unknown signal is precisely the signal that this filter
@@ -35708,17 +38099,17 @@ C++ includes: sitkXorImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::XorImageFilter::Execute "
-
-Execute the filter on the input images
-
-";
-
-%feature("docstring")  itk::simple::XorImageFilter::Execute "
 ";
 
 %feature("docstring")  itk::simple::XorImageFilter::Execute "
 
 Execute the filter with an image and a constant
+
+";
+
+%feature("docstring")  itk::simple::XorImageFilter::Execute "
+
+Execute the filter on the input images
 
 ";
 
@@ -35768,7 +38159,7 @@ Richard Beare
 
 Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA
 de Jouy-en-Josas, France.
- This implementation was taken from the Insight Journal paper: https://hdl.handle.net/10380/3279 or http://www.insight-journal.org/browse/publication/811
+ This implementation was taken from the Insight Journal paper: https://www.insight-journal.org/browse/publication/811
 
 
 See:
@@ -35783,12 +38174,12 @@ C++ includes: sitkYenThresholdImageFilter.h
 ";
 
 %feature("docstring")  itk::simple::YenThresholdImageFilter::Execute "
-
-Execute the filter on the input image
-
 ";
 
 %feature("docstring")  itk::simple::YenThresholdImageFilter::Execute "
+
+Execute the filter on the input image
+
 ";
 
 %feature("docstring")  itk::simple::YenThresholdImageFilter::GetInsideValue "
@@ -35892,7 +38283,7 @@ Destructor
 
 %feature("docstring") itk::simple::ZeroCrossingBasedEdgeDetectionImageFilter "
 
-This filter implements a zero-crossing based edge detecor.
+This filter implements a zero-crossing based edge detector.
 
 
 The zero-crossing based edge detector looks for pixels in the
@@ -36037,8 +38428,9 @@ block style connectivity (4-neighbors in 2d, 6-neighbors in 3d, etc.).
 
 Inputs and Outputs
 The input to this filter is an itk::Image of arbitrary dimension. The algorithm assumes a signed data type
-(zero-crossings are not defined for unsigned data types), and requires
-that operator>, operator<, operator==, and operator!= are defined.
+(zero-crossings are not defined for unsigned int data types), and
+requires that operator>, operator<, operator==, and operator!= are
+defined.
 
 The output of the filter is a binary, labeled image of user-specified
 type. By default, zero-crossing pixels are labeled with a default
@@ -36209,7 +38601,7 @@ is the type of pointer to member function
 
  Example member function and pointer:
 
-The provided Addressor will instantiate the templeted member functions
+The provided Addressor will instantiate the templated member functions
 by taking the address in the RegisterMethods. Later they can be
 retrieve with the GetMemberFunction method, which returns a function
 object with the same arguments as the templated member function
@@ -36285,7 +38677,7 @@ is the type of pointer to member function
 
  Example member function pointer:
 
-The RegisterMemberFunctions instantiate the templeted member functions
+The RegisterMemberFunctions instantiate the templated member functions
 and registers the member function pointer, so that it be used for
 dispatch later. Later they can be retrieve with the GetMemberFunction
 methods, which return a function object with the same arguments as the
@@ -36381,6 +38773,9 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 %feature("docstring")  itk::Accessor::BioRadImageIOFactoryRegister__Private "
 ";
 
+%feature("docstring")  itk::Accessor::bit_cast "
+";
+
 %feature("docstring")  itk::Accessor::BMPImageIOFactoryRegister__Private "
 ";
 
@@ -36412,6 +38807,9 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 ";
 
 %feature("docstring")  itk::Accessor::ComputeStartEnd "
+";
+
+%feature("docstring")  itk::Accessor::ConvertNumberToString "
 ";
 
 %feature("docstring")  itk::Accessor::CopyLineToImage "
@@ -36471,6 +38869,9 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 %feature("docstring")  itk::Accessor::ExposeMetaData "
 ";
 
+%feature("docstring")  itk::Accessor::FFTImageFilterInitFactoryRegisterManagerInstance "
+";
+
 %feature("docstring")  itk::Accessor::FillForwardExt "
 ";
 
@@ -36487,6 +38888,15 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 ";
 
 %feature("docstring")  itk::Accessor::GE5ImageIOFactoryRegister__Private "
+";
+
+%feature("docstring")  itk::Accessor::GenerateConnectedImageNeighborhoodShapeOffsets "
+";
+
+%feature("docstring")  itk::Accessor::GenerateImageNeighborhoodOffsets "
+";
+
+%feature("docstring")  itk::Accessor::GenerateRectangularImageNeighborhoodOffsets "
 ";
 
 %feature("docstring")  itk::Accessor::Get64BitPragma "
@@ -36519,7 +38929,7 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 %feature("docstring")  itk::Accessor::HDF5TransformIOFactoryRegister__Private "
 ";
 
-%feature("docstring")  itk::Accessor::IMAGEIOBASE_TYPEMAP "
+%feature("docstring")  itk::Accessor::ImageBufferRange "
 ";
 
 %feature("docstring")  itk::Accessor::IMAGEIOBASE_TYPEMAP "
@@ -36556,6 +38966,21 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 ";
 
 %feature("docstring")  itk::Accessor::IMAGEIOBASE_TYPEMAP "
+";
+
+%feature("docstring")  itk::Accessor::IMAGEIOBASE_TYPEMAP "
+";
+
+%feature("docstring")  itk::Accessor::ImageIOFactoryRegisterManagerInstance "
+";
+
+%feature("docstring")  itk::Accessor::ImageRegionRange "
+";
+
+%feature("docstring")  itk::Accessor::ImageScanlineConstIterator "
+";
+
+%feature("docstring")  itk::Accessor::ImageScanlineIterator "
 ";
 
 %feature("docstring")  itk::Accessor::Int2EigenValueOrderEnum "
@@ -36574,6 +38999,9 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 ";
 
 %feature("docstring")  itk::Accessor::ITK_DEFAULTCONVERTTRAITS_FIXEDARRAY_TYPE "
+";
+
+%feature("docstring")  itk::Accessor::ITK_DEFAULTCONVERTTRAITS_NATIVE_SPECIAL "
 ";
 
 %feature("docstring")  itk::Accessor::ITK_DEFAULTCONVERTTRAITS_NATIVE_SPECIAL "
@@ -36669,7 +39097,37 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 %feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
 ";
 
-%feature("docstring")  itk::Accessor::itkGPUKernelClassMacro "
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
+";
+
+%feature("docstring")  itk::Accessor::itkEventMacroDeclaration "
 ";
 
 %feature("docstring")  itk::Accessor::itkGPUKernelClassMacro "
@@ -36700,6 +39158,9 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 ";
 
 %feature("docstring")  itk::Accessor::itkGPUKernelClassMacro "
+";
+
+%feature("docstring")  itk::Accessor::itkGPUKernelMacro "
 ";
 
 %feature("docstring")  itk::Accessor::JPEG2000ImageIOFactoryRegister__Private "
@@ -36711,13 +39172,34 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 %feature("docstring")  itk::Accessor::LSMImageIOFactoryRegister__Private "
 ";
 
+%feature("docstring")  itk::Accessor::make_unique_for_overwrite "
+";
+
 %feature("docstring")  itk::Accessor::MakeChainCodeTracePath "
 ";
 
 %feature("docstring")  itk::Accessor::MakeEnlargedFace "
 ";
 
+%feature("docstring")  itk::Accessor::MakeFilled "
+";
+
 %feature("docstring")  itk::Accessor::MakeFourierSeriesPathTraceChainCode "
+";
+
+%feature("docstring")  itk::Accessor::MakeImageBufferRange "
+";
+
+%feature("docstring")  itk::Accessor::MakeIndex "
+";
+
+%feature("docstring")  itk::Accessor::MakePoint "
+";
+
+%feature("docstring")  itk::Accessor::MakeSize "
+";
+
+%feature("docstring")  itk::Accessor::MakeVector "
 ";
 
 %feature("docstring")  itk::Accessor::MatlabTransformIOFactoryRegister__Private "
@@ -36768,6 +39250,9 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 %feature("docstring")  itk::Accessor::MINCImageIOFactoryRegister__Private "
 ";
 
+%feature("docstring")  itk::Accessor::MINCTransformIOFactoryRegister__Private "
+";
+
 %feature("docstring")  itk::Accessor::MRCImageIOFactoryRegister__Private "
 ";
 
@@ -36802,6 +39287,15 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 ";
 
 %feature("docstring")  itk::Accessor::PNGImageIOFactoryRegister__Private "
+";
+
+%feature("docstring")  itk::Accessor::point "
+";
+
+%feature("docstring")  itk::Accessor::ReadImage "
+";
+
+%feature("docstring")  itk::Accessor::ReadMesh "
 ";
 
 %feature("docstring")  itk::Accessor::ReadRawBytesAfterSwapping "
@@ -36873,10 +39367,22 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 %feature("docstring")  itk::Accessor::TransferAutoPointer "
 ";
 
+%feature("docstring")  itk::Accessor::TransformIOFactoryRegisterManagerInstance "
+";
+
 %feature("docstring")  itk::Accessor::TxtTransformIOFactoryRegister__Private "
 ";
 
+%feature("docstring")  itk::Accessor::VnlFFTImageFilterInitFactoryRegister__Private "
+";
+
 %feature("docstring")  itk::Accessor::VTKImageIOFactoryRegister__Private "
+";
+
+%feature("docstring")  itk::Accessor::WriteImage "
+";
+
+%feature("docstring")  itk::Accessor::WriteMesh "
 ";
 
 %feature("docstring")  itk::Accessor::WriteRawBytesAfterSwapping "
@@ -37019,6 +39525,30 @@ See:
 %feature("docstring")  itk::simple::DivideReal "
 ";
 
+%feature("docstring")  itk::simple::Elastix "
+";
+
+%feature("docstring")  itk::simple::Elastix "
+";
+
+%feature("docstring")  itk::simple::Elastix "
+";
+
+%feature("docstring")  itk::simple::Elastix "
+";
+
+%feature("docstring")  itk::simple::Elastix "
+";
+
+%feature("docstring")  itk::simple::Elastix "
+";
+
+%feature("docstring")  itk::simple::Elastix "
+";
+
+%feature("docstring")  itk::simple::Elastix "
+";
+
 %feature("docstring")  itk::simple::Equal "
 ";
 
@@ -37056,10 +39586,7 @@ See:
 
 ";
 
-%feature("docstring")  itk::simple::GetImageFromVectorImage "
-
-A utility method to help convert between itk image types efficiently.
-
+%feature("docstring")  itk::simple::GetDefaultParameterMap "
 ";
 
 %feature("docstring")  itk::simple::GetPixelIDValueAsString "
@@ -37074,7 +39601,7 @@ Function mapping enumeration names in std::string to values.
 
 
 This function is intended for use by the R bindings. R stores the
-enumeration values using the names : \"sitkUnkown\", \"sitkUInt8\",
+enumeration values using the names : \"sitkUnknown\", \"sitkUInt8\",
 etc from PixelIDValueEnum above. This function is used to provide the
 integer values using calls like:
 
@@ -37087,12 +39614,6 @@ The idea is to provide a warning (via the R package) if this function
 needs to be updated to match changes to PixelIDValueEnum - i.e. if a
 new pixel type is added.
 
-";
-
-%feature("docstring")  itk::simple::GetVectorImageFromImage "
-";
-
-%feature("docstring")  itk::simple::GetVectorImageFromImage "
 ";
 
 %feature("docstring")  itk::simple::Greater "
@@ -37259,6 +39780,9 @@ See:
 ";
 
 %feature("docstring")  itk::simple::PatchBasedDenoising "
+";
+
+%feature("docstring")  itk::simple::PatchBasedDenoising "
 
 itk::simple::PatchBasedDenoisingImageFilter Procedural Interface
 
@@ -37270,9 +39794,6 @@ See:
  itk::simple::PatchBasedDenoisingImageFilter for the object oriented interface
 
 
-";
-
-%feature("docstring")  itk::simple::PatchBasedDenoising "
 ";
 
 %feature("docstring")  itk::simple::PhysicalPointSource "
@@ -37298,36 +39819,10 @@ See:
 %feature("docstring")  itk::simple::Pow "
 ";
 
-%feature("docstring")  itk::simple::ReadImage "
+%feature("docstring")  itk::simple::PrintParameterMap "
+";
 
-ReadImage is a procedural interface to the ImageSeriesReader class which is convenient for most image reading tasks.
-
-
-
-
-Parameters:
-
-fileNames:
-a vector of file names
-
-outputPixelType:
-see ImageReaderBase::SetOutputPixelType
-
-imageIO:
-see ImageReaderBase::SetImageIO
-
- Note that when reading a series of images that have meta-data
-associated with them (e.g. a DICOM series) the resulting image will
-have an empty meta-data dictionary. If you need the meta-data
-dictionaries associated with each slice then you should use the ImageSeriesReader class.
-
-
-See:
- itk::simple::ImageFileReader for reading a single file.
-
- itk::simple::ImageSeriesReader for reading a series and meta-data dictionaries.
-
-
+%feature("docstring")  itk::simple::PrintParameterMap "
 ";
 
 %feature("docstring")  itk::simple::ReadImage "
@@ -37357,64 +39852,55 @@ See:
 
 ";
 
+%feature("docstring")  itk::simple::ReadImage "
+
+ReadImage is a procedural interface to the ImageSeriesReader class which is convenient for most image reading tasks.
+
+
+
+
+Parameters:
+
+fileNames:
+a vector of file names
+
+outputPixelType:
+see ImageReaderBase::SetOutputPixelType
+
+imageIO:
+see ImageReaderBase::SetImageIO
+
+
+When reading a series of images that have meta-data associated with
+them (e.g. a DICOM series) the resulting image will have an empty
+meta-data dictionary. If you need the meta-data dictionaries
+associated with each slice then you should use the ImageSeriesReader class.
+
+If the pixel type for the returned image is not specified it is
+deduced from the first image in the series. This approach is
+computationally efficient and assumes that all images in a series have
+the same pixel type. If this is not the case, explicitly specify the
+widest pixel type in the series as the outputPixelType.
+
+See:
+ itk::simple::ImageFileReader for reading a single file.
+
+ itk::simple::ImageSeriesReader for reading a series and meta-data dictionaries.
+
+
+";
+
+%feature("docstring")  itk::simple::ReadParameterFile "
+";
+
 %feature("docstring")  itk::simple::ReadTransform "
 ";
 
 %feature("docstring")  itk::simple::Show "
 
-Display an image using Fiji, ImageJ or another application.
+Display an image in an external viewer (Fiji by default)
 
-This function requires that Fiji ( https://fiji.sc ) or ImageJ ( http://rsb.info.nih.gov/ij/) be properly installed for Mac and Windows, and in the user's path
-for Linux. ImageJ must have a plugin for reading Nifti formatted files
-( http://www.loci.wisc.edu/bio-formats/imagej).
-
-Nifti is the default file format used to export images. A different
-format can be chosen by setting the SITK_SHOW_EXTENSION environment
-variable. For example, set SITK_SHOW_EXTENSION to \".png\" to use PNG
-format.
-
-The user can specify an application other than ImageJ to view images
-via the SITK_SHOW_COMMAND environment variable.
-
-The user can also select applications specifically for color images or
-3D images using the SITK_SHOW_COLOR_COMMAND and SITK_SHOW_3D_COMMAND
-environment variables.
-
-SITK_SHOW_COMMAND, SITK_SHOW_COLOR_COMMAND and SITK_SHOW_3D_COMMAND
-allow the following tokens in their strings.\\\\li \\\\c \"%a\"  for the ImageJ application \\\\li \\\\c \"%f\"
-for SimpleITK's temporary image file
-
-For example, the default SITK_SHOW_COMMAND string on Linux systems is:
-
-
-After token substitution it may become:
-
-
-For another example, the default SITK_SHOW_COLOR_COMMAND string on Mac
-OS X is:
-
-
-After token substitution the string may become:
-
-
-The string after \"-eval\" is an ImageJ macro the opens the file and runs ImageJ's Make
-Composite command to display the image in color.
-
-If the \"%f\" token is not found in the command string, the temporary file name is
-automatically appended to the command argument list.
-
-When invoked, Show searches for Fiji first, and then ImageJ. Fiji is
-the most update-to-date version of ImageJ and includes a lot of
-plugins which facilitate scientific image analysis. By default, for a
-64-bit build of SimpleITK on Macs, sitkShow searches for ImageJ64.app.
-For a 32-bit Mac build, sitkShow searches for ImageJ.app. If the user
-prefers a different version of ImageJ (or a different image viewer
-altogether), it can be specified using the SITK_SHOW_COMMAND
-environment variable.
-
-The boolean parameter debugOn prints the search path Show uses to find
-ImageJ, the full path to the ImageJ it found, and the full command
-line used to invoke ImageJ.
+This function directly calls the execute method of ImageViewer in order to support a procedural API
 
 ";
 
@@ -37429,12 +39915,12 @@ by the size.
 ";
 
 %feature("docstring")  itk::simple::sitkITKVectorToSTL "
-
-Convert an ITK fixed width vector to a std::vector.
-
 ";
 
 %feature("docstring")  itk::simple::sitkITKVectorToSTL "
+
+Convert an ITK fixed width vector to a std::vector.
+
 ";
 
 %feature("docstring")  itk::simple::sitkITKVersorToSTL "
@@ -37462,7 +39948,7 @@ generated.
 
 %feature("docstring")  itk::simple::sitkVectorOfITKVectorToSTL "
 
-Convert an ITK style array of ITK fixed witdth vector to std::vector.
+Convert an ITK style array of ITK fixed width vector to std::vector.
 
 
 An example input type is itk::FixedArray<itk::Point<3>, 3>
@@ -37502,6 +39988,12 @@ See:
 %feature("docstring")  itk::simple::Subtract "
 ";
 
+%feature("docstring")  itk::simple::Transformix "
+";
+
+%feature("docstring")  itk::simple::Transformix "
+";
+
 %feature("docstring")  itk::simple::TransformToDisplacementField "
 
 Generate a displacement field from a coordinate transform.
@@ -37527,9 +40019,63 @@ compiler warning.
 ";
 
 %feature("docstring")  itk::simple::WriteImage "
+
+WriteImage is a procedural interface to the ImageFileWriter. class which is convenient for many image writing tasks.
+
+
+
+
+Parameters:
+
+image:
+the input image to be written
+
+fileName:
+the filename of an Image e.g. \"cthead.mha\"
+
+useCompression:
+request to compress the written file
+
+compressionLevel:
+a hint for the amount of compression to be applied during writing
+
+
+See:
+ itk::simple::ImageFileWriter for writing a single file.
+
+
 ";
 
 %feature("docstring")  itk::simple::WriteImage "
+
+WriteImage is a procedural interface to the ImageSeriesWriter. class which is convenient for many image writing tasks.
+
+
+
+
+Parameters:
+
+image:
+the input image to be written
+
+fileNames:
+a vector of filenames of length equal to the number of slices in the
+image.
+
+useCompression:
+request to compress the written file
+
+compressionLevel:
+a hint for the amount of compression to be applied during writing.
+
+
+See:
+ itk::simple::ImageFileWriter for writing a single file.
+
+
+";
+
+%feature("docstring")  itk::simple::WriteParameterFile "
 ";
 
 %feature("docstring")  itk::simple::WriteTransform "
@@ -37842,6 +40388,7 @@ C++ includes: sitkMemberFunctionFactoryBase.h
 %feature("docstring") itk::simple::hash< std::pair< S, T > > "
 C++ includes: sitkMemberFunctionFactoryBase.h
 ";
+
 
 %feature("docstring") itk::simple::scope_exit "
 C++ includes: sitkTemplateFunctions.h

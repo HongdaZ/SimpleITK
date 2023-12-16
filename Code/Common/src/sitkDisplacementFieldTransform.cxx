@@ -63,7 +63,7 @@ typename itk::Image<itk::Vector<double,NDimension>,NDimension>::Pointer
 
   if (inImage.GetPixelID() != sitkVectorFloat64)
     {
-    sitkExceptionMacro("Expected input displacement field image for be of pixel type: " << sitkVectorFloat64);
+    sitkExceptionMacro("Expected input displacement field image must be of pixel type: " << sitkVectorFloat64);
     }
 
   typename VectorImageType::Pointer image = dynamic_cast < VectorImageType* > ( inImage.GetITKBase() );
@@ -236,9 +236,9 @@ DisplacementFieldTransform::SetSmoothingBSplineOnUpdate( const std::vector<unsig
 }
 
 
-void DisplacementFieldTransform::SetPimpleTransform( PimpleTransformBase *pimpleTransform )
+void DisplacementFieldTransform::SetPimpleTransform(std::unique_ptr<PimpleTransformBase> && pimpleTransform )
 {
-  Superclass::SetPimpleTransform(pimpleTransform);
+  Superclass::SetPimpleTransform(std::move(pimpleTransform));
   Self::InternalInitialization(this->GetITKBase());
 }
 
@@ -248,15 +248,14 @@ void DisplacementFieldTransform::InternalInitialization(itk::TransformBase *tran
   visitor.transform = transform;
   visitor.that = this;
 
-  typedef typelist::MakeTypeList<
-    itk::DisplacementFieldTransform<double, 3>,
-    itk::DisplacementFieldTransform<double, 2>,
-    itk::BSplineSmoothingOnUpdateDisplacementFieldTransform<double, 3>,
-    itk::BSplineSmoothingOnUpdateDisplacementFieldTransform<double, 2>,
-    itk::GaussianSmoothingOnUpdateDisplacementFieldTransform<double, 3>,
-    itk::GaussianSmoothingOnUpdateDisplacementFieldTransform<double, 2> >::Type TransformTypeList;
+  using TransformTypeList = typelist2::typelist<itk::DisplacementFieldTransform<double, 3>,
+                                                itk::DisplacementFieldTransform<double, 2>,
+                                                itk::BSplineSmoothingOnUpdateDisplacementFieldTransform<double, 3>,
+                                                itk::BSplineSmoothingOnUpdateDisplacementFieldTransform<double, 2>,
+                                                itk::GaussianSmoothingOnUpdateDisplacementFieldTransform<double, 3>,
+                                                itk::GaussianSmoothingOnUpdateDisplacementFieldTransform<double, 2>>;
 
-  typelist::Visit<TransformTypeList> callInternalInitialization;
+  typelist2::visit<TransformTypeList> callInternalInitialization;
 
   // explicitly remove all function pointer with reference to prior transform
   m_pfSetDisplacementField = nullptr;
@@ -364,7 +363,7 @@ void DisplacementFieldTransform::InternalSetSmoothingOff( TDisplacementFieldTran
     itkNewDisplacement->SetInterpolator( itkDisplacement->GetModifiableInterpolator() );
     itkNewDisplacement->SetInverseInterpolator( itkDisplacement->GetModifiableInverseInterpolator() );
 
-    this->SetPimpleTransform( new PimpleTransform<NewTransformType>(itkNewDisplacement));
+    this->SetPimpleTransform( std::make_unique<PimpleTransform<NewTransformType>>(itkNewDisplacement));
     }
 }
 
@@ -391,7 +390,7 @@ void DisplacementFieldTransform::InternalSetSmoothingGaussianOnUpdate( TDisplace
     itkNewDisplacement->SetInterpolator( itkDisplacement->GetModifiableInterpolator() );
     itkNewDisplacement->SetInverseInterpolator( itkDisplacement->GetModifiableInverseInterpolator() );
 
-    this->SetPimpleTransform( new PimpleTransform<NewTransformType>(itkNewDisplacement));
+    this->SetPimpleTransform( std::make_unique<PimpleTransform<NewTransformType>>(itkNewDisplacement));
     }
   else
     {
@@ -429,7 +428,7 @@ void DisplacementFieldTransform::InternalSetSmoothingBSplineOnUpdate( TDisplacem
     itkNewDisplacement->SetInterpolator( itkDisplacement->GetModifiableInterpolator() );
     itkNewDisplacement->SetInverseInterpolator( itkDisplacement->GetModifiableInverseInterpolator() );
 
-    this->SetPimpleTransform( new PimpleTransform<NewTransformType>(itkNewDisplacement));
+    this->SetPimpleTransform( std::make_unique<PimpleTransform<NewTransformType>>(itkNewDisplacement));
     }
   else
     {

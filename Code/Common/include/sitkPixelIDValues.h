@@ -34,13 +34,15 @@ using PixelIDValueType = int;
 template < typename TPixelID >
 struct PixelIDToPixelIDValue
 {
-  enum { Result = typelist::IndexOf<InstantiatedPixelIDTypeList, TPixelID >::Result };
+  enum { Result = typelist2::index_of<InstantiatedPixelIDTypeList, TPixelID >::value };
+  static constexpr int value = typelist2::index_of<InstantiatedPixelIDTypeList, TPixelID >::value;
 };
 
 template <typename TImageType>
 struct ImageTypeToPixelIDValue
 {
-  enum { Result = PixelIDToPixelIDValue< typename ImageTypeToPixelID<TImageType>::PixelIDType>::Result };
+  enum { Result = PixelIDToPixelIDValue< typename ImageTypeToPixelID<TImageType>::PixelIDType>::value };
+  static constexpr int value = PixelIDToPixelIDValue< typename ImageTypeToPixelID<TImageType>::PixelIDType>::value;
 };
 
 
@@ -48,6 +50,7 @@ template <unsigned int VImageDimension>
 struct ImageTypeToPixelIDValue< itk::ImageBase<VImageDimension> >
 {
   enum { Result = -1 };
+  static constexpr int value = -1;
 };
 
 
@@ -89,34 +92,33 @@ struct ImageTypeToPixelIDValue< itk::ImageBase<VImageDimension> >
  */
 enum PixelIDValueEnum {
   sitkUnknown = -1,
-  sitkUInt8 = PixelIDToPixelIDValue< BasicPixelID<uint8_t> >::Result,   ///< Unsigned 8 bit integer
-  sitkInt8 = PixelIDToPixelIDValue< BasicPixelID<int8_t> >::Result,     ///< Signed 8 bit integer
-  sitkUInt16 = PixelIDToPixelIDValue< BasicPixelID<uint16_t> >::Result, ///< Unsigned 16 bit integer
-  sitkInt16 = PixelIDToPixelIDValue< BasicPixelID<int16_t> >::Result,   ///< Signed 16 bit integer
-  sitkUInt32 = PixelIDToPixelIDValue< BasicPixelID<uint32_t> >::Result, ///< Unsigned 32 bit integer
-  sitkInt32 = PixelIDToPixelIDValue< BasicPixelID<int32_t> >::Result,   ///< Signed 32 bit integer
-  sitkUInt64 = PixelIDToPixelIDValue< BasicPixelID<uint64_t> >::Result, ///< Unsigned 64 bit integer
-  sitkInt64 = PixelIDToPixelIDValue< BasicPixelID<int64_t> >::Result,   ///< Signed 64 bit integer
-  sitkFloat32 = PixelIDToPixelIDValue< BasicPixelID<float> >::Result,   ///< 32 bit float
-  sitkFloat64 = PixelIDToPixelIDValue< BasicPixelID<double> >::Result,  ///< 64 bit float
-  sitkComplexFloat32 = PixelIDToPixelIDValue< BasicPixelID<std::complex<float> > >::Result,  ///< compelex number of 32 bit float
-  sitkComplexFloat64 = PixelIDToPixelIDValue< BasicPixelID<std::complex<double> > >::Result,  ///< compelex number of 64 bit float
-  sitkVectorUInt8 = PixelIDToPixelIDValue< VectorPixelID<uint8_t> >::Result, ///< Multi-component of unsigned 8 bit integer
-  sitkVectorInt8 = PixelIDToPixelIDValue< VectorPixelID<int8_t> >::Result, ///< Multi-component of signed 8 bit integer
-  sitkVectorUInt16 = PixelIDToPixelIDValue< VectorPixelID<uint16_t> >::Result, ///< Multi-component of unsigned 16 bit integer
-  sitkVectorInt16 = PixelIDToPixelIDValue< VectorPixelID<int16_t> >::Result, ///< Multi-component of signed 16 bit integer
-  sitkVectorUInt32 = PixelIDToPixelIDValue< VectorPixelID<uint32_t> >::Result, ///< Multi-component of unsigned 32 bit integer
-  sitkVectorInt32 = PixelIDToPixelIDValue< VectorPixelID<int32_t> >::Result, ///< Multi-component of signed 32 bit integer
-  sitkVectorUInt64 = PixelIDToPixelIDValue< VectorPixelID<uint64_t> >::Result, ///< Multi-component of unsigned 64 bit integer
-  sitkVectorInt64 = PixelIDToPixelIDValue< VectorPixelID<int64_t> >::Result, ///< Multi-component of signed 64 bit integer
-  sitkVectorFloat32 = PixelIDToPixelIDValue< VectorPixelID<float> >::Result, ///< Multi-component of 32 bit float
-  sitkVectorFloat64 = PixelIDToPixelIDValue< VectorPixelID<double> >::Result,  ///< Multi-component of 64 bit float
-  sitkLabelUInt8 = PixelIDToPixelIDValue< LabelPixelID<uint8_t> >::Result, ///< RLE label of unsigned 8 bit integers
-  sitkLabelUInt16 = PixelIDToPixelIDValue< LabelPixelID<uint16_t> >::Result, ///< RLE label of unsigned 16 bit integers
-  sitkLabelUInt32 = PixelIDToPixelIDValue< LabelPixelID<uint32_t> >::Result, ///< RLE label of unsigned 32 bit integers
-  sitkLabelUInt64 = PixelIDToPixelIDValue< LabelPixelID<uint64_t> >::Result, ///< RLE label of unsigned 64 bit integers
+  sitkUInt8 = PixelIDToPixelIDValue< BasicPixelID<uint8_t> >::value,   ///< Unsigned 8 bit integer
+  sitkInt8 = PixelIDToPixelIDValue< BasicPixelID<int8_t> >::value,     ///< Signed 8 bit integer
+  sitkUInt16 = PixelIDToPixelIDValue< BasicPixelID<uint16_t> >::value, ///< Unsigned 16 bit integer
+  sitkInt16 = PixelIDToPixelIDValue< BasicPixelID<int16_t> >::value,   ///< Signed 16 bit integer
+  sitkUInt32 = PixelIDToPixelIDValue< BasicPixelID<uint32_t> >::value, ///< Unsigned 32 bit integer
+  sitkInt32 = PixelIDToPixelIDValue< BasicPixelID<int32_t> >::value,   ///< Signed 32 bit integer
+  sitkUInt64 = PixelIDToPixelIDValue< BasicPixelID<uint64_t> >::value, ///< Unsigned 64 bit integer
+  sitkInt64 = PixelIDToPixelIDValue< BasicPixelID<int64_t> >::value,   ///< Signed 64 bit integer
+  sitkFloat32 = PixelIDToPixelIDValue< BasicPixelID<float> >::value,   ///< 32 bit float
+  sitkFloat64 = PixelIDToPixelIDValue< BasicPixelID<double> >::value,  ///< 64 bit float
+  sitkComplexFloat32 = PixelIDToPixelIDValue< BasicPixelID<std::complex<float> > >::value,  ///< complex number of 32 bit float
+  sitkComplexFloat64 = PixelIDToPixelIDValue< BasicPixelID<std::complex<double> > >::value,  ///< complex number of 64 bit float
+  sitkVectorUInt8 = PixelIDToPixelIDValue< VectorPixelID<uint8_t> >::value, ///< Multi-component of unsigned 8 bit integer
+  sitkVectorInt8 = PixelIDToPixelIDValue< VectorPixelID<int8_t> >::value, ///< Multi-component of signed 8 bit integer
+  sitkVectorUInt16 = PixelIDToPixelIDValue< VectorPixelID<uint16_t> >::value, ///< Multi-component of unsigned 16 bit integer
+  sitkVectorInt16 = PixelIDToPixelIDValue< VectorPixelID<int16_t> >::value, ///< Multi-component of signed 16 bit integer
+  sitkVectorUInt32 = PixelIDToPixelIDValue< VectorPixelID<uint32_t> >::value, ///< Multi-component of unsigned 32 bit integer
+  sitkVectorInt32 = PixelIDToPixelIDValue< VectorPixelID<int32_t> >::value, ///< Multi-component of signed 32 bit integer
+  sitkVectorUInt64 = PixelIDToPixelIDValue< VectorPixelID<uint64_t> >::value, ///< Multi-component of unsigned 64 bit integer
+  sitkVectorInt64 = PixelIDToPixelIDValue< VectorPixelID<int64_t> >::value, ///< Multi-component of signed 64 bit integer
+  sitkVectorFloat32 = PixelIDToPixelIDValue< VectorPixelID<float> >::value, ///< Multi-component of 32 bit float
+  sitkVectorFloat64 = PixelIDToPixelIDValue< VectorPixelID<double> >::value,  ///< Multi-component of 64 bit float
+  sitkLabelUInt8 = PixelIDToPixelIDValue< LabelPixelID<uint8_t> >::value, ///< RLE label of unsigned 8 bit integers
+  sitkLabelUInt16 = PixelIDToPixelIDValue< LabelPixelID<uint16_t> >::value, ///< RLE label of unsigned 16 bit integers
+  sitkLabelUInt32 = PixelIDToPixelIDValue< LabelPixelID<uint32_t> >::value, ///< RLE label of unsigned 32 bit integers
+  sitkLabelUInt64 = PixelIDToPixelIDValue< LabelPixelID<uint64_t> >::value, ///< RLE label of unsigned 64 bit integers
 };
-
 
 const std::string SITKCommon_EXPORT GetPixelIDValueAsString( PixelIDValueType type );
 const std::string SITKCommon_EXPORT GetPixelIDValueAsString( PixelIDValueEnum type );
@@ -124,7 +126,7 @@ const std::string SITKCommon_EXPORT GetPixelIDValueAsString( PixelIDValueEnum ty
 /** \brief Function mapping enumeration names in std::string to values
  *
  * This function is intended for use by the R bindings. R stores the enumeration values
- * using the names : "sitkUnkown", "sitkUInt8", etc from PixelIDValueEnum above.
+ * using the names : "sitkUnknown", "sitkUInt8", etc from PixelIDValueEnum above.
  * This function is used to provide the integer values using calls like:
  *
  * val = GetPixelIDValueFromString("sitkInt32")
@@ -138,6 +140,37 @@ const std::string SITKCommon_EXPORT GetPixelIDValueAsString( PixelIDValueEnum ty
 PixelIDValueType SITKCommon_EXPORT GetPixelIDValueFromString(const std::string &enumString );
 
 #ifndef SWIG
+
+namespace detail
+{
+template <typename PixelIDTypeList>
+struct TypeListHasPixelIDValue;
+template <typename... Ts>
+struct TypeListHasPixelIDValue<typelist2::typelist<Ts...>>
+{
+  static bool
+  op(PixelIDValueEnum match)
+  {
+    if (match == sitkUnknown)
+      return false;
+
+    bool result = false;
+    ((void)[&match, &result]() { result = result || (PixelIDToPixelIDValue<Ts>::value == match); }(), ...);
+    return result;
+  }
+};
+}
+
+
+/** \brief Check if the runtime PixelID is contained in a template parameter typelist
+ */
+template <typename TPixelIDTypeList = InstantiatedPixelIDTypeList>
+bool
+TypeListHasPixelIDValue(PixelIDValueEnum match)
+{
+  return detail::TypeListHasPixelIDValue<TPixelIDTypeList>::op(match);
+}
+
 SITKCommon_EXPORT std::ostream& operator<<(std::ostream& os, const PixelIDValueEnum id);
 #endif
 

@@ -22,6 +22,7 @@
 #include "sitkTemplateFunctions.h"
 #include "sitkDetail.h"
 #include "sitkPixelIDTokens.h"
+#include "sitkInterpolator.h"
 
 #include <vector>
 #include <memory>
@@ -40,7 +41,7 @@ namespace simple
 {
 
   // This is the forward declaration of a class used internally to the
-  // Image class, but the actually interface is not exposed to simple
+  // Image class, but the actual interface is not exposed to simple
   // ITK. A pointer to the implementation is used as per the pimple
   // idiom.
   class PimpleImageBase;
@@ -96,6 +97,27 @@ namespace simple
      */
     Image( Image &&img ) noexcept;
     Image& operator=( Image &&img ) noexcept;
+
+    /** \brief Advanced method not commonly needed
+     *
+     * This method is designed to support implementations "in-place" object behavior for methods which operate on
+     * r-value references. The returned image is a new image which has a low level pointer to this object's image
+     * buffer, without the SimpleITK or ITK reference counting. This is implemented by setting the new ITK Image's
+     * buffer to the same as this objects without ownership.
+     *
+     * \warning This method bypasses the SimpleITK reference counting, and the reference needs to be manually maintained
+     *  in the scope. The resulting object is designed only to be a temporary.
+     *
+     * In the following example this method is used instead of an `std::move` call when the filter's first argument
+     * takes an r-value reference. The `img` object will container the results of the filter execution, and the `img`
+     * image buffer will be preserved in case of exceptions, and the meta-data will remain in the img object.
+     * \code
+     * filter.Execute( img.ProxyForInPlaceOperation() );
+     * \endcode
+     *
+     * The meta-data dictionary is not copied to the returned proxy image.
+     */
+    Image ProxyForInPlaceOperation();
 #endif
 
 
@@ -143,12 +165,16 @@ namespace simple
 
     template <typename TImageType>
       explicit Image( TImageType* image )
-      : m_PimpleImage( nullptr )
+       : Image()
       {
-        static_assert( ImageTypeToPixelIDValue<TImageType>::Result != (int)sitkUnknown,
-                          "invalid pixel type" );
-        this->InternalInitialization<ImageTypeToPixelIDValue<TImageType>::Result, TImageType::ImageDimension>( image );
-      }
+      const PixelIDValueType type = ImageTypeToPixelIDValue<TImageType>::Result;
+      const unsigned int     dimension = TImageType::ImageDimension;
+
+      static_assert(type != sitkUnknown, "invalid pixel type");
+      static_assert(dimension >= 2 && dimension <= SITK_MAX_DIMENSION, "Unsupported image dimension.");
+
+      this->InternalInitialization(type, dimension, image);
+    }
     /**@}*/
 
     /** Get access to internal ITK data object.
@@ -192,20 +218,27 @@ namespace simple
 
     /** \brief Get the number of components for each pixel
      *
-     * For scalar images this methods returns 1. For vector images the
-     * number of components for each pixel is returned.
+     * For images with scalar or complex pixel types this method
+     * returns one. For images with a vector pixel type the method
+     * returns the number of vector components per pixel.
      */
     unsigned int GetNumberOfComponentsPerPixel( ) const;
 
     /** \brief Get the number of pixels in the image
      *
-     * To Calculate the total number of values stored continuously for
+     * To calculate the total number of values stored continuously for
      * the image's buffer, the NumberOfPixels should be multiplied by
      * NumberOfComponentsPerPixel in order to account for multiple
      * component images.
      *
      */
     uint64_t GetNumberOfPixels( ) const;
+
+    /** \brief Get the number of bytes per component of a pixel.
+     *
+     * Returns the `sizeof` the pixel component type.
+     */
+    unsigned int GetSizeOfPixelComponent( ) const;
 
     /** Get/Set the Origin in physical space
      * @{
@@ -246,6 +279,32 @@ namespace simple
 
     /** Transform continuous index to physical point */
     std::vector< double > TransformContinuousIndexToPhysicalPoint( const std::vector< double > &index) const;
+
+    /** \brief Interpolate pixel value at a continuous index.
+     *
+     * This method is not supported for Label pixel types.
+     *
+     * The valid range of continuous index is [-0.5, size-0.5] for each dimension. An exception is thrown if index is out of bounds.
+     *
+     * @param index The continuous index must be at least the length of the image dimension.
+     * @param interp The interpolation type to use, only sitkNearest and sitkLinear are supported for Vector and Complex pixel types.
+     *
+     * @return All supported pixel types are returned as an array, where complex numbers are returned with the real followed by the complex component.
+     */
+    std::vector<double> EvaluateAtContinuousIndex( const std::vector<double> &index, InterpolatorEnum interp = sitkLinear) const;
+
+    /** Interpolate pixel value at a physical point.
+     *
+     * This method is not supported for Label pixel types.
+     *
+     * An exception is thrown if the point is out of the defined region for the image.
+     *
+     * @param point The physical point at which the interpolation is computed.
+     * @param interp The interpolation type to use, only sitkNearest and sitkLinear are supported for Vector and Complex pixel types.
+     *
+     * @return All supported pixel types are returned as an array, where complex numbers are returned with the real followed by the complex component.
+     */
+    std::vector<double> EvaluateAtPhysicalPoint( const std::vector<double> &point, InterpolatorEnum interp = sitkLinear) const;
 
     /** Get the number of pixels the Image is in each dimension as a
       * std::vector. The size of the vector is equal to the number of dimensions
@@ -311,6 +370,45 @@ namespace simple
     bool EraseMetaData( const std::string &key );
 
     std::string ToString( ) const;
+
+    /** \brief Convert the first dimension to the components for image with vector pixel type.
+     *
+     * This method will convert a scalar image to a vector image with
+     * the number of components equal to the size of the first
+     * dimension. If the image is already a vector image then the
+     * image is returned.
+     *
+     * The components of the direction cosine matrix for the first dimension must be the identity matrix, or else an
+     * exception is thrown.
+     *
+     * An exception is thrown if the image is 2D or if the pixel type is a label or complex pixel type.
+     *
+     * \param inPlace If true then the image is made unique and converted in place updating this image,
+     * otherwise a copy of the image is made and returned.
+     *
+     * \sa ToScalarImage
+     */
+    Image ToVectorImage(bool inPlace = true);
+
+    /** \brief Convert a image of vector pixel type to a scalar image with N+1 dimensions.
+     *
+     * This method will convert a vector image to a scalar image with
+     * the size of the first dimension equal to the number of
+     * components. If the image is already a scalar image then the
+     * image is returned.
+     *
+     * For the additional dimension the origin is set to zero, the spacing to one, and the new components of the
+     * direction cosine to the identity matrix.
+     *
+     * An exception is thrown if the image is has SITK_MAX_DIMENSION dimensions or if the pixel type is a label or
+     * complex pixel type.
+     *
+     * \param inPlace If true then the image is made unique and converted in place updating this image,
+     * otherwise a copy of the image is made and returned.
+     *
+     * \sa ToVectorImage
+     */
+    Image ToScalarImage(bool inPlace = true);
 
     /** \brief Get the value of a pixel
      *
@@ -465,7 +563,7 @@ namespace simple
     /** \brief Methods called by the constructor to allocate and initialize
      * an image.
      *
-     * This method internally utlizes the member function factory to
+     * This method internally utilizes the member function factory to
      * dispatch to methods instantiated on the image of the pixel ID
      */
     void Allocate ( const std::vector<unsigned int > &size, PixelIDValueEnum valueEnum, unsigned int numberOfComponents );
@@ -490,54 +588,53 @@ namespace simple
     AllocateInternal ( const std::vector<unsigned int > &size, unsigned int numberOfComponents );
     /**@}*/
 
+    /** \brief Internal methods for converting images between vectors and scalars
+     *  @{
+     */
+    template<class TImageType>
+    std::enable_if_t<IsVector<TImageType>::Value, Image>
+    ToVectorInternal(bool inPlace);
+
+    template<class TImageType>
+    std::enable_if_t<IsBasic<TImageType>::Value, Image>
+    ToVectorInternal(bool inPlace);
+
+    template<class TImageType>
+    std::enable_if_t<IsVector<TImageType>::Value, Image>
+    ToScalarInternal(bool inPlace);
+
+    template<class TImageType>
+    std::enable_if_t<IsBasic<TImageType>::Value, Image>
+    ToScalarInternal(bool inPlace);
+    /**@}*/
 
   private:
 
    /** Method called by certain constructors to convert ITK images
-     * into simpleITK ones.
+     * into SimpleITK ones.
      *
      * This is the single method which needs to be explicitly
      * instantiated to separate the internal ITK and Pimple image from
      * the external SimpleITK interface. Template parameters have been
      * chosen carefully to flexibly enable this.
      */
-    template <int VPixelIDValue, unsigned int VImageDimension>
-    void InternalInitialization( typename PixelIDToImageType<typename typelist::TypeAt<InstantiatedPixelIDTypeList,
-                                                                                       VPixelIDValue>::Result,
-                                                             VImageDimension>::ImageType *i );
+    void InternalInitialization( PixelIDValueType type, unsigned  int dimension, itk::DataObject *image );
 
-    /** Dispatched from the InternalInitialization method. The
-     * "enable-if" idiom is used here for method overloading. The
-     * second method is for non-instantiated image, which turn into a
-     * void pointer for the parameter. However, this second method
-     * should never be executed.
-     * @{
-     */
-    template<int VPixelIDValue, typename TImageType>
-      typename std::enable_if<!std::is_same<TImageType, void>::value>::type
-    ConditionalInternalInitialization( TImageType *i);
 
-    template<int VPixelIDValue, typename TImageType>
-    typename std::enable_if<std::is_same<TImageType, void>::value>::type
-    ConditionalInternalInitialization( TImageType *) { assert( false ); }
-     /**@}*/
+    Image( std::unique_ptr<PimpleImageBase> pimpleImage );
 
-    /** An addressor of AllocateInternal to be utilized with
-     * registering member functions with the factory.
-     */
-    template < class TMemberFunctionPointer >
-    struct AllocateMemberFunctionAddressor
-    {
-      using ObjectType = typename ::detail::FunctionTraits<TMemberFunctionPointer>::ClassType;
 
-      template< typename TImageType >
-      TMemberFunctionPointer operator() ( ) const
-      {
-        return &ObjectType::template AllocateInternal< TImageType >;
-      }
-    };
+    template <typename TImageType>
+    PimpleImageBase * DispatchedInternalInitialization(itk::DataObject *image);
 
-    PimpleImageBase *m_PimpleImage;
+
+    friend struct DispatchedInternalInitialiationAddressor;
+    friend struct AllocateMemberFunctionAddressor;
+    friend struct ToVectorAddressor;
+    friend struct ToScalarAddressor;
+
+
+    std::unique_ptr<PimpleImageBase> m_PimpleImage;
   };
 
 }

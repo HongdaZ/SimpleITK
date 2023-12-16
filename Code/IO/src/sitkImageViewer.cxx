@@ -263,7 +263,7 @@ std::string ImageViewer::FindViewingApplication()
     }
 
 #if !defined(__APPLE__) && !defined(_WIN32)
-    // is the imagej we're running a script or a binary?
+    // is the ImageJ we're running a script or a binary?
     // only done on Linux/*nix
     //
     // some installations of ImageJ have a shell script front-end.  That script uses the "-eval"
@@ -515,7 +515,7 @@ void ExecuteCommand( const std::vector<std::string> & cmdLine, const unsigned in
 
   // Wait one second then check to see if we launched ok.
   // N.B. Because the launched process may spawn a child process for
-  // the acutal application we want, this methods is needed to be
+  // the actual application we want, this methods is needed to be
   // called before the GetState, so that we get more then the
   // immediate result of the initial execution.
   double t = timeout;
@@ -769,6 +769,30 @@ std::vector<std::string> ConvertCommand( const std::string & command, const std:
   return result;
   }
 
+
+// Check if character is not allowed for the temporary file name.
+//
+bool IsBadCharacter(char c)
+  {
+  if (!isgraph(c))
+    {
+    return true;
+    }
+
+  switch(c)
+    {
+    case '/':
+    case '\\':
+    case ' ':
+    case ':':
+    case '\"':
+    case '\'':
+      return true;
+    default:
+      return false;
+    }
+  }
+
 //
 std::string FormatFileName ( const std::string & TempDirectory, const std::string & name, const std::string & extension,
                              const int tagID )
@@ -787,7 +811,7 @@ std::string FormatFileName ( const std::string & TempDirectory, const std::strin
     {
     std::string n = name;
     // remove whitespace
-    n.erase(std::remove_if(n.begin(), n.end(), &::isspace), n.end());
+    n.erase(std::remove_if(n.begin(), n.end(), &IsBadCharacter), n.end());
 
     tmp << n << "-" << pid << "-" << tagID;
     TempFile = TempFile + tmp.str() + extension;

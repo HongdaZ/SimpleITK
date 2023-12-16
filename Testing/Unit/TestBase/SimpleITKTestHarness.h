@@ -45,6 +45,7 @@ inline std::ostream& operator<< (std::ostream& os, const std::vector<T>& v)
 
 #include "sitkImage.h"
 #include "sitkCommand.h"
+#include "sitkLogger.h"
 
 // Class to help us find test data
 //
@@ -92,6 +93,39 @@ protected:
 extern DataFinder dataFinder;
 
 
+// A mockup of a logger which saves messages to strings.
+class MockLogger
+  :public itk::simple::LoggerBase {
+public:
+
+  MockLogger() = default;
+
+  ~MockLogger() override = default;
+
+  void DisplayText(const char * t) override {m_DisplayText << t;}
+
+  void DisplayErrorText(const char * t) override {m_DisplayErrorText << t;}
+
+  void DisplayWarningText(const char * t) override {m_DisplayWarningText << t;}
+
+  void DisplayGenericOutputText(const char * t) override {m_DisplayGenericOutputText << t;}
+
+  void DisplayDebugText(const char * t) override {m_DisplayDebugText << t;}
+
+  void Clear() {
+    m_DisplayText.str("");
+    m_DisplayErrorText.str("");
+    m_DisplayWarningText.str("");
+    m_DisplayGenericOutputText.str("");
+    m_DisplayDebugText.str("");
+  }
+
+  std::stringstream m_DisplayText;
+  std::stringstream m_DisplayErrorText;
+  std::stringstream m_DisplayWarningText;
+  std::stringstream m_DisplayGenericOutputText;
+  std::stringstream m_DisplayDebugText;
+};
 
 /** Base Command Class which holds onto a process object
  */
@@ -149,52 +183,44 @@ public:
 
 inline std::vector<double> v2(double v1, double v2)
 {
-  std::vector<double> temp(2);
-  temp[0]=v1;temp[1]=v2;
-  return temp;
+  return std::vector<double>{v1,v2};
 }
 
 inline std::vector<double> v3(double v1, double v2, double v3)
 {
-  std::vector<double> temp(3);
-  temp[0]=v1;temp[1]=v2;temp[2]=v3;
-  return temp;
+  return std::vector<double>{v1,v2,v3};
 }
 
 inline std::vector<double> v4(double v1, double v2, double v3, double v4)
 {
-  std::vector<double> temp(4);
-  temp[0]=v1;temp[1]=v2;temp[2]=v3;temp[3]=v4;
-  return temp;
+  return std::vector<double>{v1,v2,v3,v4};
 }
 
 
 inline std::vector<double> v5(double v1, double v2, double v3, double v4, double v5)
 {
-  std::vector<double> temp(5);
-  temp[0]=v1;temp[1]=v2;temp[2]=v3;temp[3]=v4;temp[4]=v5;
-  return temp;
+    return std::vector<double>{v1,v2,v3,v4,v5};
 }
 
 inline std::vector<double> v6(double v1, double v2, double v3,
                               double v4, double v5, double v6)
 {
-  std::vector<double> temp(6);
-  temp[0]=v1;temp[1]=v2;temp[2]=v3;
-  temp[3]=v4;temp[4]=v5;temp[5]=v6;
-  return temp;
+    return std::vector<double>{v1,v2,v3,v4,v5,v6};
 }
+
+inline std::vector<double> v7(double v1, double v2, double v3,
+                              double v4, double v5, double v6, double v7)
+{
+  return std::vector<double>{v1, v2, v3, v4, v5, v6, v7};
+}
+
 
 
 inline std::vector<double> v9(double v1, double v2, double v3,
                               double v4, double v5, double v6,
                               double v7, double v8, double v9)
 {
-  std::vector<double> temp(9);
-  temp[0]=v1;temp[1]=v2;temp[2]=v3;
-  temp[3]=v4;temp[4]=v5;temp[5]=v6;
-  temp[6]=v7;temp[7]=v8;temp[8]=v9;
-  return temp;
+    return std::vector<double>{v1, v2, v3, v4, v5, v6, v7, v8, v9};
 }
 
 inline std::vector<double> v12(double v1, double v2, double v3,
@@ -202,12 +228,7 @@ inline std::vector<double> v12(double v1, double v2, double v3,
                                double v7, double v8, double v9,
                                double v10, double v11, double v12)
 {
-  std::vector<double> temp(12);
-  temp[0]=v1;temp[1]=v2;temp[2]=v3;
-  temp[3]=v4;temp[4]=v5;temp[5]=v6;
-  temp[6]=v7;temp[7]=v8;temp[8]=v9;
-  temp[9]=v10;temp[10]=v11;temp[11]=v12;
-  return temp;
+    return std::vector<double>{v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12};
 }
 
 

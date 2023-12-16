@@ -13,6 +13,8 @@ endforeach()
 
 if (NOT CMAKE_PROJECT_NAME STREQUAL "SimpleITK" )
 
+  cmake_policy( VERSION ${SITK_CMAKE_POLICY_VERSION} )
+
   set( SimpleITK_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.." )
   list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}")
 
@@ -77,7 +79,7 @@ endif()
 # General SWIG configuration
 #
 
-find_package ( SWIG 3 REQUIRED )
+find_package ( SWIG 4 REQUIRED )
 
 include (sitkUseSWIG)
 

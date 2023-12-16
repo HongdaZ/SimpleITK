@@ -31,7 +31,7 @@ namespace simple
 namespace detail
 {
 
-// a privately declared predicate for use with the typelist::Visit
+// a privately declared predicate for use with the typelist2::visit
 // algorithm
 //
 // \todo doc
@@ -45,8 +45,8 @@ struct DualMemberFunctionInstantiater
   DualMemberFunctionInstantiater( TMemberFunctionFactory &factory )
     : m_Factory( factory )
     {}
-  template <class TPixelIDType1, class TPixelIDType2>
 
+  template <class TPixelIDType1, class TPixelIDType2 = TPixelIDType1>
   typename std::enable_if< IsInstantiated<TPixelIDType1,VImageDimension>::Value &&
                               IsInstantiated<TPixelIDType2,VImageDimension>::Value >::type
   operator()( TPixelIDType1* t1=nullptr, TPixelIDType2*t2=nullptr ) const
@@ -63,7 +63,7 @@ struct DualMemberFunctionInstantiater
     }
 
   // this methods is conditionally enabled when the PixelID is not instantiated
-  template <class TPixelIDType1, class TPixelIDType2>
+  template <class TPixelIDType1, class TPixelIDType2 = TPixelIDType1>
   typename std::enable_if< ! (IsInstantiated<TPixelIDType1,VImageDimension>::Value &&
                               IsInstantiated<TPixelIDType2,VImageDimension>::Value) >::type
   operator()( TPixelIDType1*t1=nullptr, TPixelIDType2*t2=nullptr ) const
@@ -91,12 +91,12 @@ void
 DualMemberFunctionFactory< TMemberFunctionPointer >
 ::Register( MemberFunctionType pfunc,  TImageType1*, TImageType2*  )
 {
-  PixelIDValueType pixelID1 = ImageTypeToPixelIDValue<TImageType1>::Result;
-  PixelIDValueType pixelID2 = ImageTypeToPixelIDValue<TImageType2>::Result;
+  constexpr PixelIDValueType pixelID1 = ImageTypeToPixelIDValue<TImageType1>::value;
+  constexpr PixelIDValueType pixelID2 = ImageTypeToPixelIDValue<TImageType2>::value;
 
   // this shouldn't occur, just may be useful for debugging
-  assert( pixelID1 >= 0 && pixelID1 < typelist::Length< InstantiatedPixelIDTypeList >::Result );
-  assert( pixelID2 >= 0 && pixelID2 < typelist::Length< InstantiatedPixelIDTypeList >::Result );
+  static_assert( pixelID1 >= 0 && pixelID1 < typelist2::length< InstantiatedPixelIDTypeList >::value, "" );
+  static_assert( pixelID2 >= 0 && pixelID2 < typelist2::length< InstantiatedPixelIDTypeList >::value, "" );
 
   static_assert( TImageType1::ImageDimension >= 2 && TImageType1::ImageDimension <= SITK_MAX_DIMENSION,
                     "Image1 Dimension out of range" );
@@ -125,7 +125,22 @@ DualMemberFunctionFactory< TMemberFunctionPointer >
   using InstantiaterType = DualMemberFunctionInstantiater< Self, VImageDimension, TAddressor >;
 
   // initialize function array with pointer
-  typelist::DualVisit<TPixelIDTypeList1, TPixelIDTypeList2> visitEachComboInLists;
+  typelist2::dual_visit<TPixelIDTypeList1, TPixelIDTypeList2> visitEachComboInLists;
+  visitEachComboInLists( InstantiaterType( *this ) );
+}
+
+
+template <typename TMemberFunctionPointer>
+template < typename TPixelIDTypeList, unsigned int VImageDimension, typename TAddressor >
+void
+DualMemberFunctionFactory< TMemberFunctionPointer >
+::RegisterMemberFunctions( )
+{
+
+  using InstantiaterType = DualMemberFunctionInstantiater< Self, VImageDimension, TAddressor >;
+
+  // initialize function array with pointer
+  typelist2::visit<TPixelIDTypeList> visitEachComboInLists;
   visitEachComboInLists( InstantiaterType( *this ) );
 }
 
@@ -153,12 +168,12 @@ typename DualMemberFunctionFactory< TMemberFunctionPointer >::FunctionObjectType
 DualMemberFunctionFactory< TMemberFunctionPointer >
 ::GetMemberFunction( PixelIDValueType pixelID1, PixelIDValueType pixelID2, unsigned int imageDimension  )
 {
-  if ( pixelID1 >= typelist::Length< InstantiatedPixelIDTypeList >::Result || pixelID1 < 0 )
+  if ( pixelID1 >= typelist2::length< InstantiatedPixelIDTypeList >::value || pixelID1 < 0 )
     {
     sitkExceptionMacro ( << "unexpected error pixelID1 is out of range " << pixelID1 << " "  << typeid(ObjectType).name() );
     }
 
-  if ( pixelID2 >= typelist::Length< InstantiatedPixelIDTypeList >::Result || pixelID2 < 0 )
+  if ( pixelID2 >= typelist2::length< InstantiatedPixelIDTypeList >::value || pixelID2 < 0 )
     {
     sitkExceptionMacro ( << "unexpected error pixelID2 is out of range " << pixelID2 << " "  << typeid(ObjectType).name() );
     }

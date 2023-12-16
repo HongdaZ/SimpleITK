@@ -10,6 +10,28 @@ image, draws a smiley face made of Gaussian blobs, and calls the Show function t
 display the image with Fiji.
 
 
+Sample Output
+-------------
+
+Running the python code produces this image:
+
+
+.. exec_code::
+    :hide_output:
+
+    # --- hide: start ---
+    from example_utils import run_example, save_image
+    args = []
+    return_dict = run_example('HelloWorld', 'main', args)
+    save_image(return_dict["output_image"], f"HelloWorld_output_image")
+    # --- hide: stop ---
+
+
+.. figure:: ../images/HelloWorld_output_image.png
+   :scale: 100%
+
+   **Input Image**
+
 Code
 ----
 
@@ -42,7 +64,7 @@ Code
 
     .. literalinclude:: ../../Examples/HelloWorld/HelloWorld.py
        :language: python
-       :lines: 1,19-
+       :lines: 20-64
 
   .. tab:: R
 

@@ -16,7 +16,6 @@
 #
 #==========================================================================*/
 
-from __future__ import print_function
 import unittest
 
 import SimpleITK as sitk
@@ -78,6 +77,74 @@ class ImageTests(unittest.TestCase):
 
         img_c.SetOrigin([7, 8])
         self.assertNotEqual(img.GetOrigin(), img_c.GetOrigin())
+
+    def test_get_item_metadata(self):
+        """Test the __getitem__ with a string to access meta-data dictionary"""
+
+        img = sitk.Image([10, 9, 11], sitk.sitkFloat32 )
+        img.SetSpacing([.3, .1, .2])
+        img.SetOrigin([-3.0, -2.0, -1.0])
+
+        self.assertEqual(img["spacing"], (.3, .1, .2))
+        self.assertEqual(img["origin"], (-3.0, -2.0, -1.0))
+        self.assertEqual(img["direction"], (1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0, 1.0))
+
+        with self.assertRaises(KeyError):
+            img[""]
+
+        with self.assertRaises(KeyError):
+            img["does_not_exit"]
+
+    def test_setitem_metadata(self):
+        """Test the __setitem__ with a string to access meta-data dictionary"""
+
+        img = sitk.Image([10, 9], sitk.sitkFloat32)
+
+        img["spacing"] = [.3, .1, .2]
+        self.assertEqual(img["spacing"], (.3, .1))
+        self.assertEqual(img.GetSpacing(), (.3, .1))
+
+        img["origin"] = [-3.0, -2.0, -1.0]
+        self.assertEqual(img["origin"], (-3.0, -2.0))
+        self.assertEqual(img.GetOrigin(), (-3.0, -2.0))
+
+        with self.assertRaises(RuntimeError):
+            img["direction"] = (-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
+
+        img["direction"] = (-1.0, 0.0, 0.0, 1.0)
+        self.assertEqual(img["direction"], (-1.0, 0.0, 0.0, 1.0))
+        self.assertEqual(img.GetDirection(), (-1.0, 0.0, 0.0, 1.0))
+
+
+        with self.assertRaises(TypeError):
+            img["test"] = 1
+
+    def test_delitem_metadata(self):
+        """Test the __delitem__ with a string key to remove elements from meta-data """
+
+        img = sitk.Image([10, 9], sitk.sitkFloat32)
+
+        for k in ['origin', 'spacing', 'direction']:
+            with self.assertRaises(KeyError):
+                del img[k]
+
+        for k in [1.0, [1, 2], (3, 4)]:
+            with self.assertRaises(TypeError):
+                k in img
+
+    def test_contains_metadata(self):
+        """Test the __contains__ with a string key  """
+
+        img = sitk.Image([10, 9], sitk.sitkFloat32)
+
+        for k in ['origin', 'spacing', 'direction']:
+            self.assertTrue(k in img)
+
+        for k in [1.0, [1, 2], (3, 4)]:
+            with self.assertRaises(TypeError):
+                k in img
+
+
 
     def test_pickle_file(self):
        """Test the custom pickling and un-pickling interface"""
@@ -177,87 +244,287 @@ class ImageTests(unittest.TestCase):
 
         image1 = sitk.Image([2, 2], sitk.sitkFloat64)
         image2 = image1 + 1.0
+        image1["test"] = "value"
 
         self.assertEqual(image1[1, 1], 0.0)
         self.assertEqual(image2[1, 1], 1.0)
+        self.assertEqual(image1["test"], "value")
 
         image1 += image2
         self.assertEqual(image1[1, 1], 1.0)
+        self.assertEqual(image1["test"], "value")
 
         image1 *= image2+5.5
         self.assertEqual(image1[0, 0], 6.5)
+        self.assertEqual(image1["test"], "value")
 
         image1 -= image2
         self.assertEqual(image1[0, 0], 5.5)
+        self.assertEqual(image1["test"], "value")
 
         image1 /= image2*2.0
         self.assertEqual(image1[0, 0], 2.75)
+        self.assertEqual(image1["test"], "value")
 
         image1 //= image2*2.0
         self.assertEqual(image1[0, 0], 1.0)
+        self.assertEqual(image1["test"], "value")
 
         image1 **= image2
         self.assertEqual(image1[0, 0], 1.0)
+        self.assertEqual(image1["test"], "value")
 
         image1 = sitk.Image([3, 3], sitk.sitkUInt32)
         image2 = sitk.Image([3,3], sitk.sitkUInt32)
+        image1["test"] = "value"
 
         image1 += (image2 + 0b10001110101)
         self.assertEqual(image1[1, 1], 1141)
+        self.assertEqual(image1["test"], "value")
 
         image1 &= (image2 + 0b11111111011)
         self.assertEqual(image1[1, 1], 1137)
+        self.assertEqual(image1["test"], "value")
 
         image1 |= (image2 + 0b00000000111)
         self.assertEqual(image1[1, 1], 1143)
+        self.assertEqual(image1["test"], "value")
 
         image1 ^= (image2 + 0b00000001101)
         self.assertEqual(image1[1, 1], 1146)
+        self.assertEqual(image1["test"], "value")
 
         image1 %= (image2 + 4)
         self.assertEqual(image1[1, 1], 2)
+        self.assertEqual(image1["test"], "value")
+
+    def test_inplace_operators_exception(self):
+        """ Test exception generated during inplace operation"""
+
+        size = [1, 1]
+        img = sitk.Image(size, sitk.sitkUInt32)
+        img["test"] = "1"
+        try:
+            img += sitk.Cast(img, sitk.sitkFloat32)
+        except RuntimeError:
+            pass
+        else:
+            assert False  # Failed to throw exception
+
+        # Check the image and meta-data dictionary are the sane.
+        self.assertEqual( img.GetSize(), tuple(size))
+        self.assertTrue( "test" in img )
+        self.assertEqual( img["test"], "1")
 
     def test_inplace_operators_constants(self):
         """ Test in place operators with numeric constants"""
 
         image = sitk.Image([2, 2], sitk.sitkFloat64)
+        image["test"] = "value"
 
         self.assertEqual(image[0, 0], 0.0)
+        self.assertEqual(image["test"], "value")
 
         image += 3.125
         self.assertEqual(image[0, 0], 3.125)
+        self.assertEqual(image["test"], "value")
 
         image *= 2.0
         self.assertEqual(image[0, 0], 6.25)
+        self.assertEqual(image["test"], "value")
 
         image -= 4.0
         self.assertEqual(image[0, 0], 2.25)
+        self.assertEqual(image["test"], "value")
 
         image /= 0.25
         self.assertEqual(image[0, 0], 9.0)
+        self.assertEqual(image["test"], "value")
 
         image //= 2.2
         self.assertEqual(image[0, 0], 4.0)
+        self.assertEqual(image["test"], "value")
 
         image **= 2.0
         self.assertEqual(image[0, 0], 16.0)
+        self.assertEqual(image["test"], "value")
 
         image = sitk.Image([3, 3], sitk.sitkUInt32)
+        image["test"] = "value"
 
         image += 0b10001110101
         self.assertEqual(image[1, 1], 1141)
+        self.assertEqual(image["test"], "value")
 
         image &= 0b11111111011
         self.assertEqual(image[1, 1], 1137)
+        self.assertEqual(image["test"], "value")
 
         image |= 0b00000000111
         self.assertEqual(image[1, 1], 1143)
+        self.assertEqual(image["test"], "value")
 
         image ^= 0b00000001101
         self.assertEqual(image[1, 1], 1146)
+        self.assertEqual(image["test"], "value")
 
         image %= 4
         self.assertEqual(image[1, 1], 2)
+        self.assertEqual(image["test"], "value")
+
+    def test_evaluate_at_continuous_index(self):
+        """Test for EvaluateAtContinuousIndex"""
+
+        for pixel_type in (sitk.sitkFloat32, sitk.sitkFloat64,
+                           sitk.sitkUInt8, sitk.sitkInt8,
+                           sitk.sitkUInt16, sitk.sitkInt16,
+                           sitk.sitkUInt32, sitk.sitkInt32,
+                           sitk.sitkUInt64, sitk.sitkInt64):
+            image = sitk.Image([2, 2], pixel_type)
+            result = image.EvaluateAtContinuousIndex([0.5, 0.5])
+            self.assertEqual(result, 0.0)
+            self.assertEqual(type(result), float)
+
+        for pixel_type in (sitk.sitkComplexFloat32,
+                           sitk.sitkComplexFloat64):
+            image = sitk.Image([2, 2], pixel_type)
+            result = image.EvaluateAtContinuousIndex([0.5, 0.5])
+            self.assertEqual(result, complex(0.0, 0.0))
+            self.assertEqual(type(result), complex)
+
+        for pixel_type in (sitk.sitkVectorFloat32, sitk.sitkVectorFloat64,
+                           sitk.sitkVectorUInt8, sitk.sitkVectorInt8,
+                           sitk.sitkVectorUInt16, sitk.sitkVectorInt16,
+                           sitk.sitkVectorUInt32, sitk.sitkVectorInt32,
+                           sitk.sitkVectorUInt64, sitk.sitkVectorInt64):
+            image = sitk.Image([2, 2], pixel_type, 7)
+            result = image.EvaluateAtContinuousIndex([0.5, 0.5])
+            self.assertEqual(len(result), 7)
+            self.assertTrue(all(i == 0 for i in result))
+
+    def test_evaluate_at_physical_point(self):
+        """Test for EvaluateAtPhysicalPoint"""
+
+        for pixel_type in (sitk.sitkFloat32, sitk.sitkFloat64,
+                           sitk.sitkUInt8, sitk.sitkInt8,
+                           sitk.sitkUInt16, sitk.sitkInt16,
+                           sitk.sitkUInt32, sitk.sitkInt32,
+                           sitk.sitkUInt64, sitk.sitkInt64):
+            image = sitk.Image([2, 2], pixel_type)
+            result = image.EvaluateAtPhysicalPoint([0.5, 0.5])
+            self.assertEqual(result, 0.0)
+            self.assertEqual(type(result), float)
+
+        for pixel_type in (sitk.sitkComplexFloat32,
+                           sitk.sitkComplexFloat64):
+            image = sitk.Image([2, 2], pixel_type)
+            result = image.EvaluateAtPhysicalPoint([0.5, 0.5])
+            self.assertEqual(result, complex(0.0, 0.0))
+            self.assertEqual(type(result), complex)
+
+        for pixel_type in (sitk.sitkVectorFloat32, sitk.sitkVectorFloat64,
+                           sitk.sitkVectorUInt8, sitk.sitkVectorInt8,
+                           sitk.sitkVectorUInt16, sitk.sitkVectorInt16,
+                           sitk.sitkVectorUInt32, sitk.sitkVectorInt32,
+                           sitk.sitkVectorUInt64, sitk.sitkVectorInt64):
+            image = sitk.Image([2, 2], pixel_type, 7)
+            result = image.EvaluateAtPhysicalPoint([0.5, 0.5])
+            self.assertEqual(len(result), 7)
+            self.assertTrue(all(i == 0 for i in result))
+
+    def test_masked_assign(self):
+
+        mask_image = sitk.Image([2,2], sitk.sitkUInt8)
+        mask_image[0,1] = 1
+        mask_image[1,0] = 2
+        for pixel_type in (sitk.sitkFloat32, sitk.sitkFloat64,
+                           sitk.sitkUInt8, sitk.sitkInt8,
+                           sitk.sitkUInt16, sitk.sitkInt16,
+                           sitk.sitkUInt32, sitk.sitkInt32,
+                           sitk.sitkUInt64, sitk.sitkInt64):
+            image = sitk.Image([2, 2], pixel_type)
+            image["test"] = "value"
+
+            image2 = sitk.Image([2, 2], pixel_type)
+            image2 += 2
+
+            image[mask_image] = image2
+            self.assertEqual(image[0,0], 0)
+            self.assertEqual(image[1,0], 2)
+            self.assertEqual(image[0,1], 2)
+            self.assertEqual(image[1,1], 0)
+            self.assertEqual(image["test"], "value")
+
+        for pixel_type in (sitk.sitkComplexFloat32,
+                           sitk.sitkComplexFloat64):
+            image = sitk.Image([2, 2], pixel_type)
+            image["test"] = "value"
+
+            image2 = sitk.Image([2, 2], pixel_type)
+            image2 -= 1
+            image[mask_image] = image2
+
+            self.assertEqual(image[0,0], 0)
+            self.assertEqual(image[1,0], complex(-1,0))
+            self.assertEqual(image[0,1], complex(-1,0))
+            self.assertEqual(image[1,1], 0)
+            self.assertEqual(image["test"], "value")
+
+        for pixel_type in (sitk.sitkVectorFloat32, sitk.sitkVectorFloat64,
+                           sitk.sitkVectorUInt8, sitk.sitkVectorInt8,
+                           sitk.sitkVectorUInt16, sitk.sitkVectorInt16,
+                           sitk.sitkVectorUInt32, sitk.sitkVectorInt32,
+                           sitk.sitkVectorUInt64, sitk.sitkVectorInt64):
+            image = sitk.Image([2, 2], pixel_type, 4)
+            image["test"] = "value"
+
+            image2 = sitk.Image([2, 2], pixel_type, 4)
+            image2 += 2
+
+            image[mask_image] = image2
+
+            self.assertTrue(all(i == 0 for i in image[0,0]))
+            self.assertTrue(all(i == 2 for i in image[1,0]), image[1,0])
+            self.assertTrue(all(i == 2 for i in image[0,1]))
+            self.assertTrue(all(i == 0 for i in image[1,1]))
+            self.assertEqual(image["test"], "value")
+
+    def test_masked_assign_constant(self):
+
+        mask_image = sitk.Image([2,2], sitk.sitkUInt8)
+        mask_image[0,1] = 1
+        mask_image[1,0] = 2
+        for pixel_type in (sitk.sitkFloat32, sitk.sitkFloat64,
+                           sitk.sitkUInt8, sitk.sitkInt8,
+                           sitk.sitkUInt16, sitk.sitkInt16,
+                           sitk.sitkUInt32, sitk.sitkInt32,
+                           sitk.sitkUInt64, sitk.sitkInt64, ):
+            image = sitk.Image([2, 2], pixel_type)
+            image["test"] = "value"
+
+            image[mask_image] = 2
+            self.assertEqual(image[0,0], 0)
+            self.assertEqual(image[1,0], 2)
+            self.assertEqual(image[0,1], 2)
+            self.assertEqual(image[1,1], 0)
+            self.assertEqual(image["test"], "value")
+
+
+        for pixel_type in (sitk.sitkVectorFloat32, sitk.sitkVectorFloat64,
+                           sitk.sitkVectorUInt8, sitk.sitkVectorInt8,
+                           sitk.sitkVectorUInt16, sitk.sitkVectorInt16,
+                           sitk.sitkVectorUInt32, sitk.sitkVectorInt32,
+                           sitk.sitkVectorUInt64, sitk.sitkVectorInt64, ):
+            image = sitk.Image([2, 2], pixel_type)
+            image["test"] = "value"
+
+            image[mask_image] = 2
+            self.assertTrue(all(i == 0 for i in image[0,0]))
+            self.assertTrue(all(i == 2 for i in image[1,0]), image[1,0])
+            self.assertTrue(all(i == 2 for i in image[0,1]))
+            self.assertTrue(all(i == 0 for i in image[1,1]))
+            self.assertEqual(image["test"], "value")
+
 
     def test_legacy(self):
         """ This is old testing cruft before unittest"""

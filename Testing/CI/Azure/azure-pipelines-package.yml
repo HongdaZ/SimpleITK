@@ -1,8 +1,9 @@
-
 trigger:
    tags:
      include:
        - '*'
+     exclude:
+       - latest
    branches:
      exclude:
        - '*'
@@ -14,7 +15,7 @@ jobs:
   - job: Configure
     displayName: Configure Variables
     pool:
-      vmImage: 'Ubuntu-16.04'
+      vmImage: 'ubuntu-latest'
     steps:
       - checkout: none
       - bash: |
@@ -22,34 +23,11 @@ jobs:
         name: configure
   - template: templates/package-linux-job.yml
     parameters:
-      ARCH: x86_64
+        DOCKERFILE: Dockerfile-2014-x86_64
+        BUILD_CSHARP: 1
   - template: templates/package-mac-job.yml
   - template: templates/package-win-job.yml
     parameters:
       PYTHON_ARCH: x64
       CMAKE_PLATFORM: x64
       VCVAR_OPTIONS: amd64
-  - job: Doxygen
-    dependsOn: Configure
-    condition: ne( variables['configure.doxygen'], 'true' )
-    timeoutInMinutes: 60
-    variables:
-      SIMPLEITK_GIT_TAG: $[ dependencies.Configure.outputs['configure.BuildHash'] ]
-    steps:
-      - template: templates/git-download-steps.yml
-      - bash: |
-          cd ${BUILD_SOURCESDIRECTORY}/Utilities/Doxygen/docker
-          docker build -f Dockerfile -t simpleitk-doxygen .
-        displayName: Build Docker Image
-      - bash: |
-          docker run \
-                 --mount type=bind,source=${BUILD_SOURCESDIRECTORY},destination=/work/SimpleITK,readonly \
-                 --env SIMPLEITK_GIT_TAG \
-                 --name sitk-dox simpleitk-doxygen
-          mkdir -p $(Build.ArtifactStagingDirectory)/Doxygen
-          docker cp sitk-dox:/SimpleITKDoxygen.tar.gz $(Build.ArtifactStagingDirectory)/Doxygen/SimpleITKDoxygen-${SIMPLEITK_GIT_TAG}.tar.gz
-        displayName: Docker doxygen generation
-      - task: PublishBuildArtifacts@1
-        inputs:
-          pathtoPublish: $(Build.ArtifactStagingDirectory)/Doxygen
-          artifactName: Doxygen

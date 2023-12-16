@@ -304,6 +304,12 @@ if(NOT CMAKE_VERSION VERSION_LESS 3.4)
     USES_TERMINAL_INSTALL 1)
 endif()
 
+
+if(POLICY CMP0135)
+  set(External_Project_USE_ARCHIVE_TIMESTAMP DOWNLOAD_EXTRACT_TIMESTAMP 1)
+endif()
+
+
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 include(ExternalProject)
 
@@ -326,11 +332,11 @@ endif()
 #------------------------------------------------------------------------------
 # Swig
 #------------------------------------------------------------------------------
-option ( SimpleITK_USE_SYSTEM_SWIG "Use a pre-compiled version of SWIG 3.0 previously configured for your system" OFF )
+option ( SimpleITK_USE_SYSTEM_SWIG "Use a pre-compiled version of SWIG 4.0 previously configured for your system" OFF )
 sitk_legacy_naming( SimpleITK_USE_SYSTEM_SWIG USE_SYSTEM_SWIG )
 mark_as_advanced(SimpleITK_USE_SYSTEM_SWIG)
 if(SimpleITK_USE_SYSTEM_SWIG)
-  find_package ( SWIG 3 REQUIRED )
+  find_package ( SWIG 4 REQUIRED )
 else()
   include(External_Swig)
   list(APPEND ${CMAKE_PROJECT_NAME}_DEPENDENCIES Swig)
@@ -358,24 +364,6 @@ if ( BUILD_TESTING )
 endif()
 
 #------------------------------------------------------------------------------
-# Python virtualenv
-#------------------------------------------------------------------------------
-option( SimpleITK_USE_SYSTEM_VIRTUALENV "Use a system version of Python's virtualenv. " OFF )
-sitk_legacy_naming( SimpleITK_USE_SYSTEM_VIRTUALENV USE_SYSTEM_VIRTUALENV)
-mark_as_advanced(SimpleITK_USE_SYSTEM_VIRTUALENV)
-if( NOT DEFINED SimpleITK_PYTHON_USE_VIRTUALENV OR SimpleITK_PYTHON_USE_VIRTUALENV )
-  if ( SimpleITK_USE_SYSTEM_VIRTUALENV )
-    find_package( PythonVirtualEnv REQUIRED)
-  else()
-    include(External_virtualenv)
-    if ( WRAP_PYTHON )
-      list(APPEND ${CMAKE_PROJECT_NAME}_DEPENDENCIES virtualenv)
-    endif()
-  endif()
-  list(APPEND SimpleITK_VARS PYTHON_VIRTUALENV_SCRIPT)
-endif()
-
-#------------------------------------------------------------------------------
 # ITK
 #------------------------------------------------------------------------------
 
@@ -391,6 +379,14 @@ else()
   list(APPEND ${CMAKE_PROJECT_NAME}_DEPENDENCIES ITK)
 endif()
 
+#------------------------------------------------------------------------------
+# Elastix
+#------------------------------------------------------------------------------
+option(SimpleITK_USE_ELASTIX "Use the Elastix image registration library" OFF)
+if(SimpleITK_USE_ELASTIX )
+  include(External_Elastix)
+  list(APPEND ${CMAKE_PROJECT_NAME}_DEPENDENCIES Elastix)
+endif()
 
 
 get_cmake_property( _varNames VARIABLES )
@@ -467,20 +463,15 @@ ExternalProject_Add(${proj}
     -DWRAP_TCL:BOOL=${WRAP_TCL}
     -DWRAP_CSHARP:BOOL=${WRAP_CSHARP}
     -DWRAP_R:BOOL=${WRAP_R}
-    -DBUILD_EXAMPLES:BOOL=${BUILD_TESTING}
+    -DBUILD_EXAMPLES:BOOL=${BUILD_EXAMPLES}
+    -DElastix_DIR:PATH=${Elastix_DIR}
   DEPENDS ${${CMAKE_PROJECT_NAME}_DEPENDENCIES}
   ${External_Project_USES_TERMINAL}
+  STEP_TARGETS configure build doc
+  BUILD_ALWAYS 1
 )
 
-ExternalProject_Add_Step(${proj} forcebuild
-  COMMAND ${CMAKE_COMMAND} -E remove
-    ${CMAKE_CURRENT_BUILD_DIR}/${proj}-prefix/src/${proj}-stamp/${prog}-build
-  DEPENDEES configure
-  DEPENDERS build
-  ALWAYS 1
-)
-
-# explicitly add a non-default step to build SimpleITK do
+# explicitly add a non-default step to build SimpleITK docs
 ExternalProject_Add_Step(${proj} doc
   COMMAND ${CMAKE_COMMAND}
       --build <BINARY_DIR>
@@ -489,10 +480,6 @@ ExternalProject_Add_Step(${proj} doc
   EXCLUDE_FROM_MAIN 1
   LOG 1
 )
-
-# adds superbuild level target "SimpleITK-documentation" etc..
-ExternalProject_Add_StepTargets(${proj} configure build test forcebuild doc)
-
 
 
 # Load the SimpleITK version variables, scope isolated in a function.
@@ -518,7 +505,7 @@ include(External_SimpleITKExamples)
 #------------------------------------------------------------------------------
 # List of external projects
 #------------------------------------------------------------------------------
-set(external_project_list ITK Swig SimpleITKExamples PCRE Lua GTest virtualenv ${CMAKE_PROJECT_NAME})
+set(external_project_list ITK Swig SimpleITKExamples PCRE2 Lua GTest Elastix ${CMAKE_PROJECT_NAME})
 
 
 #-----------------------------------------------------------------------------

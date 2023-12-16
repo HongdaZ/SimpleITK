@@ -38,10 +38,31 @@ enum InterpolatorEnum {
    */
   sitkLinear = 2,
 
+  /** \brief B-Spline of order 1 interpolation
+   * \sa itk::BSplineInterpolateImageFunction
+   */
+  sitkBSpline1 = 21,
+
+  /** \brief B-Spline of order 2 interpolation
+   * \sa itk::BSplineInterpolateImageFunction
+   */
+  sitkBSpline2 = 22,
+
   /** \brief B-Spline of order 3 interpolation
    * \sa itk::BSplineInterpolateImageFunction
    */
-  sitkBSpline = 3,
+  sitkBSpline = 23,
+  sitkBSpline3 = 23,
+
+  /** \brief B-Spline of order 4 interpolation
+   * \sa itk::BSplineInterpolateImageFunction
+   */
+  sitkBSpline4 = 24,
+
+  /** \brief B-Spline of order 5 interpolation
+   * \sa itk::BSplineInterpolateImageFunction
+   */
+  sitkBSpline5 = 25,
 
   /** \brief Gaussian interpolation
    *
@@ -58,6 +79,13 @@ enum InterpolatorEnum {
    * \sa itk:LabelImageGaussianInterpolateImageFunction
    */
   sitkLabelGaussian = 5,
+
+  /** \brief Linear interpolation for multi-label images
+   *
+   * \sa itk:LabelImageGenericInterpolateImageFunction
+   * \sa itk:LinearInterpolateImageFunction
+   */
+  sitkLabelLinear = 26,
 
   /** \brief Windowed sinc interpolation
    *
@@ -104,7 +132,7 @@ enum InterpolatorEnum {
    */
   sitkBlackmanWindowedSinc = 10,
 
-  /** \brief Interpolator for a BSpline coefficient image
+  /** \brief Interpolator for a <b>BSpline coefficient image</b>
    *
    *  This interpolator should be used with the resampling the image
    *  intensities of a BSpline coefficient image. The order specifies
@@ -114,10 +142,20 @@ enum InterpolatorEnum {
    *  \sa itk::BSplineResampleImageFunction
    */
   sitkBSplineResampler = 11,
+  /** \brief Interpolator for a <b>BSpline coefficient image</b>, order 3.
+   */
   sitkBSplineResamplerOrder3 = 11,
+  /** \brief Interpolator for a <b>BSpline coefficient image</b>, order 1.
+   */
   sitkBSplineResamplerOrder1 = 12,
+  /** \brief Interpolator for a <b>BSpline coefficient image</b>, order 2.
+   */
   sitkBSplineResamplerOrder2 = 13,
+  /** \brief Interpolator for a <b>BSpline coefficient image</b>, order 4.
+   */
   sitkBSplineResamplerOrder4 = 14,
+  /** \brief Interpolator for a <b>BSpline coefficient image</b>, order 5.
+   */
   sitkBSplineResamplerOrder5 = 15
 
 

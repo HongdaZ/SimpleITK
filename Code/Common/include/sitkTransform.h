@@ -51,6 +51,7 @@ enum TransformEnum { sitkUnknownTransform = -1,
                      sitkVersor,
                      sitkVersorRigid,
                      sitkScaleSkewVersor,
+                     sitkComposeScaleSkewVersor,
                      sitkScaleVersor,
                      sitkAffine,
                      sitkComposite,
@@ -92,7 +93,7 @@ public:
    */
   template<unsigned int NDimension>
   explicit Transform( itk::CompositeTransform< double, NDimension >* compositeTransform )
-    : m_PimpleTransform( nullptr )
+  : Transform()
     {
       static_assert( NDimension == 2 || NDimension == 3, "Only 2D and 3D transforms are supported" );
       if ( compositeTransform == nullptr )
@@ -254,9 +255,9 @@ protected:
   explicit Transform( PimpleTransformBase *pimpleTransform );
 
   // this method is called to set the private pimpleTransform outside
-  // of the constructor, derived classes can override it of update the
+  // the constructor, derived classes can override it of update the
   // state.
-  virtual void SetPimpleTransform( PimpleTransformBase *pimpleTransform );
+  virtual void SetPimpleTransform(std::unique_ptr<PimpleTransformBase> && pimpleTransform );
 
 private:
 
@@ -305,7 +306,7 @@ private:
   // As is the architecture of all SimpleITK pimples,
   // this pointer should never be null and should always point to a
   // valid object
-  PimpleTransformBase *m_PimpleTransform;
+  std::unique_ptr<PimpleTransformBase> m_PimpleTransform;
 };
 
 

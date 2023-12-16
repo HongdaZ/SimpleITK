@@ -88,9 +88,9 @@ std::vector<double> ScaleTransform::GetMatrix( ) const
   return this->m_pfGetMatrix();
 }
 
-void ScaleTransform::SetPimpleTransform( PimpleTransformBase *pimpleTransform )
+void ScaleTransform::SetPimpleTransform(std::unique_ptr<PimpleTransformBase> && pimpleTransform )
 {
-  Superclass::SetPimpleTransform(pimpleTransform);
+  Superclass::SetPimpleTransform(std::move(pimpleTransform));
   Self::InternalInitialization(this->GetITKBase());
 }
 
@@ -101,10 +101,9 @@ void ScaleTransform::InternalInitialization(itk::TransformBase *transform)
   visitor.transform = transform;
   visitor.that = this;
 
-  typedef typelist::MakeTypeList<itk::ScaleTransform<double, 3>,
-                                 itk::ScaleTransform<double, 2> >::Type TransformTypeList;
+  using TransformTypeList = typelist2::typelist<itk::ScaleTransform<double, 3>, itk::ScaleTransform<double, 2>>;
 
-  typelist::Visit<TransformTypeList> callInternalInitialization;
+  typelist2::visit<TransformTypeList> callInternalInitialization;
 
   this->m_pfSetCenter = nullptr;
   this->m_pfGetCenter = nullptr;

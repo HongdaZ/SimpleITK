@@ -1,4 +1,5 @@
-cmake_minimum_required ( VERSION 3.10 FATAL_ERROR )
+include("${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/sitkCMakeInit.cmake")
+cmake_minimum_required(VERSION ${SITK_CMAKE_MINIMUM_REQUIRED_VERSION})
 
 project( SimpleITK_R )
 
@@ -60,7 +61,7 @@ if(DEFINED SimpleITK_VERSION_PATCH)
 endif()
 if(DEFINED SimpleITK_VERSION_POST)
   set(SimpleITKR_VERSION "${SimpleITKR_VERSION}-${SimpleITK_VERSION_POST}")
-elseif(DEFINED SimpleITK_VERSION_DEV)
+elseif(DEFINED SimpleITK_VERSION_DEV AND NOT SimpleITK_VERSION_DEV STREQUAL "" )
   math(EXPR DEV "9000 + ${SimpleITK_VERSION_DEV}")
   set(SimpleITKR_VERSION "${SimpleITKR_VERSION}-${DEV}")
 endif()

@@ -17,22 +17,20 @@
 #
 # =========================================================================
 
-from __future__ import print_function
-
 import SimpleITK as sitk
 import sys
 import os
 
 
 def command_iteration(filter):
-    print("{0:3} = {1:10.5f}".format(filter.GetElapsedIterations(),
-                                     filter.GetMetric()))
+    print(f"{filter.GetElapsedIterations():3} = {filter.GetMetric():10.5f}")
 
 
 if len(sys.argv) < 4:
     print(
-        "Usage: {0} <fixedImageFilter> <movingImageFile> <outputTransformFile>"
-        .format(sys.argv[0]))
+        f"Usage: {sys.argv[0]}"
+        + " <fixedImageFilter> <movingImageFile> <outputTransformFile>"
+    )
     sys.exit(1)
 
 fixed = sitk.ReadImage(sys.argv[1], sitk.sitkFloat32)
@@ -58,14 +56,14 @@ demons.AddCommand(sitk.sitkIterationEvent, lambda: command_iteration(demons))
 displacementField = demons.Execute(fixed, moving)
 
 print("-------")
-print("Number Of Iterations: {0}".format(demons.GetElapsedIterations()))
-print(" RMS: {0}".format(demons.GetRMSChange()))
+print(f"Number Of Iterations: {demons.GetElapsedIterations()}")
+print(f" RMS: {demons.GetRMSChange()}")
 
 outTx = sitk.DisplacementFieldTransform(displacementField)
 
 sitk.WriteTransform(outTx, sys.argv[3])
 
-if ("SITK_NOSHOW" not in os.environ):
+if "SITK_NOSHOW" not in os.environ:
     resampler = sitk.ResampleImageFilter()
     resampler.SetReferenceImage(fixed)
     resampler.SetInterpolator(sitk.sitkLinear)
@@ -78,5 +76,5 @@ if ("SITK_NOSHOW" not in os.environ):
     # Use the // floor division operator so that the pixel type is
     # the same for all three images which is the expectation for
     # the compose filter.
-    cimg = sitk.Compose(simg1, simg2, simg1 // 2. + simg2 // 2.)
+    cimg = sitk.Compose(simg1, simg2, simg1 // 2.0 + simg2 // 2.0)
     sitk.Show(cimg, "DeformableRegistration1 Composition")

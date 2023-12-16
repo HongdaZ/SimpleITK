@@ -23,8 +23,10 @@ mkdir -p ${BLD_DIR} && \
     cmake -G Ninja\
           -DBUILD_DOXYGEN=ON\
           -DWRAP_DEFAULT=OFF\
+          -DPYTHON_EXECUTABLE=$(which python)\
           -DSimpleITK_BUILD_DISTRIBUTE:BOOL=ON\
           ${SRC_DIR}/SuperBuild/ && \
     cmake --build . --target SimpleITK-doc && \
     cd ${BLD_DIR}/SimpleITK-build/Documentation/ && \
-    tar --exclude=\*.md5 --exclude=\*.map -zcvf /SimpleITKDoxygen.tar.gz ./html
+    tar --exclude=\*.md5 --exclude=\*.map -zcvf /SimpleITKDoxygen.tar.gz ./html && \
+    tar -zcvf /SimpleITKDoxygenXML.tar.gz ./xml

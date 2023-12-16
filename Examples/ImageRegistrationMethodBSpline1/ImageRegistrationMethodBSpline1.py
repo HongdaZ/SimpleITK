@@ -17,59 +17,63 @@
 #
 # =========================================================================
 
-from __future__ import print_function
-
 import SimpleITK as sitk
 import sys
 import os
 
 
 def command_iteration(method):
-    print("{0:3} = {1:10.5f}".format(method.GetOptimizerIteration(),
-                                     method.GetMetricValue()))
+    print(
+        f"{method.GetOptimizerIteration():3} "
+        + f"= {method.GetMetricValue():10.5f}"
+    )
 
 
-if len(sys.argv) < 4:
-    print("Usage:", sys.argv[0], "<fixedImageFilter> <movingImageFile>",
-          "<outputTransformFile>")
-    sys.exit(1)
+def main(args):
+    if len(args) < 4:
+        print(
+            "Usage:",
+            sys.args[0],
+            "<fixedImageFilter> <movingImageFile>",
+            "<outputTransformFile>",
+        )
+        sys.exit(1)
 
-fixed = sitk.ReadImage(sys.argv[1], sitk.sitkFloat32)
+    fixed = sitk.ReadImage(args[1], sitk.sitkFloat32)
 
-moving = sitk.ReadImage(sys.argv[2], sitk.sitkFloat32)
+    moving = sitk.ReadImage(args[2], sitk.sitkFloat32)
 
-transformDomainMeshSize = [8] * moving.GetDimension()
-tx = sitk.BSplineTransformInitializer(fixed,
-                                      transformDomainMeshSize)
+    transformDomainMeshSize = [8] * moving.GetDimension()
+    tx = sitk.BSplineTransformInitializer(fixed, transformDomainMeshSize)
 
-print("Initial Parameters:")
-print(tx.GetParameters())
+    print("Initial Parameters:")
+    print(tx.GetParameters())
 
-R = sitk.ImageRegistrationMethod()
-R.SetMetricAsCorrelation()
+    R = sitk.ImageRegistrationMethod()
+    R.SetMetricAsCorrelation()
 
-R.SetOptimizerAsLBFGSB(gradientConvergenceTolerance=1e-5,
-                       numberOfIterations=100,
-                       maximumNumberOfCorrections=5,
-                       maximumNumberOfFunctionEvaluations=1000,
-                       costFunctionConvergenceFactor=1e+7)
-R.SetInitialTransform(tx, True)
-R.SetInterpolator(sitk.sitkLinear)
+    R.SetOptimizerAsLBFGSB(
+        gradientConvergenceTolerance=1e-5,
+        numberOfIterations=100,
+        maximumNumberOfCorrections=5,
+        maximumNumberOfFunctionEvaluations=1000,
+        costFunctionConvergenceFactor=1e7,
+    )
+    R.SetInitialTransform(tx, True)
+    R.SetInterpolator(sitk.sitkLinear)
 
-R.AddCommand(sitk.sitkIterationEvent, lambda: command_iteration(R))
+    R.AddCommand(sitk.sitkIterationEvent, lambda: command_iteration(R))
 
-outTx = R.Execute(fixed, moving)
+    outTx = R.Execute(fixed, moving)
 
-print("-------")
-print(outTx)
-print("Optimizer stop condition: {0}"
-      .format(R.GetOptimizerStopConditionDescription()))
-print(" Iteration: {0}".format(R.GetOptimizerIteration()))
-print(" Metric value: {0}".format(R.GetMetricValue()))
+    print("-------")
+    print(outTx)
+    print(f"Optimizer stop condition: {R.GetOptimizerStopConditionDescription()}")
+    print(f" Iteration: {R.GetOptimizerIteration()}")
+    print(f" Metric value: {R.GetMetricValue()}")
 
-sitk.WriteTransform(outTx, sys.argv[3])
+    sitk.WriteTransform(outTx, args[3])
 
-if ("SITK_NOSHOW" not in os.environ):
     resampler = sitk.ResampleImageFilter()
     resampler.SetReferenceImage(fixed)
     resampler.SetInterpolator(sitk.sitkLinear)
@@ -79,5 +83,15 @@ if ("SITK_NOSHOW" not in os.environ):
     out = resampler.Execute(moving)
     simg1 = sitk.Cast(sitk.RescaleIntensity(fixed), sitk.sitkUInt8)
     simg2 = sitk.Cast(sitk.RescaleIntensity(out), sitk.sitkUInt8)
-    cimg = sitk.Compose(simg1, simg2, simg1 // 2. + simg2 // 2.)
-    sitk.Show(cimg, "ImageRegistration1 Composition")
+    cimg = sitk.Compose(simg1, simg2, simg1 // 2.0 + simg2 // 2.0)
+
+    return_images = {"fixed": fixed,
+                     "moving": moving,
+                     "composition": cimg}
+    return return_images
+
+
+if __name__ == "__main__":
+    return_dict = main(sys.argv)
+    if "SITK_NOSHOW" not in os.environ:
+        sitk.Show(return_dict["composition"], "ImageRegistrationMethodBSpline1 Composition")

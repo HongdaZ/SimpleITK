@@ -37,16 +37,75 @@ the limit of iterations per resolution level, thereby setting both the
 iterations and the number of scales ( from the length of the array
 ). The output of the filter is the bias corrected input image.
 
+Example Run
+-----------
+Running the Python code with the following inputs:
+
+``main("BrainProtonDensitySlice.png", "N4_corrected.nrrd", 1)``
+
+produces the images below.
+
+.. exec_code::
+    :hide_output:
+
+    # --- hide: start ---
+
+    from example_utils import run_example, save_image
+    args = ['../../docs/images/BrainProtonDensitySlice.png',
+            'N4BiasCorrected.nrrd',
+            1,
+           ]
+    return_dict = run_example('N4BiasFieldCorrection', 'main', args)
+    for key, value in return_dict.items():
+        save_image(value, f"N4BiasFieldCorrection_{key}", is_label="mask" in key)
+
+Input Images
+^^^^^^^^^^^^^^^^^^^
+
+.. figure:: ../images/N4BiasFieldCorrection_input_image.png
+   :scale: 100%
+
+   **Original Input**
+
+Output Images
+^^^^^^^^^^^^^^^^^^^
+
+.. list-table::
+
+    * - .. figure:: ../images/N4BiasFieldCorrection_mask_image.png
+
+           **Default Mask Image**
+
+      - .. figure:: ../images/N4BiasFieldCorrection_log_bias_field.png
+
+           **Log Bias Image**
+
+      - .. figure:: ../images/N4BiasFieldCorrection_corrected_image.png
+
+           **N4 Bias Corrected Image**
+
 Code
 ----
 
 .. tabs::
 
+  .. tab:: C++
+
+    .. literalinclude:: ../../Examples/N4BiasFieldCorrection/N4BiasFieldCorrection.cxx
+       :language: c++
+       :lines: 18-
+
+  .. tab:: C#
+
+    .. literalinclude:: ../../Examples/N4BiasFieldCorrection/N4BiasFieldCorrection.cs
+       :language: c#
+       :lines: 18-
+
   .. tab:: Python
 
     .. literalinclude:: ../../Examples/N4BiasFieldCorrection/N4BiasFieldCorrection.py
        :language: python
-       :lines: 1,19-
+       :lines: 1,20-83
 
   .. tab:: R
 

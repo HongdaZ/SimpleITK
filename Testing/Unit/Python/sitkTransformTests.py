@@ -16,12 +16,12 @@
 #
 #==========================================================================*/
 
-from __future__ import print_function
 import unittest
 import tempfile
 import os.path
 import shutil
 from copy import deepcopy
+from pathlib import Path
 
 import SimpleITK as sitk
 try:
@@ -343,6 +343,89 @@ class TransformTests(unittest.TestCase):
         tx_c.SetCenter([9, 10])
         self.assertNotEqual(tx.GetCenter(), tx_c.GetCenter())
 
+    def test_readwrite(self):
+        """Test reading and writing transforms"""
+
+        transforms = {
+            'AffineTransform': (3,),
+            'AffineTransform': (2,),
+            'BSplineTransform': (3, 3),
+            'BSplineTransform': (2, 3),
+            'BSplineTransform': (2, 2),
+            'DisplacementFieldTransform': (3,),
+            'DisplacementFieldTransform': (2,),
+            'Euler2DTransform': (),
+            'Euler3DTransform': (),
+            'ScaleSkewVersor3DTransform': (),
+            'ScaleTransform': (2,),
+            'ScaleTransform': (3,),
+            'ScaleVersor3DTransform': (),
+            'Similarity2DTransform': (),
+            'Similarity3DTransform': (),
+            'Transform': (),
+            'TranslationTransform': (3,),
+            'TranslationTransform': (2,),
+            'VersorRigid3DTransform': (),
+            'VersorTransform': (),
+            'CompositeTransform' : (3,)
+        }
+
+        extensions = [
+            "txt",
+            "tfm",
+            "xfm", # requires ITKIOTransformMINC module enabled
+            "hdf",
+            "mat"
+        ]
+
+        tx_extension = "txt"
+
+        for ext in extensions:
+            for k, v in transforms.items():
+
+                fname = Path(self.test_dir) / f"test_readwrite_{k}.{tx_extension}"
+
+                tx = getattr(sitk, k)(*v)
+
+                # test with concrete transform and Path object
+                sitk.WriteTransform(tx, fname)
+                read_tx = sitk.ReadTransform(fname)
+                self.assertEqual(tx, read_tx.Downcast(), msg=f"Testing I/O {k} with {ext}")
+                self.assertEqual(read_tx, read_tx.Downcast(), msg=f"Testing ReadTransform downcast")
+
+                # test with base transform class, and a regular string.
+                sitk.WriteTransform(sitk.Transform(tx), str(fname))
+                read_tx = sitk.ReadTransform(str(fname))
+                self.assertEqual(tx, read_tx.Downcast(), msg=f"Testing I/O Transform {k} with {ext}")
+                self.assertEqual(read_tx, read_tx.Downcast(), msg=f"Testing ReadTransform downcast")
+
+    def test_downcast_returned(self):
+        """
+        Test python specific methods where returned type is downcasted to derived class.
+        """
+
+        tx = sitk.AffineTransform(3)
+        itx = tx.GetInverse()
+        self.assertEqual(tx.__class__, itx.__class__)
+        self.assertEqual(tx.GetDimension(), itx.GetDimension())
+
+        tx = sitk.Euler2DTransform()
+        itx = tx.GetInverse()
+        self.assertEqual(tx.__class__, itx.__class__)
+        self.assertEqual(tx.GetDimension(), itx.GetDimension())
+
+
+        tx_list = [sitk.AffineTransform(2),
+                   sitk.Euler2DTransform(),
+                   sitk.TranslationTransform(2),
+                   sitk.AffineTransform(2)]
+        ctx = sitk.CompositeTransform( tx_list );
+
+        self.assertEqual(ctx.GetBackTransform().__class__, sitk.AffineTransform)
+
+        for i, itx in enumerate(tx_list):
+            self.assertEqual(ctx.GetNthTransform(i).__class__, itx.__class__)
 
 if __name__ == '__main__':
+
     unittest.main()

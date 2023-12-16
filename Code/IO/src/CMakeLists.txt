@@ -16,9 +16,12 @@ set(use_itk_modules  ITKCommon ITKLabelMap ITKImageCompose
   ITKImageIO ITKTransformIO )
 
 find_package(ITK COMPONENTS ${use_itk_modules} )
-include(${ITK_USE_FILE})
+
+
 add_library ( SimpleITKIO ${SimpleITKIOSource} )
 sitk_target_use_itk ( SimpleITKIO PRIVATE ${use_itk_modules} )
+sitk_target_use_itk_factory( SimpleITKIO ImageIO )
+sitk_target_use_itk_factory( SimpleITKIO TransformIO )
 target_link_libraries ( SimpleITKIO
   PUBLIC  SimpleITKCommon )
 if (SimpleITK_EXPLICIT_INSTANTIATION)
@@ -35,7 +38,7 @@ target_compile_options( SimpleITKIO
     ${SimpleITK_PUBLIC_COMPILE_OPTIONS}
   PRIVATE
     ${SimpleITK_PRIVATE_COMPILE_OPTIONS} )
-target_compile_features( SimpleITKIO PUBLIC cxx_std_11 )
+target_compile_features( SimpleITKIO PUBLIC cxx_std_17 )
 
 
 sitk_install_exported_target( SimpleITKIO )

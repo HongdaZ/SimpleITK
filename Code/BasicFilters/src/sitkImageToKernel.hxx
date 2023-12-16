@@ -24,12 +24,12 @@
 
 namespace itk {
 namespace simple {
+namespace {
 
-
-/** \brief Convert an itk Image to an itk ImageKernalOperator
+/** \brief Convert an itk Image to an itk ImageKernelOperator
  *
  * This method will internally pad the image with the
- * ConstantPadImageFilter, and then convert to an ImageKernalOperator
+ * ConstantPadImageFilter, and then convert to an ImageKernelOperator
  * via a deep copy.
  *
  */
@@ -83,6 +83,7 @@ kernelOperator->CreateToRadius( radius );
 return kernelOperator;
 }
 
+}
 } // end namespace simple
 } // end namespace itk
 

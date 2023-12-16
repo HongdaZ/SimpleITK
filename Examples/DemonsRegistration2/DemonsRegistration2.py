@@ -17,21 +17,22 @@
 #
 # =========================================================================
 
-from __future__ import print_function
-
 import SimpleITK as sitk
 import sys
 import os
 
 
 def command_iteration(filter):
-    print("{0:3} = {1:10.5f}".format(filter.GetElapsedIterations(),
-                                     filter.GetMetric()))
+    print(f"{filter.GetElapsedIterations():3} = {filter.GetMetric():10.5f}")
 
 
 if len(sys.argv) < 4:
-    print("Usage:", sys.argv[0], "<fixedImageFilter> <movingImageFile>",
-          "[initialTransformFile] <outputTransformFile>")
+    print(
+        "Usage:",
+        sys.argv[0],
+        "<fixedImageFilter> <movingImageFile>",
+        "[initialTransformFile] <outputTransformFile>",
+    )
     sys.exit(1)
 
 fixed = sitk.ReadImage(sys.argv[1])
@@ -39,7 +40,7 @@ fixed = sitk.ReadImage(sys.argv[1])
 moving = sitk.ReadImage(sys.argv[2])
 
 matcher = sitk.HistogramMatchingImageFilter()
-if (fixed.GetPixelID() in (sitk.sitkUInt8, sitk.sitkInt8)):
+if fixed.GetPixelID() in (sitk.sitkUInt8, sitk.sitkInt8):
     matcher.SetNumberOfHistogramLevels(128)
 else:
     matcher.SetNumberOfHistogramLevels(1024)
@@ -73,14 +74,14 @@ else:
     displacementField = demons.Execute(fixed, moving)
 
 print("-------")
-print("Number Of Iterations: {0}".format(demons.GetElapsedIterations()))
-print(" RMS: {0}".format(demons.GetRMSChange()))
+print(f"Number Of Iterations: {demons.GetElapsedIterations()}")
+print(f" RMS: {demons.GetRMSChange()}")
 
 outTx = sitk.DisplacementFieldTransform(displacementField)
 
 sitk.WriteTransform(outTx, sys.argv[3])
 
-if ("SITK_NOSHOW" not in os.environ):
+if "SITK_NOSHOW" not in os.environ:
     resampler = sitk.ResampleImageFilter()
     resampler.SetReferenceImage(fixed)
     resampler.SetInterpolator(sitk.sitkLinear)
@@ -90,5 +91,5 @@ if ("SITK_NOSHOW" not in os.environ):
     out = resampler.Execute(moving)
     simg1 = sitk.Cast(sitk.RescaleIntensity(fixed), sitk.sitkUInt8)
     simg2 = sitk.Cast(sitk.RescaleIntensity(out), sitk.sitkUInt8)
-    cimg = sitk.Compose(simg1, simg2, simg1 // 2. + simg2 // 2.)
+    cimg = sitk.Compose(simg1, simg2, simg1 // 2.0 + simg2 // 2.0)
     sitk.Show(cimg, "DeformableRegistration1 Composition")

@@ -17,8 +17,6 @@
 #
 # =========================================================================
 
-from __future__ import print_function
-
 import os
 import sys
 
@@ -37,9 +35,10 @@ class MyCommand(sitk.Command):
         self.processObject = po
 
     def Execute(self):
-        print("{0} Progress: {1:1.2f}".format(self.processObject.GetName(),
-                                              self.processObject.GetProgress())
-              )
+        print(
+            f"{self.processObject.GetName()}"
+            + f" Progress: {self.processObject.GetProgress():1.2f}"
+        )
 
 
 ##! [python director command]
@@ -71,5 +70,5 @@ writer = sitk.ImageFileWriter()
 writer.SetFileName(sys.argv[3])
 writer.Execute(image)
 
-if ("SITK_NOSHOW" not in os.environ):
+if "SITK_NOSHOW" not in os.environ:
     sitk.Show(image, "Simple Gaussian")
