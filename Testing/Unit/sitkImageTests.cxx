@@ -1953,10 +1953,7 @@ TEST_F(Image, Evaluate)
            sitk::sitkBSplineResamplerOrder3,
            sitk::sitkBSplineResamplerOrder4,
            sitk::sitkBSplineResamplerOrder5,
-#ifdef SITK_GENERIC_LABEL_INTERPOLATOR
-           sitk::sitkLabelLinear
-#endif
-       })
+           sitk::sitkLabelLinear})
   {
     EXPECT_ANY_THROW(img.EvaluateAtPhysicalPoint({0.0,0.0}, interp));
   }
