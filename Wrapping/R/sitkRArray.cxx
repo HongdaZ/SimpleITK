@@ -51,7 +51,7 @@ SEXP ImAsArray(itk::simple::Image src)
     {
     char error_msg[1024];
     snprintf( error_msg, 1024, "Exception thrown ImAsArray : unknown pixel type");
-    Rprintf(error_msg);
+    Rprintf(%s, error_msg);
     return(res);
     }
     break;
@@ -161,7 +161,7 @@ SEXP ImAsArray(itk::simple::Image src)
     default:
       char error_msg[1024];
       snprintf( error_msg, 1024, "Exception thrown ImAsArray : unsupported pixel type: %d", PID );
-      Rprintf(error_msg);
+      Rprintf(%s, error_msg);
     }
   UNPROTECT(1);
   return(res);
@@ -190,7 +190,7 @@ itk::simple::Image ArrayAsIm(SEXP arr,
     {
     char error_msg[1024];
     snprintf( error_msg, 1024, "Exception thrown ArrayAsIm : unsupported array type");
-    Rprintf(error_msg);
+    Rprintf(%s, error_msg);
     }
   itk::simple::Image res = importer.Execute();
   return(res);
